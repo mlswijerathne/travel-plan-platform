@@ -38,7 +38,8 @@ services:
 aws:
   region: ${AWS_REGION:ap-south-1}
   sqs:
-    queue-url: ${SQS_QUEUE_URL:}
+    booking-queue-url: ${SQS_BOOKING_QUEUE_URL:}
+    notification-queue-url: ${SQS_NOTIFICATION_QUEUE_URL:}
 
 management:
   endpoints:
