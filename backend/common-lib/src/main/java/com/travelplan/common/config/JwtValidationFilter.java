@@ -20,6 +20,7 @@ import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -46,18 +47,14 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                         .getPayload();
 
                 String userId = claims.getSubject();
-                String role = claims.get("role", String.class);
-
-                if (role == null) {
-                    role = "TOURIST";
-                }
+                String role = extractAppRole(claims);
 
                 List<SimpleGrantedAuthority> authorities = List.of(
                         new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())
                 );
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userId, null, authorities);
+                        new UsernamePasswordAuthenticationToken(userId, token, authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -68,6 +65,22 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    @SuppressWarnings("unchecked")
+    private String extractAppRole(Claims claims) {
+        // Supabase stores custom app role in app_metadata or user_metadata
+        Map<String, Object> appMetadata = claims.get("app_metadata", Map.class);
+        if (appMetadata != null && appMetadata.get("role") != null) {
+            return (String) appMetadata.get("role");
+        }
+
+        Map<String, Object> userMetadata = claims.get("user_metadata", Map.class);
+        if (userMetadata != null && userMetadata.get("role") != null) {
+            return (String) userMetadata.get("role");
+        }
+
+        return "TOURIST";
     }
 
     @Override

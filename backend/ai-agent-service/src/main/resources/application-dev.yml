@@ -1,0 +1,2 @@
+## Dev profile - Feign clients are disabled via FeignConfig @Profile("!dev")
+## MockFeignClients provides mock implementations for all service clients

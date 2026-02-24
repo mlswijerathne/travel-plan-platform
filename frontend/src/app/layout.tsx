@@ -1,13 +1,23 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/providers'
+import { Toaster } from '@/components/ui/sonner'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+})
+
+const jakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['500', '600', '700', '800'],
+})
 
 export const metadata: Metadata = {
-  title: 'Travel Plan - AI-Powered Trip Planning',
-  description: 'Plan your perfect Sri Lanka adventure with AI-powered recommendations',
+  title: 'TravelPlan - AI-Powered Trip Planning for Sri Lanka',
+  description: 'Plan your perfect Sri Lanka adventure with AI-powered recommendations. Find hotels, tour guides, and vehicles — all tailored to your preferences.',
 }
 
 export default function RootLayout({
@@ -17,9 +27,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${jakartaSans.variable} ${inter.className}`}>
         <Providers>
           {children}
+          <Toaster richColors position="top-right" />
         </Providers>
       </body>
     </html>
