@@ -10,6 +10,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        # Use PostgreSQL dialect so Hibernate generates correct array / JSON SQL
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    # Useful during development to inspect generated SQL; set to false in prod
+    show-sql: false
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -22,7 +28,12 @@ cors:
 aws:
   region: ${AWS_REGION:ap-south-1}
   sqs:
+    # Queue that receives review.rating.updated events (consumed by provider services)
     rating-update-queue-url: ${SQS_RATING_UPDATE_QUEUE_URL:}
+    # Queue that receives itinerary.trip.completed events (published by itinerary-service)
+    trip-completion-queue-url: ${SQS_TRIP_COMPLETION_QUEUE_URL:}
+    # Optional local endpoint override (e.g. ElasticMQ for local dev)
+    endpoint-override: ${SQS_ENDPOINT_OVERRIDE:}
 management:
   endpoints:
     web:
