@@ -34,8 +34,9 @@ services:
   # Tour Guide Service
   tour-guide-service:
     build:
-      context: ./tour-guide-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: tour-guide-service/Dockerfile
+
     ports:
       - "8084:8084"
     environment:
