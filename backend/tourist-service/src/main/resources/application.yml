@@ -5,9 +5,9 @@ spring:
   application:
     name: tourist-service
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/tourist_db}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
+    url: ${DATABASE_URL:jdbc:postgresql://aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require&prepareThreshold=0}
+    username: ${DATABASE_USERNAME:postgres.azdrclbpnuiijhmnfxtf}
+    password: ${DATABASE_PASSWORD:DEA2TravlPlan2026}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,17 +17,29 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: tourist
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+    schemas: tourist
+    create-schemas: true
 
 supabase:
   jwt:
-    secret: ${SUPABASE_JWT_SECRET:your-secret-key}
+    secret: ${SUPABASE_JWT_SECRET:2057/ms99yxu0Kv+rqqaDmGnZRIUcw1VDfM/26VqinfB3AWnS80sgBWQleqgLxdD2LpXVRZgUfuKQeBk1cujZQ==}
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
 
 management:
   endpoints:

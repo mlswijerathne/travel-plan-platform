@@ -20,6 +20,8 @@
 
     <modules>
         <module>common-lib</module>
+        <module>discovery-server</module>
+        <module>api-gateway</module>
         <module>tourist-service</module>
         <module>hotel-service</module>
         <module>tour-guide-service</module>
