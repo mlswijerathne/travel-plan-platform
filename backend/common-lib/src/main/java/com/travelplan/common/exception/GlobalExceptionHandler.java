@@ -74,6 +74,17 @@ public class GlobalExceptionHandler {
                         request.getRequestURI(), traceId));
     }
 
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflictException(
+            ConflictException ex, HttpServletRequest request) {
+        String traceId = UUID.randomUUID().toString();
+        log.error("Conflict: {} | TraceId: {}", ex.getMessage(), traceId);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(409, "Conflict", ex.getMessage(),
+                        request.getRequestURI(), traceId));
+    }
+
     @ExceptionHandler(ServiceUnavailableException.class)
     public ResponseEntity<ErrorResponse> handleServiceUnavailableException(
             ServiceUnavailableException ex, HttpServletRequest request) {

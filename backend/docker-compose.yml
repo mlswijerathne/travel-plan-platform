@@ -1,6 +1,42 @@
 version: '3.8'
 
 services:
+  # Discovery Server (Eureka) - starts first
+  discovery-server:
+    build:
+      context: ./discovery-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8060:8060"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_URL=http://discovery-server:8761/eureka/
+      - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    networks:
+      - travel-plan-network
+
   # Tourist Service
   tourist-service:
     build:
@@ -10,9 +46,13 @@ services:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -25,9 +65,13 @@ services:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -40,9 +84,13 @@ services:
       - "8084:8084"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -55,9 +103,13 @@ services:
       - "8085:8085"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -70,13 +122,19 @@ services:
       - "8086:8086"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
     depends_on:
-      - hotel-service
-      - tour-guide-service
-      - vehicle-service
+      discovery-server:
+        condition: service_healthy
+      hotel-service:
+        condition: service_started
+      tour-guide-service:
+        condition: service_started
+      vehicle-service:
+        condition: service_started
     networks:
       - travel-plan-network
 
@@ -89,9 +147,13 @@ services:
       - "8087:8087"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -104,12 +166,16 @@ services:
       - "8088:8088"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -122,9 +188,13 @@ services:
       - "8089:8089"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -137,9 +207,13 @@ services:
       - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -152,9 +226,13 @@ services:
       - "8091:8091"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      discovery-server:
+        condition: service_healthy
     networks:
       - travel-plan-network
 
@@ -167,14 +245,21 @@ services:
       - "8093:8093"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on:
-      - hotel-service
-      - tour-guide-service
-      - vehicle-service
-      - review-service
+      discovery-server:
+        condition: service_healthy
+      hotel-service:
+        condition: service_started
+      tour-guide-service:
+        condition: service_started
+      vehicle-service:
+        condition: service_started
+      review-service:
+        condition: service_started
     networks:
       - travel-plan-network
 
