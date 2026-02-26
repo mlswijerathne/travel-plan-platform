@@ -39,3 +39,19 @@ management:
     web:
       exposure:
         include: health,info,metrics
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+aws:
+  sqs:
+    booking-events-queue: ${BOOKING_EVENTS_QUEUE:booking-events}
+    review-trigger-queue: ${REVIEW_TRIGGER_QUEUE:review-triggers}
+  region: ${AWS_REGION:ap-northeast-1}
+
+scheduling:
+  trip-completion:
+    enabled: true
+    cron: ${TRIP_COMPLETION_CRON:0 0 0 * * *}
