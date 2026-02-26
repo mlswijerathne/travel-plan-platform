@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface ItineraryDayRepository extends JpaRepository<ItineraryDay, Long> {
     List<ItineraryDay> findByItineraryId(Long itineraryId);
 
-    @Query("SELECT id FROM ItineraryDay WHERE itineraryId = :itineraryId ORDER BY dayNumber ASC")
+    @Query("SELECT d.id FROM ItineraryDay d WHERE d.itinerary.id = :itineraryId ORDER BY d.dayNumber ASC")
     List<Long> findIdsByItineraryId(@Param("itineraryId") Long itineraryId);
 
     Optional<ItineraryDay> findByItineraryIdAndDate(Long itineraryId, LocalDate date);

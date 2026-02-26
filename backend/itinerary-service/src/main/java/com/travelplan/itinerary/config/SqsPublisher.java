@@ -7,15 +7,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class SqsPublisher {
     private final SqsTemplate sqsTemplate;
+
+    public SqsPublisher(@org.springframework.beans.factory.annotation.Autowired(required = false) SqsTemplate sqsTemplate) {
+        this.sqsTemplate = sqsTemplate;
+    }
 
     @Value("${aws.sqs.review-trigger-queue:review-triggers}")
     private String reviewTriggerQueue;
 
     public void publishTripCompletedEvent(String event) {
+        if (sqsTemplate == null) {
+            log.warn("SqsTemplate not configured; skipping trip completed event");
+            return;
+        }
         log.info("Publishing trip completed event to SQS queue: {}", reviewTriggerQueue);
         try {
             sqsTemplate.send(reviewTriggerQueue, event);
