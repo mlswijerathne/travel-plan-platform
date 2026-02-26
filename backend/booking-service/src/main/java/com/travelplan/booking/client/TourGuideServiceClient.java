@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "tour-guide-service", url = "${services.tour-guide-url}")
+@FeignClient(name = "tour-guide-service")
 public interface TourGuideServiceClient {
 
     @GetMapping("/api/tour-guides/{id}")

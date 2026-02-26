@@ -37,4 +37,14 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> success(T data) {
         return success(data, null);
     }
+
+    public static <T> ApiResponse<T> error(String message) {
+        return ApiResponse.<T>builder()
+                .meta(Meta.builder()
+                        .timestamp(Instant.now())
+                        .requestId(message) // Reusing requestId for simple message for now, or could add an 'error'
+                                            // field if schema allows
+                        .build())
+                .build();
+    }
 }

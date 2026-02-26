@@ -4,6 +4,17 @@ server:
 spring:
   application:
     name: tour-guide-service
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION:us-east-1}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID:test}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:test}
+      sqs:
+        endpoint: ${AWS_SQS_ENDPOINT:http://localhost:4566}
+        listener:
+          auto-startup: ${AWS_SQS_LISTENER_AUTO_STARTUP:false}
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/guide_db}
     username: ${DATABASE_USERNAME:postgres}
@@ -23,8 +34,22 @@ supabase:
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
 
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics
+
+app:
+  sqs:
+    enabled: ${APP_SQS_ENABLED:false}
+    rating-update-queue: ${SQS_RATING_UPDATE_QUEUE:rating-updates-queue}
