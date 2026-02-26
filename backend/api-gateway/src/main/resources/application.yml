@@ -89,7 +89,7 @@ eureka:
 
 supabase:
   jwt:
-    secret: ${SUPABASE_JWT_SECRET:your-secret-key}
+    secret: ${SUPABASE_JWT_SECRET:2057/ms99yxu0Kv+rqqaDmGnZRIUcw1VDfM/26VqinfB3AWnS80sgBWQleqgLxdD2LpXVRZgUfuKQeBk1cujZQ==}
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

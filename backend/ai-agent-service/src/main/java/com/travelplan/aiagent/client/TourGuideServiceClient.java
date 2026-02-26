@@ -22,6 +22,6 @@ public interface TourGuideServiceClient {
     @GetMapping("/api/tour-guides/{id}")
     ApiResponse<Object> getTourGuideById(@PathVariable String id);
 
-    @GetMapping("/api/tour-guides/search")
+    @GetMapping("/api/tour-guides")
     ApiResponse<Object> searchTourGuidesByQuery(@RequestParam Map<String, String> params);
 }
