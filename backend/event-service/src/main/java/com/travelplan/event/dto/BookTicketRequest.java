@@ -17,5 +17,7 @@ public class BookTicketRequest {
     @Min(value = 1, message = "Must book at least 1 ticket")
     private Integer numberOfTickets;
 
+    private Long ticketTierId;
+
     private String notes;
 }
