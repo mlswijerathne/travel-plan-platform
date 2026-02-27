@@ -4,13 +4,25 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/profile'
+  const next = searchParams.get('next')
 
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      // If no explicit redirect, determine based on role
+      if (next) {
+        return NextResponse.redirect(`${origin}${next}`)
+      }
+
+      const { data: { user } } = await supabase.auth.getUser()
+      const role = user?.user_metadata?.role || 'TOURIST'
+      const providerRoles = ['HOTEL_OWNER', 'TOUR_GUIDE', 'VEHICLE_OWNER']
+      let redirectTo = '/profile'
+      if (providerRoles.includes(role)) redirectTo = '/provider/dashboard'
+      else if (role === 'ADMIN') redirectTo = '/dashboard'
+
+      return NextResponse.redirect(`${origin}${redirectTo}`)
     }
   }
 

@@ -16,26 +16,24 @@ spring:
         listener:
           auto-startup: ${AWS_SQS_LISTENER_AUTO_STARTUP:false}
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require&prepareThreshold=0}
-    username: ${DATABASE_USERNAME:postgres.azdrclbpnuiijhmnfxtf}
-    password: ${DATABASE_PASSWORD:DEA2TravlPlan2026}
+    url: ${DATABASE_URL:jdbc:postgresql://ep-misty-king-aiv2kum3.c-4.us-east-1.aws.neon.tech/guide_db?sslmode=require}
+    username: ${DATABASE_USERNAME:neondb_owner}
+    password: ${DATABASE_PASSWORD:npg_tdOaupSzoX32}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        default_schema: guide
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    schemas: guide
-    create-schemas: true
 
 supabase:
   jwt:
-    secret: ${SUPABASE_JWT_SECRET:2057/ms99yxu0Kv+rqqaDmGnZRIUcw1VDfM/26VqinfB3AWnS80sgBWQleqgLxdD2LpXVRZgUfuKQeBk1cujZQ==}
+    secret: ${SUPABASE_JWT_SECRET:O7htcXf6lOb4l+Th+tsyhDGq2c+e1mS2uo2Zt2gd6qMClVGPjKwfYdShmva33q3GhJBEtWJIwrkN2DO7P3KF4w==}
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

@@ -2,10 +2,10 @@ package com.travelplan.aiagent.agent;
 
 import com.google.adk.agents.BaseAgent;
 import com.google.adk.agents.LlmAgent;
+import com.google.adk.models.BaseLlm;
 import com.google.adk.tools.FunctionTool;
 import com.travelplan.aiagent.tool.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,10 +21,10 @@ public class AgentFactory {
     private static final String TRIP_PLANNER_AGENT = "TripPlannerAgent";
 
     @Bean
-    public LlmAgent hotelSearchAgent(@Qualifier("geminiModelName") String modelName) {
+    public LlmAgent hotelSearchAgent(BaseLlm agentModel) {
         return LlmAgent.builder()
                 .name(HOTEL_SEARCH_AGENT)
-                .model(modelName)
+                .model(agentModel)
                 .description("Specialist for finding and recommending hotels and accommodations in Sri Lanka. Handles hotel searches, comparisons, and detailed hotel information.")
                 .instruction("""
                     You are the Hotel Search specialist for a Sri Lanka travel platform.
@@ -65,10 +65,10 @@ public class AgentFactory {
     }
 
     @Bean
-    public LlmAgent tourGuideSearchAgent(@Qualifier("geminiModelName") String modelName) {
+    public LlmAgent tourGuideSearchAgent(BaseLlm agentModel) {
         return LlmAgent.builder()
                 .name(TOUR_GUIDE_SEARCH_AGENT)
-                .model(modelName)
+                .model(agentModel)
                 .description("Specialist for finding and recommending tour guides in Sri Lanka. Handles guide searches by location, language, and specialization.")
                 .instruction("""
                     You are the Tour Guide Search specialist for a Sri Lanka travel platform.
@@ -107,10 +107,10 @@ public class AgentFactory {
     }
 
     @Bean
-    public LlmAgent vehicleSearchAgent(@Qualifier("geminiModelName") String modelName) {
+    public LlmAgent vehicleSearchAgent(BaseLlm agentModel) {
         return LlmAgent.builder()
                 .name(VEHICLE_SEARCH_AGENT)
-                .model(modelName)
+                .model(agentModel)
                 .description("Specialist for finding and recommending rental vehicles and transportation in Sri Lanka. Handles vehicle searches, comparisons, and transport recommendations with real route data.")
                 .instruction("""
                     You are the Vehicle Search specialist for a Sri Lanka travel platform.
@@ -153,10 +153,10 @@ public class AgentFactory {
     }
 
     @Bean
-    public LlmAgent itineraryGeneratorAgent(@Qualifier("geminiModelName") String modelName) {
+    public LlmAgent itineraryGeneratorAgent(BaseLlm agentModel) {
         return LlmAgent.builder()
                 .name(ITINERARY_GENERATOR_AGENT)
-                .model(modelName)
+                .model(agentModel)
                 .description("Specialist for generating day-by-day travel itineraries for Sri Lanka trips. Uses real Google Maps data for accurate travel times, reviews and package data to create detailed plans with cost estimates.")
                 .instruction("""
                     You are the Itinerary Generator specialist for a Sri Lanka travel platform.
@@ -212,10 +212,10 @@ public class AgentFactory {
     }
 
     @Bean
-    public LlmAgent budgetAnalyzerAgent(@Qualifier("geminiModelName") String modelName) {
+    public LlmAgent budgetAnalyzerAgent(BaseLlm agentModel) {
         return LlmAgent.builder()
                 .name(BUDGET_ANALYZER_AGENT)
-                .model(modelName)
+                .model(agentModel)
                 .description("Specialist for analyzing travel budgets, providing cost breakdowns, and suggesting money-saving tips for Sri Lanka trips. Uses pure LLM reasoning without external tools.")
                 .instruction("""
                     You are the Budget Analyzer specialist for a Sri Lanka travel platform.
@@ -266,7 +266,7 @@ public class AgentFactory {
 
     @Bean
     public BaseAgent tripPlannerAgent(
-            @Qualifier("geminiModelName") String modelName,
+            BaseLlm agentModel,
             LlmAgent hotelSearchAgent,
             LlmAgent tourGuideSearchAgent,
             LlmAgent vehicleSearchAgent,
@@ -275,7 +275,7 @@ public class AgentFactory {
 
         LlmAgent rootAgent = LlmAgent.builder()
                 .name(TRIP_PLANNER_AGENT)
-                .model(modelName)
+                .model(agentModel)
                 .description("Root coordinator agent for the Sri Lanka Travel Plan Platform. Routes user queries to specialist agents and synthesizes responses.")
                 .instruction("""
                     You are the TripPlannerAgent, the main AI travel assistant for a Sri Lanka travel platform.

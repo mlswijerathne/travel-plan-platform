@@ -13,6 +13,8 @@ import {
   Send,
   ChevronRight,
   Globe,
+  MapPin,
+  Car,
 } from 'lucide-react'
 
 const FEATURES = [
@@ -79,6 +81,33 @@ const STATS = [
   { value: '1K+', label: 'Trips Planned', icon: Globe },
 ]
 
+const PROVIDER_TYPES = [
+  {
+    icon: Building2,
+    title: 'Hotel Owners',
+    description: 'List your property on TravelPlan and reach thousands of travelers visiting Sri Lanka. Manage bookings, rooms, and reviews all in one place.',
+    cta: 'List Your Property',
+    href: '/register?role=HOTEL_OWNER',
+    color: 'bg-blue-50 text-blue-600',
+  },
+  {
+    icon: MapPin,
+    title: 'Tour Guides',
+    description: 'Share your local expertise with travelers from around the world. Set your own rates, manage your schedule, and grow your reputation.',
+    cta: 'Become a Guide',
+    href: '/register?role=TOUR_GUIDE',
+    color: 'bg-emerald-50 text-emerald-600',
+  },
+  {
+    icon: Car,
+    title: 'Vehicle Owners',
+    description: 'Rent your vehicles to tourists and earn. From tuk-tuks to luxury cars, reach travelers looking for reliable transport.',
+    cta: 'Register Your Vehicle',
+    href: '/register?role=VEHICLE_OWNER',
+    color: 'bg-orange-50 text-orange-500',
+  },
+]
+
 export default function HomePage() {
   return (
     <main className="min-h-screen">
@@ -103,6 +132,9 @@ export default function HomePage() {
             </a>
             <a href="#destinations" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Destinations
+            </a>
+            <a href="#providers" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              For Providers
             </a>
           </div>
 
@@ -277,6 +309,42 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* For Providers */}
+      <section id="providers" className="py-24 bg-gradient-to-b from-white to-teal-50/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-3">For Providers</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
+              Grow your business with TravelPlan
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg">
+              Join our network of verified providers and connect with travelers from around the world.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {PROVIDER_TYPES.map(({ icon: Icon, title, description, cta, href, color }) => (
+              <div
+                key={title}
+                className="group relative p-8 rounded-2xl border border-border/50 bg-white hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${color} mb-5`}>
+                  <Icon className="h-7 w-7" />
+                </div>
+                <h3 className="font-display text-xl font-semibold text-foreground mb-3">{title}</h3>
+                <p className="text-muted-foreground leading-relaxed mb-6">{description}</p>
+                <Button asChild variant="outline" className="rounded-full">
+                  <Link href={href}>
+                    {cta}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-teal-600 to-emerald-600" />
@@ -320,10 +388,12 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
               <a href="#features" className="hover:text-foreground transition-colors">Features</a>
               <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
               <a href="#destinations" className="hover:text-foreground transition-colors">Destinations</a>
+              <Link href="/register?role=HOTEL_OWNER" className="hover:text-foreground transition-colors">List Property</Link>
+              <Link href="/register?role=TOUR_GUIDE" className="hover:text-foreground transition-colors">Become a Guide</Link>
               <Link href="/login" className="hover:text-foreground transition-colors">Sign In</Link>
             </div>
 

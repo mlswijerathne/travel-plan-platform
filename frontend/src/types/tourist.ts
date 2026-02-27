@@ -64,10 +64,4 @@ export interface WalletTransaction {
   createdAt: string
 }
 
-export interface ApiResponse<T> {
-  data: T
-  meta: {
-    timestamp: string
-    requestId: string | null
-  }
-}
+export type { ApiResponse } from './api'

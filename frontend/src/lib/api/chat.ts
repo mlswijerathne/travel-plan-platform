@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { ChatStreamEvent } from '@/types/chat'
 import type { TripPlanFormData, RecommendationRequest, RecommendationResponse } from '@/types/trip-plan'
 
-const AI_API_URL = process.env.NEXT_PUBLIC_AI_API_URL || 'http://localhost:8093'
+const AI_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060'
 
 async function getToken(): Promise<string | null> {
   const supabase = createClient()
@@ -62,19 +62,19 @@ async function postSSE(
   onDone: () => void,
 ): Promise<void> {
   const token = await getToken()
-  if (!token) {
-    onError('Not authenticated')
-    return
-  }
 
   try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Accept': 'text/event-stream',
+    }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'text/event-stream',
-      },
+      headers,
       body: JSON.stringify(body),
     })
 

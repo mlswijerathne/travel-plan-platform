@@ -31,7 +31,19 @@ export default function LoginPage() {
       }
 
       toast.success('Welcome back!')
-      router.push('/profile')
+
+      // Role-based redirect
+      const { data: { session } } = await supabase.auth.getSession()
+      let redirectTo = '/profile'
+      if (session?.access_token) {
+        const payload = JSON.parse(atob(session.access_token.split('.')[1]))
+        const role = payload.user_metadata?.role || payload.app_metadata?.role || 'TOURIST'
+        const providerRoles = ['HOTEL_OWNER', 'TOUR_GUIDE', 'VEHICLE_OWNER']
+        if (providerRoles.includes(role)) redirectTo = '/provider/dashboard'
+        else if (role === 'ADMIN') redirectTo = '/dashboard'
+      }
+
+      router.push(redirectTo)
       router.refresh()
     } catch {
       toast.error('An unexpected error occurred')

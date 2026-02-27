@@ -35,7 +35,7 @@ public class DevSecurityConfig {
         http
                 .securityMatcher("/api/chat/**")
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configure(http))
+                .cors(cors -> cors.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())

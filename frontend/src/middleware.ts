@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Protected routes
-  const protectedRoutes = ['/chat', '/trips', '/bookings', '/reviews', '/profile', '/dashboard', '/listings', '/settings']
+  const protectedRoutes = ['/chat', '/trips', '/bookings', '/reviews', '/profile', '/dashboard', '/listings', '/settings', '/hotels', '/guides', '/provider']
   const isProtectedRoute = protectedRoutes.some(route =>
     request.nextUrl.pathname.startsWith(route)
   )
@@ -52,7 +52,12 @@ export async function middleware(request: NextRequest) {
   )
 
   if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL('/profile', request.url))
+    const role = user.user_metadata?.role || user.app_metadata?.role || 'TOURIST'
+    const providerRoles = ['HOTEL_OWNER', 'TOUR_GUIDE', 'VEHICLE_OWNER']
+    let redirectTo = '/profile'
+    if (providerRoles.includes(role)) redirectTo = '/provider/dashboard'
+    else if (role === 'ADMIN') redirectTo = '/dashboard'
+    return NextResponse.redirect(new URL(redirectTo, request.url))
   }
 
   return response

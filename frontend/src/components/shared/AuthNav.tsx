@@ -26,22 +26,62 @@ import {
   Wallet,
   Menu,
   LogOut,
-  Settings,
+  Hotel,
+  MapPin,
+  Star,
+  LayoutDashboard,
 } from 'lucide-react'
 import { useState } from 'react'
+import { useUserRole } from '@/hooks/use-user-role'
 
-const NAV_ITEMS = [
+const TOURIST_NAV = [
   { href: '/chat', label: 'Plan Trip', icon: MessageSquare },
-  { href: '/profile', label: 'Profile', icon: User },
+  { href: '/hotels', label: 'Hotels', icon: Hotel },
+  { href: '/guides', label: 'Guides', icon: MapPin },
   { href: '/bookings', label: 'Bookings', icon: Calendar },
-  { href: '/wallet', label: 'Wallet', icon: Wallet },
+  { href: '/reviews', label: 'Reviews', icon: Star },
+  { href: '/profile', label: 'Profile', icon: User },
+]
+
+const PROVIDER_NAV = [
+  { href: '/provider/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/provider/bookings', label: 'Bookings', icon: Calendar },
+  { href: '/provider/reviews', label: 'Reviews', icon: Star },
+  { href: '/profile', label: 'Profile', icon: User },
+]
+
+const HOTEL_OWNER_NAV = [
+  { href: '/provider/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/provider/hotels', label: 'My Hotels', icon: Hotel },
+  { href: '/provider/bookings', label: 'Bookings', icon: Calendar },
+  { href: '/provider/reviews', label: 'Reviews', icon: Star },
+  { href: '/profile', label: 'Profile', icon: User },
+]
+
+const GUIDE_NAV = [
+  { href: '/provider/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/provider/profile', label: 'Guide Profile', icon: MapPin },
+  { href: '/provider/bookings', label: 'Bookings', icon: Calendar },
+  { href: '/provider/reviews', label: 'Reviews', icon: Star },
+  { href: '/profile', label: 'Profile', icon: User },
 ]
 
 export function AuthNav({ userEmail }: { userEmail: string }) {
   const router = useRouter()
   const pathname = usePathname()
+  const { role } = useUserRole()
   const initials = userEmail.slice(0, 2).toUpperCase()
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  let navItems = TOURIST_NAV
+  if (role === 'HOTEL_OWNER') navItems = HOTEL_OWNER_NAV
+  else if (role === 'TOUR_GUIDE') navItems = GUIDE_NAV
+  else if (role === 'VEHICLE_OWNER') navItems = PROVIDER_NAV
+
+  const roleLabel = role === 'HOTEL_OWNER' ? 'Hotel Owner'
+    : role === 'TOUR_GUIDE' ? 'Tour Guide'
+    : role === 'VEHICLE_OWNER' ? 'Vehicle Owner'
+    : 'Tourist'
 
   async function handleSignOut() {
     const supabase = createClient()
@@ -53,7 +93,6 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-white/80 backdrop-blur-xl">
       <nav className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
-        {/* Left: Logo + Nav */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
@@ -64,15 +103,14 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
             </span>
           </Link>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
+            {navItems.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
                 className={cn(
                   'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200',
-                  pathname === href
+                  pathname === href || pathname.startsWith(href + '/')
                     ? 'bg-primary/10 text-primary'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                 )}
@@ -84,9 +122,7 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
           </div>
         </div>
 
-        {/* Right: Avatar + Mobile Menu */}
         <div className="flex items-center gap-2">
-          {/* Desktop avatar dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full hidden md:inline-flex">
@@ -100,6 +136,7 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
             <DropdownMenuContent className="w-56" align="end">
               <div className="px-3 py-2">
                 <p className="text-sm font-medium truncate">{userEmail}</p>
+                <p className="text-xs text-muted-foreground">{roleLabel}</p>
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
@@ -114,10 +151,6 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
                   Wallet
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                Settings
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive flex items-center gap-2">
                 <LogOut className="h-4 w-4" />
@@ -126,7 +159,6 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Mobile menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="sm" className="md:hidden h-9 w-9 p-0">
@@ -134,7 +166,6 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-72 pt-10">
-              {/* User info */}
               <div className="flex items-center gap-3 mb-6 px-1">
                 <Avatar className="h-10 w-10">
                   <AvatarFallback className="bg-primary/10 text-primary font-semibold">
@@ -143,20 +174,19 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{userEmail}</p>
-                  <p className="text-xs text-muted-foreground">Tourist</p>
+                  <p className="text-xs text-muted-foreground">{roleLabel}</p>
                 </div>
               </div>
 
-              {/* Nav links */}
               <div className="space-y-1">
-                {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
+                {navItems.map(({ href, label, icon: Icon }) => (
                   <Link
                     key={href}
                     href={href}
                     onClick={() => setMobileOpen(false)}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                      pathname === href
+                      pathname === href || pathname.startsWith(href + '/')
                         ? 'bg-primary/10 text-primary'
                         : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                     )}
@@ -167,7 +197,6 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
                 ))}
               </div>
 
-              {/* Sign out */}
               <div className="absolute bottom-6 left-6 right-6">
                 <Button
                   variant="outline"

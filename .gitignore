@@ -94,6 +94,9 @@ coverage/
 build/
 dist/
 
+# Supabase
+supabase/.temp/
+
 # Claude Code
 .claude/
 

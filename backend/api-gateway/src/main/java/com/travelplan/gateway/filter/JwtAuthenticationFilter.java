@@ -75,7 +75,37 @@ public class JwtAuthenticationFilter implements WebFilter {
         return path.startsWith("/actuator") ||
                 path.equals("/health") ||
                 path.startsWith("/eureka") ||
-                path.equals("/api/tourists/register");
+                path.equals("/api/tourists/register") ||
+                path.startsWith("/api/chat") ||
+                isPublicBrowsingPath(path);
+    }
+
+    private boolean isPublicBrowsingPath(String path) {
+        String method = "GET";
+        // Hotels public browsing
+        if (path.equals("/api/hotels") || path.equals("/api/hotels/search") ||
+                path.equals("/api/hotels/query") || path.matches("/api/hotels/\\d+") ||
+                path.matches("/api/hotels/\\d+/details") ||
+                path.matches("/api/hotels/\\d+/availability")) {
+            return true;
+        }
+        // Rooms public browsing
+        if (path.startsWith("/api/rooms")) {
+            return true;
+        }
+        // Guides public browsing
+        if (path.equals("/api/tour-guides") || path.equals("/api/tour-guides/search") ||
+                path.matches("/api/tour-guides/[^/]+") ||
+                path.matches("/api/tour-guides/[^/]+/availability")) {
+            return true;
+        }
+        // Reviews public browsing
+        if (path.startsWith("/api/reviews/entity/") ||
+                path.startsWith("/api/reviews/summary/") ||
+                path.matches("/api/reviews/\\d+")) {
+            return true;
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
