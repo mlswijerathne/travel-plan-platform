@@ -1,6 +1,5 @@
 package com.travelplan.hotel.mapper;
 
-import com.travelplan.hotel.dto.*;
 import com.travelplan.hotel.dto.request.CreateHotelRequest;
 import com.travelplan.hotel.dto.request.UpdateHotelRequest;
 import com.travelplan.hotel.dto.response.HotelResponse;

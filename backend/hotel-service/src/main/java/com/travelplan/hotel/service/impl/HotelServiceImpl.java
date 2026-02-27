@@ -3,7 +3,6 @@ package com.travelplan.hotel.service.impl;
 import com.travelplan.common.dto.PaginatedResponse;
 import com.travelplan.common.exception.ForbiddenException;
 import com.travelplan.common.exception.ResourceNotFoundException;
-import com.travelplan.hotel.dto.*;
 import com.travelplan.hotel.dto.request.CreateHotelRequest;
 import com.travelplan.hotel.dto.request.UpdateHotelRequest;
 import com.travelplan.hotel.dto.response.AvailabilityResponse;

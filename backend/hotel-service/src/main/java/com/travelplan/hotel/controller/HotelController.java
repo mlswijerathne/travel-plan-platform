@@ -2,7 +2,6 @@ package com.travelplan.hotel.controller;
 
 import com.travelplan.common.dto.ApiResponse;
 import com.travelplan.common.dto.PaginatedResponse;
-import com.travelplan.hotel.dto.*;
 import com.travelplan.hotel.dto.request.CreateHotelRequest;
 import com.travelplan.hotel.dto.request.UpdateHotelRequest;
 import com.travelplan.hotel.dto.response.AvailabilityResponse;
