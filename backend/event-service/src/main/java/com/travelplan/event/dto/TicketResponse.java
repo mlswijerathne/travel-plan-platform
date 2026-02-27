@@ -18,12 +18,16 @@ public class TicketResponse {
     private String ticketNumber;
     private Long eventId;
     private String eventTitle;
+    private Long ticketTierId;
+    private String ticketTierName;
     private String touristId;
     private Integer numberOfTickets;
     private BigDecimal unitPrice;
     private BigDecimal totalAmount;
     private RegistrationStatus status;
     private OffsetDateTime registeredAt;
+    private OffsetDateTime cancelledAt;
+    private String cancellationReason;
     private OffsetDateTime eventStartDateTime;
     private String eventLocation;
 }
