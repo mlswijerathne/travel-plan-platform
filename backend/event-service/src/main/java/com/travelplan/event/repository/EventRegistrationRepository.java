@@ -18,6 +18,11 @@ public interface EventRegistrationRepository extends JpaRepository<EventRegistra
     Page<EventRegistration> findByEventId(Long eventId, Pageable pageable);
 
     /**
+     * Finds all registrations for a specific event (unpaginated).
+     */
+    java.util.List<EventRegistration> findByEventId(Long eventId);
+
+    /**
      * Finds all registrations for a specific event and status.
      */
     Page<EventRegistration> findByEventIdAndStatus(Long eventId, RegistrationStatus status, Pageable pageable);
