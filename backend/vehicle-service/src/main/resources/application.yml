@@ -1,6 +1,10 @@
 server:
   port: 8085
+
 spring:
+  main:
+    # Essential to allow custom SecurityConfig to override common-lib beans
+    allow-bean-definition-overriding: true
   application:
     name: vehicle-service
   datasource:
@@ -15,7 +19,7 @@ spring:
       hibernate:
         default_schema: vehicle
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     schemas: vehicle
@@ -39,3 +43,6 @@ management:
     web:
       exposure:
         include: health,info,metrics
+
+file:
+  upload-dir: "E:/travel-plan-platform/travel-plan-uploads/"
