@@ -5,7 +5,9 @@ import com.travelplan.event.model.enums.EventStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -74,6 +76,15 @@ public class Event {
     @Column(length = 500)
     private String tags;
 
+    @Builder.Default
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "vibes", columnDefinition = "jsonb")
+    private List<String> vibes = new ArrayList<>();
+
+    @Builder.Default
+    @Column(name = "is_authentic_cultural")
+    private boolean authenticCultural = false;
+
     @Version
     private Integer version;
 
@@ -88,4 +99,8 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<EventRegistration> registrations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<TicketTier> ticketTiers = new ArrayList<>();
 }

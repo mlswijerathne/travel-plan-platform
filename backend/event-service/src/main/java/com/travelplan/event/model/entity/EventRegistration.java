@@ -25,6 +25,10 @@ public class EventRegistration {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_tier_id")
+    private TicketTier ticketTier;
+
     @Column(name = "tourist_id", nullable = false)
     private String touristId;
 
