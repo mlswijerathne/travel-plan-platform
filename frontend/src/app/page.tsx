@@ -108,7 +108,7 @@ const PROVIDER_TYPES = [
   },
 ]
 
-export default function HomePage() {
+export default function LandingPage() {
   return (
     <main className="min-h-screen">
       {/* Navigation */}
@@ -405,4 +405,13 @@ export default function HomePage() {
       </footer>
     </main>
   )
+}
+
+// Quick component for the Badge used in the hero section
+function Badge({ children, className }: { children: React.ReactNode, className?: string }) {
+  return (
+    <span className={`inline-block rounded-full text-xs font-semibold tracking-wide uppercase ${className}`}>
+      {children}
+    </span>
+  );
 }
