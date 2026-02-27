@@ -17,6 +17,7 @@ import java.time.OffsetDateTime;
 public class EventResponse {
     private Long id;
     private String organizerId;
+    private String organizerName;
     private String title;
     private String description;
     private EventCategory category;
@@ -32,6 +33,9 @@ public class EventResponse {
     private EventStatus status;
     private String imageUrl;
     private String tags;
+    private java.util.List<String> vibes;
+    private boolean authenticCultural;
+    private java.util.List<TicketTierResponse> ticketTiers;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 }
