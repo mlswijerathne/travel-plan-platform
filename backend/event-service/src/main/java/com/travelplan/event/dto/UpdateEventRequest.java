@@ -38,4 +38,6 @@ public class UpdateEventRequest {
     private EventStatus status;
     private String imageUrl;
     private String tags;
+    private java.util.List<String> vibes;
+    private Boolean authenticCultural;
 }
