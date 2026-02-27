@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "itinerary_activities", schema = "itinerary")
+@Table(name = "itinerary_activities")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

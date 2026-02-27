@@ -12,7 +12,7 @@ public class DatabaseHealthIndicator implements HealthIndicator {
         try {
             return Health.up()
                     .withDetail("database", "PostgreSQL")
-                    .withDetail("schema", "itinerary")
+                    .withDetail("database", "itinerary_db")
                     .build();
         } catch (Exception e) {
             return Health.down()

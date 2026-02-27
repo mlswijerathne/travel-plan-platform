@@ -73,8 +73,8 @@ services:
   # Discovery Server (Eureka) - starts first
   discovery-server:
     build:
-      context: ./discovery-server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: discovery-server/Dockerfile
     ports:
       - "8761:8761"
     environment:
@@ -91,8 +91,8 @@ services:
   # API Gateway
   api-gateway:
     build:
-      context: ./api-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: api-gateway/Dockerfile
     ports:
       - "8060:8060"
     environment:
@@ -109,16 +109,14 @@ services:
   # Tourist Service
   tourist-service:
     build:
-      context: ./tourist-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: tourist-service/Dockerfile
     ports:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -128,16 +126,14 @@ services:
   # Hotel Service
   hotel-service:
     build:
-      context: ./hotel-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: hotel-service/Dockerfile
     ports:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       discovery-server:
@@ -157,9 +153,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       discovery-server:
@@ -172,16 +166,14 @@ services:
   # Vehicle Service
   vehicle-service:
     build:
-      context: ./vehicle-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: vehicle-service/Dockerfile
     ports:
       - "8085:8085"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -191,16 +183,14 @@ services:
   # Booking Service
   booking-service:
     build:
-      context: ./booking-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: booking-service/Dockerfile
     ports:
       - "8086:8086"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       discovery-server:
@@ -219,16 +209,14 @@ services:
   # Itinerary Service
   itinerary-service:
     build:
-      context: ./itinerary-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: itinerary-service/Dockerfile
     ports:
       - "8087:8087"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       discovery-server:
@@ -241,16 +229,14 @@ services:
   # Review Service
   review-service:
     build:
-      context: ./review-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: review-service/Dockerfile
     ports:
       - "8088:8088"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       discovery-server:
@@ -263,16 +249,14 @@ services:
   # Trip Plan Service
   trip-plan-service:
     build:
-      context: ./trip-plan-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: trip-plan-service/Dockerfile
     ports:
       - "8089:8089"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -282,16 +266,14 @@ services:
   # Event Service
   event-service:
     build:
-      context: ./event-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: event-service/Dockerfile
     ports:
       - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -301,16 +283,14 @@ services:
   # E-Commerce Service
   ecommerce-service:
     build:
-      context: ./ecommerce-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ecommerce-service/Dockerfile
     ports:
       - "8091:8091"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -320,16 +300,14 @@ services:
   # AI Agent Service
   ai-agent-service:
     build:
-      context: ./ai-agent-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ai-agent-service/Dockerfile
     ports:
       - "8093:8093"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
-      - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on:
       discovery-server:
         condition: service_healthy

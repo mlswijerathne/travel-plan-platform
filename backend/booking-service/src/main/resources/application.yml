@@ -4,10 +4,13 @@ spring:
   application:
     name: booking-service
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://ep-misty-king-aiv2kum3.c-4.us-east-1.aws.neon.tech/booking_db?sslmode=require}
+    url: ${DATABASE_URL:jdbc:postgresql://ep-solitary-shadow-akftm1z0.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require}
     username: ${DATABASE_USERNAME:neondb_owner}
-    password: ${DATABASE_PASSWORD:npg_tdOaupSzoX32}
+    password: ${DATABASE_PASSWORD:npg_8cpTuSM1vwlm}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
   jpa:
     hibernate:
       ddl-auto: validate
