@@ -1,0 +1,183 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4F46E5', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3730A3', 'lineColor': '#6366F1', 'secondaryColor': '#F59E0B', 'tertiaryColor': '#10B981', 'background': '#F8FAFC', 'mainBkg': '#EEF2FF', 'nodeBorder': '#4F46E5', 'clusterBkg': '#F1F5F9', 'clusterBorder': '#CBD5E1', 'titleColor': '#1E293B', 'edgeLabelBackground': '#F8FAFC'}}}%%
+
+graph TB
+    subgraph CLIENTS["<b>Client Layer</b>"]
+        direction LR
+        BROWSER["<b>Browser</b><br/>Next.js 16 + React 19<br/>TypeScript + Tailwind CSS<br/>TanStack Query<br/>Port: 3000"]
+        MOBILE["<b>Mobile</b><br/>(Future)"]
+    end
+
+    subgraph EXTERNAL["<b>External Services</b>"]
+        direction LR
+        SUPABASE_AUTH["<b>Supabase Auth</b><br/>JWT Tokens<br/>OAuth / Email+Password<br/>Role: TOURIST, HOTEL_OWNER,<br/>TOUR_GUIDE, VEHICLE_OWNER, ADMIN"]
+        GEMINI["<b>Google Gemini API</b><br/>LLM for Travel Planning<br/>LangChain4j"]
+        GMAPS["<b>Google Maps API</b><br/>Directions, Places,<br/>Geocoding, Distance Matrix"]
+    end
+
+    subgraph GATEWAY_LAYER["<b>API Gateway Layer</b>"]
+        GATEWAY["<b>API Gateway</b><br/>Spring Cloud Gateway (Reactive)<br/>JWT Validation + CORS<br/>Load-balanced routing (lb://)<br/>Port: 8060"]
+    end
+
+    subgraph DISCOVERY["<b>Service Discovery</b>"]
+        EUREKA["<b>Eureka Server</b><br/>Netflix Eureka<br/>Service Registry<br/>Port: 8761"]
+    end
+
+    subgraph MESSAGING["<b>Message Broker</b>"]
+        direction LR
+        KAFKA["<b>Apache Kafka</b><br/>KRaft Mode (No Zookeeper)<br/>Confluent 7.7.0<br/>Port: 9092 / 29092"]
+        KAFKA_UI["<b>Kafka UI</b><br/>Dev Dashboard<br/>Port: 8080"]
+    end
+
+    subgraph CORE_SERVICES["<b>Core Domain Services</b>"]
+        direction TB
+
+        subgraph TOURIST_SVC["Tourist Service :8082"]
+            TS["<b>Tourist Service</b><br/>Profile, Preferences, Wallet<br/>DB: Neon (tourist_db)"]
+        end
+
+        subgraph HOTEL_SVC["Hotel Service :8083"]
+            HS["<b>Hotel Service</b><br/>Hotels, Rooms, Availability<br/>Search, Ratings<br/>DB: Neon (hotel_db)"]
+        end
+
+        subgraph GUIDE_SVC["Tour Guide Service :8084"]
+            GS["<b>Tour Guide Service</b><br/>Guide Profiles, Skills,<br/>Schedules, Availability<br/>DB: Neon (guide_db)"]
+        end
+
+        subgraph VEHICLE_SVC["Vehicle Service :8085"]
+            VS["<b>Vehicle Service</b><br/>Vehicle Management<br/>& Availability<br/>DB: Supabase (vehicle schema)"]
+        end
+    end
+
+    subgraph ORCHESTRATION_SERVICES["<b>Orchestration & Booking Services</b>"]
+        direction TB
+
+        subgraph BOOKING_SVC["Booking Service :8086"]
+            BS["<b>Booking Service</b><br/>Multi-provider Booking<br/>Saga Orchestrator<br/>Refund Policy Engine<br/>DB: Neon (booking_db)"]
+        end
+
+        subgraph ITINERARY_SVC["Itinerary Service :8087"]
+            IS["<b>Itinerary Service</b><br/>Trip Itineraries, Days,<br/>Activities, Expenses<br/>PDF Export, Map View<br/>DB: Supabase (itinerary schema)"]
+        end
+
+        subgraph REVIEW_SVC["Review Service :8088"]
+            RS["<b>Review Service</b><br/>Reviews, Ratings,<br/>Provider Responses<br/>Pending Review Queue<br/>DB: Neon (review_db)"]
+        end
+    end
+
+    subgraph SECONDARY_SERVICES["<b>Secondary Services</b>"]
+        direction TB
+
+        subgraph TRIP_SVC["Trip Plan Service :8089"]
+            TPS["<b>Trip Plan Service</b><br/>Trip Templates & Packages<br/>DB: Supabase (tripplan schema)"]
+        end
+
+        subgraph EVENT_SVC["Event Service :8090"]
+            ES["<b>Event Service</b><br/>Travel Events<br/>DB: Supabase (event schema)"]
+        end
+
+        subgraph ECOM_SVC["E-Commerce Service :8091"]
+            ECS["<b>E-Commerce Service</b><br/>Products & Orders<br/>DB: Supabase (ecommerce schema)"]
+        end
+    end
+
+    subgraph AI_LAYER["<b>AI Layer</b>"]
+        subgraph AI_SVC["AI Agent Service :8093"]
+            AIS["<b>AI Agent Service</b><br/>Chat (SSE Streaming)<br/>Recommendations<br/>Trip Plan Generation<br/>Google ADK 0.5.0 + LangChain4j"]
+        end
+    end
+
+    subgraph DATABASES["<b>Database Layer</b>"]
+        direction LR
+        NEON["<b>Neon PostgreSQL</b><br/>tourist_db, hotel_db,<br/>guide_db, booking_db,<br/>review_db"]
+        SUPABASE_DB["<b>Supabase PostgreSQL</b><br/>Schemas: vehicle, itinerary,<br/>tripplan, event, ecommerce"]
+    end
+
+    %% Client connections
+    BROWSER -->|"HTTPS / JWT"| GATEWAY
+    BROWSER -->|"Auth (OAuth, Email)"| SUPABASE_AUTH
+
+    %% Gateway to services
+    GATEWAY -->|"/api/tourists/**"| TS
+    GATEWAY -->|"/api/hotels/** /api/rooms/**"| HS
+    GATEWAY -->|"/api/tour-guides/**"| GS
+    GATEWAY -->|"/api/vehicles/**"| VS
+    GATEWAY -->|"/api/bookings/**"| BS
+    GATEWAY -->|"/api/itineraries/**"| IS
+    GATEWAY -->|"/api/reviews/**"| RS
+    GATEWAY -->|"/api/trip-plans/**"| TPS
+    GATEWAY -->|"/api/events/**"| ES
+    GATEWAY -->|"/api/products/** /api/orders/**"| ECS
+    GATEWAY -->|"/api/chat/**"| AIS
+
+    %% Eureka registration
+    EUREKA -.->|"Service Registry"| GATEWAY
+    EUREKA -.->|"Register/Discover"| TS
+    EUREKA -.->|"Register/Discover"| HS
+    EUREKA -.->|"Register/Discover"| GS
+    EUREKA -.->|"Register/Discover"| VS
+    EUREKA -.->|"Register/Discover"| BS
+    EUREKA -.->|"Register/Discover"| IS
+    EUREKA -.->|"Register/Discover"| RS
+    EUREKA -.->|"Register/Discover"| TPS
+    EUREKA -.->|"Register/Discover"| ES
+    EUREKA -.->|"Register/Discover"| ECS
+
+    %% Feign client calls (synchronous)
+    BS -->|"Feign: availability, confirm"| HS
+    BS -->|"Feign: availability, confirm"| GS
+    BS -->|"Feign: availability, confirm"| VS
+    AIS -->|"Feign: search"| HS
+    AIS -->|"Feign: search"| GS
+    AIS -->|"Feign: search"| VS
+    AIS -->|"Feign: ratings"| RS
+    AIS -->|"Feign: packages"| TPS
+
+    %% Kafka event flows
+    BS -->|"booking-events<br/>booking-notifications"| KAFKA
+    KAFKA -->|"booking-events"| IS
+    IS -->|"trip-completion-events"| KAFKA
+    KAFKA -->|"trip-completion-events"| RS
+    RS -->|"rating-update-events"| KAFKA
+    KAFKA -->|"rating-update-events"| GS
+    KAFKA -->|"rating-update-events"| HS
+
+    %% External API calls
+    AIS -->|"LLM API"| GEMINI
+    AIS -->|"Location API"| GMAPS
+
+    %% Database connections
+    TS --> NEON
+    HS --> NEON
+    GS --> NEON
+    BS --> NEON
+    RS --> NEON
+    VS --> SUPABASE_DB
+    IS --> SUPABASE_DB
+    TPS --> SUPABASE_DB
+    ES --> SUPABASE_DB
+    ECS --> SUPABASE_DB
+
+    KAFKA_UI -.-> KAFKA
+
+    %% Styling
+    classDef client fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F
+    classDef gateway fill:#EDE9FE,stroke:#7C3AED,color:#4C1D95
+    classDef eureka fill:#FEF3C7,stroke:#D97706,color:#92400E
+    classDef kafka fill:#D1FAE5,stroke:#059669,color:#064E3B
+    classDef core fill:#EEF2FF,stroke:#4F46E5,color:#312E81
+    classDef orch fill:#FFF7ED,stroke:#EA580C,color:#9A3412
+    classDef secondary fill:#F1F5F9,stroke:#64748B,color:#334155
+    classDef ai fill:#FCE7F3,stroke:#DB2777,color:#831843
+    classDef db fill:#F0FDF4,stroke:#16A34A,color:#14532D
+    classDef ext fill:#FEF2F2,stroke:#DC2626,color:#7F1D1D
+
+    class BROWSER,MOBILE client
+    class GATEWAY gateway
+    class EUREKA eureka
+    class KAFKA,KAFKA_UI kafka
+    class TS,HS,GS,VS core
+    class BS,IS,RS orch
+    class TPS,ES,ECS secondary
+    class AIS ai
+    class NEON,SUPABASE_DB db
+    class SUPABASE_AUTH,GEMINI,GMAPS ext

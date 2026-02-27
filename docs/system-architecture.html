@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Plan Platform - System Architecture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; color: #1e293b; }
+        .header { background: linear-gradient(135deg, #4F46E5, #7C3AED); color: white; padding: 24px 40px; }
+        .header h1 { font-size: 28px; font-weight: 700; }
+        .header p { opacity: 0.85; margin-top: 4px; font-size: 14px; }
+        .controls { padding: 12px 40px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; gap: 12px; align-items: center; }
+        .controls button { padding: 8px 16px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+        .controls button:hover { background: #4F46E5; color: #fff; border-color: #4F46E5; }
+        .diagram-container { padding: 20px 40px; overflow: auto; }
+        .mermaid { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .legend { padding: 20px 40px; }
+        .legend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .legend-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+        .legend-label { font-size: 13px; font-weight: 500; }
+        .legend-desc { font-size: 11px; color: #64748b; }
+        h3 { font-size: 16px; margin-bottom: 12px; color: #334155; }
+        .stats { padding: 0 40px 20px; display: flex; gap: 16px; flex-wrap: wrap; }
+        .stat { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 20px; min-width: 140px; }
+        .stat-value { font-size: 24px; font-weight: 700; color: #4F46E5; }
+        .stat-label { font-size: 12px; color: #64748b; margin-top: 2px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Travel Plan Platform - System Architecture</h1>
+        <p>AI-Powered Travel Planning Platform for Sri Lanka Tourism | Spring Boot 3.5.0 + Next.js 16 + Kafka + Eureka</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-value">14</div><div class="stat-label">Microservices</div></div>
+        <div class="stat"><div class="stat-value">4</div><div class="stat-label">Kafka Topics</div></div>
+        <div class="stat"><div class="stat-value">10</div><div class="stat-label">Databases</div></div>
+        <div class="stat"><div class="stat-value">3</div><div class="stat-label">External APIs</div></div>
+        <div class="stat"><div class="stat-value">5</div><div class="stat-label">User Roles</div></div>
+    </div>
+
+    <div class="controls">
+        <button onclick="downloadSVG()">Download SVG</button>
+        <button onclick="window.print()">Print / Save PDF</button>
+        <span style="color:#94a3b8; font-size:12px;">Right-click diagram to save as image</span>
+    </div>
+
+    <div class="diagram-container">
+        <pre class="mermaid">
+graph TB
+    subgraph CLIENTS["CLIENT LAYER"]
+        direction LR
+        BROWSER["fa:fa-globe <b>Next.js 16 Frontend</b><br/>React 19 + TypeScript<br/>TanStack Query + Tailwind<br/>Supabase Auth SSR<br/>Port 3000"]
+    end
+
+    subgraph EXTERNAL["EXTERNAL SERVICES"]
+        direction LR
+        SUPABASE_AUTH["fa:fa-lock <b>Supabase Auth</b><br/>JWT + OAuth<br/>5 Roles"]
+        GEMINI["fa:fa-brain <b>Google Gemini</b><br/>LLM API<br/>LangChain4j"]
+        GMAPS["fa:fa-map <b>Google Maps</b><br/>Places, Directions<br/>Geocoding"]
+    end
+
+    subgraph INFRA["INFRASTRUCTURE"]
+        direction LR
+        EUREKA["fa:fa-broadcast-tower <b>Eureka Server</b><br/>Service Discovery<br/>Port 8761"]
+        GATEWAY["fa:fa-shield <b>API Gateway</b><br/>Spring Cloud Gateway<br/>JWT + CORS + lb://<br/>Port 8060"]
+        KAFKA["fa:fa-stream <b>Apache Kafka</b><br/>KRaft Mode 7.7.0<br/>4 Topics + 4 DLT<br/>Port 9092"]
+    end
+
+    subgraph CORE["CORE DOMAIN SERVICES"]
+        TS["<b>Tourist Service</b><br/>Profile, Preferences, Wallet<br/>:8082 | Neon DB"]
+        HS["<b>Hotel Service</b><br/>Hotels, Rooms, Availability<br/>Search, Ratings<br/>:8083 | Neon DB"]
+        GS["<b>Tour Guide Service</b><br/>Guides, Skills, Schedules<br/>:8084 | Neon DB"]
+        VS["<b>Vehicle Service</b><br/>Vehicles, Availability<br/>:8085 | Supabase DB"]
+    end
+
+    subgraph ORCH["ORCHESTRATION SERVICES"]
+        BS["<b>Booking Service</b><br/>Multi-Provider Booking<br/>Saga Orchestrator<br/>Refund Engine<br/>:8086 | Neon DB"]
+        IS["<b>Itinerary Service</b><br/>Trips, Days, Activities<br/>PDF Export, Scheduling<br/>:8087 | Supabase DB"]
+        RS["<b>Review Service</b><br/>Reviews, Ratings<br/>Pending Review Queue<br/>:8088 | Neon DB"]
+    end
+
+    subgraph SECONDARY["SECONDARY SERVICES"]
+        TPS["<b>Trip Plan Service</b><br/>Packages & Templates<br/>:8089 | Supabase DB"]
+        ES["<b>Event Service</b><br/>Travel Events<br/>:8090 | Supabase DB"]
+        ECS["<b>E-Commerce Service</b><br/>Products & Orders<br/>:8091 | Supabase DB"]
+    end
+
+    subgraph AI["AI LAYER"]
+        AIS["<b>AI Agent Service</b><br/>Chat SSE, Recommendations<br/>Trip Plan Generation<br/>Google ADK + LangChain4j<br/>:8093"]
+    end
+
+    subgraph DATA["DATABASE LAYER"]
+        direction LR
+        NEON[("fa:fa-database <b>Neon PostgreSQL</b><br/>tourist_db, hotel_db<br/>guide_db, booking_db<br/>review_db")]
+        SUPA_DB[("fa:fa-database <b>Supabase PostgreSQL</b><br/>vehicle, itinerary<br/>tripplan, event<br/>ecommerce schemas")]
+    end
+
+    %% Client Flow
+    BROWSER -->|"HTTPS + JWT"| GATEWAY
+    BROWSER -.->|"OAuth / Email Auth"| SUPABASE_AUTH
+
+    %% Gateway Routes
+    GATEWAY -->|"/api/tourists/**"| TS
+    GATEWAY -->|"/api/hotels/** rooms/**"| HS
+    GATEWAY -->|"/api/tour-guides/**"| GS
+    GATEWAY -->|"/api/vehicles/**"| VS
+    GATEWAY -->|"/api/bookings/**"| BS
+    GATEWAY -->|"/api/itineraries/**"| IS
+    GATEWAY -->|"/api/reviews/**"| RS
+    GATEWAY -->|"/api/trip-plans/**"| TPS
+    GATEWAY -->|"/api/events/**"| ES
+    GATEWAY -->|"/api/products/**"| ECS
+    GATEWAY -->|"/api/chat/**"| AIS
+
+    %% Eureka Discovery
+    EUREKA -.->|"Registry"| GATEWAY
+    EUREKA -.->|"Register"| TS & HS & GS & VS
+    EUREKA -.->|"Register"| BS & IS & RS
+    EUREKA -.->|"Register"| TPS & ES & ECS
+
+    %% Feign (Synchronous)
+    BS ===>|"Feign: Check & Confirm"| HS
+    BS ===>|"Feign: Check & Confirm"| GS
+    BS ===>|"Feign: Check & Confirm"| VS
+    AIS ==>|"Feign: Search"| HS & GS & VS & RS & TPS
+
+    %% Kafka Event Flows
+    BS -->|"booking-events"| KAFKA
+    BS -->|"booking-notifications"| KAFKA
+    KAFKA -->|"booking-events"| IS
+    IS -->|"trip-completion-events"| KAFKA
+    KAFKA -->|"trip-completion-events"| RS
+    RS -->|"rating-update-events"| KAFKA
+    KAFKA -->|"rating-update-events"| HS & GS
+
+    %% External APIs
+    AIS -.->|"LLM"| GEMINI
+    AIS -.->|"Maps"| GMAPS
+
+    %% Database connections
+    TS & HS & GS & BS & RS --> NEON
+    VS & IS & TPS & ES & ECS --> SUPA_DB
+
+    %% Styles
+    classDef client fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E40AF
+    classDef external fill:#FEF2F2,stroke:#DC2626,stroke-width:1px,color:#991B1B
+    classDef infra fill:#EDE9FE,stroke:#7C3AED,stroke-width:2px,color:#5B21B6
+    classDef core fill:#EEF2FF,stroke:#4F46E5,stroke-width:2px,color:#3730A3
+    classDef orch fill:#FFF7ED,stroke:#EA580C,stroke-width:2px,color:#C2410C
+    classDef secondary fill:#F1F5F9,stroke:#64748B,stroke-width:1px,color:#334155
+    classDef ai fill:#FCE7F3,stroke:#DB2777,stroke-width:2px,color:#9D174D
+    classDef db fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#166534
+
+    class BROWSER client
+    class SUPABASE_AUTH,GEMINI,GMAPS external
+    class EUREKA,GATEWAY,KAFKA infra
+    class TS,HS,GS,VS core
+    class BS,IS,RS orch
+    class TPS,ES,ECS secondary
+    class AIS ai
+    class NEON,SUPA_DB db
+        </pre>
+    </div>
+
+    <div class="legend">
+        <h3>Architecture Legend</h3>
+        <div class="legend-grid">
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#DBEAFE; border: 2px solid #2563EB;"></div>
+                <div><div class="legend-label">Client Layer</div><div class="legend-desc">Next.js 16 frontend (port 3000)</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#EDE9FE; border: 2px solid #7C3AED;"></div>
+                <div><div class="legend-label">Infrastructure</div><div class="legend-desc">Gateway, Eureka, Kafka</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#EEF2FF; border: 2px solid #4F46E5;"></div>
+                <div><div class="legend-label">Core Domain Services</div><div class="legend-desc">Tourist, Hotel, Guide, Vehicle</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#FFF7ED; border: 2px solid #EA580C;"></div>
+                <div><div class="legend-label">Orchestration Services</div><div class="legend-desc">Booking (Saga), Itinerary, Review</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#F1F5F9; border: 2px solid #64748B;"></div>
+                <div><div class="legend-label">Secondary Services</div><div class="legend-desc">Trip Plan, Events, E-Commerce</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#FCE7F3; border: 2px solid #DB2777;"></div>
+                <div><div class="legend-label">AI Layer</div><div class="legend-desc">AI Agent (Gemini + LangChain4j)</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#FEF2F2; border: 2px solid #DC2626;"></div>
+                <div><div class="legend-label">External Services</div><div class="legend-desc">Supabase Auth, Google APIs</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#DCFCE7; border: 2px solid #16A34A;"></div>
+                <div><div class="legend-label">Database Layer</div><div class="legend-desc">Neon + Supabase PostgreSQL</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="legend" style="padding-bottom: 40px;">
+        <h3>Kafka Event Flows</h3>
+        <div class="legend-grid">
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#4F46E5;"></div>
+                <div><div class="legend-label">booking-events</div><div class="legend-desc">Booking Service -> Itinerary Service (3 partitions)</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#7C3AED;"></div>
+                <div><div class="legend-label">booking-notifications</div><div class="legend-desc">Booking Service -> (Future Notification Service)</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#EA580C;"></div>
+                <div><div class="legend-label">trip-completion-events</div><div class="legend-desc">Itinerary Service -> Review Service (3 partitions)</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#16A34A;"></div>
+                <div><div class="legend-label">rating-update-events</div><div class="legend-desc">Review Service -> Hotel + Tour Guide (3 partitions)</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="legend" style="padding-bottom: 40px;">
+        <h3>Communication Patterns</h3>
+        <div class="legend-grid">
+            <div class="legend-item">
+                <div style="width:30px; height:3px; background:#333; flex-shrink:0;"></div>
+                <div><div class="legend-label">Solid Arrow</div><div class="legend-desc">Synchronous HTTP / Feign / Kafka produce</div></div>
+            </div>
+            <div class="legend-item">
+                <div style="width:30px; height:3px; border-top:3px dashed #333; flex-shrink:0;"></div>
+                <div><div class="legend-label">Dashed Arrow</div><div class="legend-desc">Service discovery / External API call</div></div>
+            </div>
+            <div class="legend-item">
+                <div style="width:30px; height:5px; background:#333; flex-shrink:0;"></div>
+                <div><div class="legend-label">Thick Arrow</div><div class="legend-desc">Feign client (synchronous inter-service)</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#EEF2FF',
+                primaryBorderColor: '#4F46E5',
+                primaryTextColor: '#1E293B',
+                lineColor: '#6366F1',
+                secondaryColor: '#FFF7ED',
+                tertiaryColor: '#F1F5F9',
+                background: '#FFFFFF',
+                mainBkg: '#EEF2FF',
+                nodeBorder: '#4F46E5',
+                clusterBkg: '#F8FAFC',
+                clusterBorder: '#CBD5E1',
+                titleColor: '#1E293B',
+                edgeLabelBackground: '#FFFFFF',
+                fontSize: '13px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 15,
+                nodeSpacing: 40,
+                rankSpacing: 60
+            },
+            securityLevel: 'loose'
+        });
+    </script>
+    <script>
+        function downloadSVG() {
+            const svg = document.querySelector('.mermaid svg');
+            if (!svg) { alert('Diagram not rendered yet'); return; }
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const blob = new Blob([svgData], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'travel-plan-architecture.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
