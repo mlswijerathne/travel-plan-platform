@@ -2,14 +2,13 @@ package com.travelplan.booking.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.travelplan.booking.config.KafkaConfig;
 import com.travelplan.booking.dto.BookingEvent;
 import com.travelplan.booking.dto.BookingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
 @Slf4j
 @Service
@@ -17,13 +16,7 @@ import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 public class EventPublisher {
 
     private final ObjectMapper objectMapper;
-    private final SqsClient sqsClient;
-
-    @Value("${aws.sqs.booking-queue-url:}")
-    private String bookingQueueUrl;
-
-    @Value("${aws.sqs.notification-queue-url:}")
-    private String notificationQueueUrl;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public static final String BOOKING_CREATED = "booking.reservation.created";
     public static final String BOOKING_CONFIRMED = "booking.reservation.confirmed";
@@ -31,41 +24,33 @@ public class EventPublisher {
     public static final String BOOKING_REFUND_PROCESSED = "booking.refund.processed";
 
     public void publishBookingCreated(BookingResponse booking) {
-        publish(BOOKING_CREATED, booking, bookingQueueUrl);
+        publish(BOOKING_CREATED, booking, KafkaConfig.TOPIC_BOOKING_EVENTS);
     }
 
     public void publishBookingConfirmed(BookingResponse booking) {
-        publish(BOOKING_CONFIRMED, booking, bookingQueueUrl);
-        publish(BOOKING_CONFIRMED, booking, notificationQueueUrl);
+        publish(BOOKING_CONFIRMED, booking, KafkaConfig.TOPIC_BOOKING_EVENTS);
+        publish(BOOKING_CONFIRMED, booking, KafkaConfig.TOPIC_BOOKING_NOTIFICATIONS);
     }
 
     public void publishBookingCancelled(BookingResponse booking) {
-        publish(BOOKING_CANCELLED, booking, bookingQueueUrl);
-        publish(BOOKING_CANCELLED, booking, notificationQueueUrl);
+        publish(BOOKING_CANCELLED, booking, KafkaConfig.TOPIC_BOOKING_EVENTS);
+        publish(BOOKING_CANCELLED, booking, KafkaConfig.TOPIC_BOOKING_NOTIFICATIONS);
     }
 
     public void publishRefundProcessed(BookingResponse booking) {
-        publish(BOOKING_REFUND_PROCESSED, booking, bookingQueueUrl);
+        publish(BOOKING_REFUND_PROCESSED, booking, KafkaConfig.TOPIC_BOOKING_EVENTS);
     }
 
-    private void publish(String eventType, BookingResponse booking, String queueUrl) {
-        if (sqsClient == null || queueUrl == null || queueUrl.isBlank()) {
-            log.info("SQS not configured - event logged locally: type={}, bookingId={}", eventType, booking.getId());
-            return;
-        }
-
+    private void publish(String eventType, BookingResponse booking, String topic) {
         try {
             BookingEvent event = BookingEvent.from(eventType, booking);
             String messageBody = objectMapper.writeValueAsString(event);
+            String key = String.valueOf(booking.getId());
 
-            sqsClient.sendMessage(SendMessageRequest.builder()
-                    .queueUrl(queueUrl)
-                    .messageBody(messageBody)
-                    .messageGroupId(String.valueOf(booking.getId()))
-                    .build());
+            kafkaTemplate.send(topic, key, messageBody);
 
-            log.info("Published event: type={}, bookingId={}, eventId={}",
-                    eventType, booking.getId(), event.getEventId());
+            log.info("Published event: type={}, bookingId={}, eventId={}, topic={}",
+                    eventType, booking.getId(), event.getEventId(), topic);
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize event: type={}, bookingId={}", eventType, booking.getId(), e);
         } catch (Exception e) {

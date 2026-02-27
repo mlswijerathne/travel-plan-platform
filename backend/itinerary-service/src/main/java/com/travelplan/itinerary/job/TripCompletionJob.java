@@ -1,7 +1,7 @@
 package com.travelplan.itinerary.job;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.travelplan.itinerary.config.SqsPublisher;
+import com.travelplan.itinerary.config.KafkaEventPublisher;
 import com.travelplan.itinerary.event.TripCompletedEvent;
 import com.travelplan.itinerary.model.ActivityType;
 import com.travelplan.itinerary.model.Itinerary;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TripCompletionJob {
     private final ItineraryRepository itineraryRepository;
-    private final SqsPublisher sqsPublisher;
+    private final KafkaEventPublisher kafkaEventPublisher;
     private final ObjectMapper objectMapper;
 
     @Scheduled(cron = "${scheduling.trip-completion.cron:0 0 0 * * *}")
@@ -65,7 +65,7 @@ public class TripCompletionJob {
                     bookingItems
             );
 
-            sqsPublisher.publishTripCompletedEvent(objectMapper.writeValueAsString(event));
+            kafkaEventPublisher.publishTripCompletedEvent(objectMapper.writeValueAsString(event));
             log.info("Trip {} marked as completed and event published", trip.getId());
 
         } catch (Exception e) {

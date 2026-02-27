@@ -1,47 +1,42 @@
 package com.travelplan.guide.messaging;
 
-import com.travelplan.guide.domain.Guide;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.travelplan.common.dto.RatingUpdateEvent;
 import com.travelplan.guide.repository.GuideRepository;
-import io.awspring.cloud.sqs.annotation.SqsListener;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "app.sqs.enabled", havingValue = "true", matchIfMissing = false)
 public class RatingUpdateListener {
 
     private final GuideRepository guideRepository;
+    private final ObjectMapper objectMapper;
 
-    @SqsListener("${app.sqs.rating-update-queue}")
-    public void handleRatingUpdate(RatingUpdateEvent event) {
-        log.info("Received rating update event for {} ID: {}", event.getEntityType(), event.getEntityId());
+    @KafkaListener(topics = "rating-update-events", groupId = "tour-guide-service-group")
+    public void handleRatingUpdate(String message) {
+        try {
+            RatingUpdateEvent event = objectMapper.readValue(message, RatingUpdateEvent.class);
+            log.info("Received rating update event for {} ID: {}",
+                    event.getPayload().getEntityType(), event.getPayload().getEntityId());
 
-        if (!"TOUR_GUIDE".equals(event.getEntityType())) {
-            return;
+            if (!"TOUR_GUIDE".equals(event.getPayload().getEntityType())) {
+                return;
+            }
+
+            guideRepository.findById(event.getPayload().getEntityId()).ifPresent(guide -> {
+                guide.setAverageRating(event.getPayload().getNewRating());
+                guide.setReviewCount(event.getPayload().getReviewCount());
+                guideRepository.save(guide);
+                log.info("Updated rating for guide {}: rating={}, count={}",
+                        guide.getId(), event.getPayload().getNewRating(), event.getPayload().getReviewCount());
+            });
+        } catch (Exception e) {
+            log.error("Error processing rating update event", e);
+            throw new RuntimeException("Failed to process rating update event", e);
         }
-
-        guideRepository.findById(event.getEntityId()).ifPresent(guide -> {
-            guide.setAverageRating(event.getAverageRating());
-            guide.setReviewCount(event.getReviewCount());
-            guideRepository.save(guide);
-            log.info("Updated rating for guide {}: rating={}, count={}",
-                    guide.getId(), event.getAverageRating(), event.getReviewCount());
-        });
-    }
-
-    @Data
-    public static class RatingUpdateEvent {
-        private Long entityId;
-        private String entityType;
-        private BigDecimal averageRating;
-        private Integer reviewCount;
     }
 }

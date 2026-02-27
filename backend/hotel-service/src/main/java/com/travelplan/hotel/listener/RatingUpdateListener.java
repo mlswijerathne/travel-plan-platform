@@ -5,6 +5,7 @@ import com.travelplan.common.dto.RatingUpdateEvent;
 import com.travelplan.hotel.service.HotelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -15,11 +16,12 @@ public class RatingUpdateListener {
     private final HotelService hotelService;
     private final ObjectMapper objectMapper;
 
+    @KafkaListener(topics = "rating-update-events", groupId = "hotel-service-group")
     public void handleRatingUpdate(String message) {
         try {
             log.info("Received rating update event: {}", message);
             RatingUpdateEvent event = objectMapper.readValue(message, RatingUpdateEvent.class);
-            
+
             if ("HOTEL".equalsIgnoreCase(event.getPayload().getEntityType())) {
                 Long hotelId = event.getPayload().getEntityId();
                 hotelService.updateHotelRating(
@@ -31,6 +33,7 @@ public class RatingUpdateListener {
             }
         } catch (Exception e) {
             log.error("Error processing rating update event", e);
+            throw new RuntimeException("Failed to process rating update event", e);
         }
     }
 }

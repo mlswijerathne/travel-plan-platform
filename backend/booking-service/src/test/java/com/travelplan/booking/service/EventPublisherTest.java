@@ -9,104 +9,89 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
-import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
+import org.springframework.kafka.core.KafkaTemplate;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EventPublisherTest {
 
     @Mock
-    private SqsClient sqsClient;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     private EventPublisher eventPublisher;
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        eventPublisher = new EventPublisher(objectMapper, sqsClient);
-
-        // Set queue URLs via reflection since @Value won't work in unit test
-        setField(eventPublisher, "bookingQueueUrl", "https://sqs.ap-south-1.amazonaws.com/123/booking-queue");
-        setField(eventPublisher, "notificationQueueUrl", "https://sqs.ap-south-1.amazonaws.com/123/notification-queue");
+        eventPublisher = new EventPublisher(objectMapper, kafkaTemplate);
     }
 
     @Test
-    void publishBookingCreated_sendsToBookingQueue() {
+    void publishBookingCreated_sendsToBookingEventsTopic() {
         BookingResponse booking = buildSampleBooking();
-        when(sqsClient.sendMessage(any(SendMessageRequest.class)))
-                .thenReturn(SendMessageResponse.builder().messageId("msg-1").build());
+        when(kafkaTemplate.send(anyString(), anyString(), anyString()))
+                .thenReturn(new CompletableFuture<>());
 
         eventPublisher.publishBookingCreated(booking);
 
-        verify(sqsClient, times(1)).sendMessage(any(SendMessageRequest.class));
+        verify(kafkaTemplate, times(1)).send(eq("booking-events"), anyString(), anyString());
     }
 
     @Test
-    void publishBookingConfirmed_sendsToBothQueues() {
+    void publishBookingConfirmed_sendsToBothTopics() {
         BookingResponse booking = buildSampleBooking();
-        when(sqsClient.sendMessage(any(SendMessageRequest.class)))
-                .thenReturn(SendMessageResponse.builder().messageId("msg-1").build());
+        when(kafkaTemplate.send(anyString(), anyString(), anyString()))
+                .thenReturn(new CompletableFuture<>());
 
         eventPublisher.publishBookingConfirmed(booking);
 
-        verify(sqsClient, times(2)).sendMessage(any(SendMessageRequest.class));
+        verify(kafkaTemplate, times(1)).send(eq("booking-events"), anyString(), anyString());
+        verify(kafkaTemplate, times(1)).send(eq("booking-notifications"), anyString(), anyString());
     }
 
     @Test
-    void publishBookingCancelled_sendsToBothQueues() {
+    void publishBookingCancelled_sendsToBothTopics() {
         BookingResponse booking = buildSampleBooking();
-        when(sqsClient.sendMessage(any(SendMessageRequest.class)))
-                .thenReturn(SendMessageResponse.builder().messageId("msg-1").build());
+        when(kafkaTemplate.send(anyString(), anyString(), anyString()))
+                .thenReturn(new CompletableFuture<>());
 
         eventPublisher.publishBookingCancelled(booking);
 
-        verify(sqsClient, times(2)).sendMessage(any(SendMessageRequest.class));
+        verify(kafkaTemplate, times(1)).send(eq("booking-events"), anyString(), anyString());
+        verify(kafkaTemplate, times(1)).send(eq("booking-notifications"), anyString(), anyString());
     }
 
     @Test
-    void publish_noSqsClient_logsWithoutError() throws Exception {
-        EventPublisher noSqsPublisher = new EventPublisher(objectMapper, null);
-        setField(noSqsPublisher, "bookingQueueUrl", "");
-        setField(noSqsPublisher, "notificationQueueUrl", "");
-
-        // Should not throw
-        noSqsPublisher.publishBookingCreated(buildSampleBooking());
-
-        verifyNoInteractions(sqsClient);
-    }
-
-    @Test
-    void publish_emptyQueueUrl_logsWithoutError() throws Exception {
-        setField(eventPublisher, "bookingQueueUrl", "");
-
-        eventPublisher.publishBookingCreated(buildSampleBooking());
-
-        verifyNoInteractions(sqsClient);
-    }
-
-    @Test
-    void publishRefundProcessed_sendsToBookingQueue() {
+    void publishRefundProcessed_sendsToBookingEventsTopic() {
         BookingResponse booking = buildSampleBooking();
         booking.setRefundAmount(new BigDecimal("150.00"));
         booking.setRefundPolicy("FULL_REFUND");
 
-        when(sqsClient.sendMessage(any(SendMessageRequest.class)))
-                .thenReturn(SendMessageResponse.builder().messageId("msg-1").build());
+        when(kafkaTemplate.send(anyString(), anyString(), anyString()))
+                .thenReturn(new CompletableFuture<>());
 
         eventPublisher.publishRefundProcessed(booking);
 
-        verify(sqsClient, times(1)).sendMessage(any(SendMessageRequest.class));
+        verify(kafkaTemplate, times(1)).send(eq("booking-events"), anyString(), anyString());
+    }
+
+    @Test
+    void publish_kafkaError_logsWithoutThrowing() {
+        BookingResponse booking = buildSampleBooking();
+        when(kafkaTemplate.send(anyString(), anyString(), anyString()))
+                .thenThrow(new RuntimeException("Kafka unavailable"));
+
+        // Should not throw
+        eventPublisher.publishBookingCreated(booking);
     }
 
     private BookingResponse buildSampleBooking() {
@@ -120,11 +105,5 @@ class EventPublisherTest {
                         .startDate(LocalDate.now().plusDays(5)).endDate(LocalDate.now().plusDays(10))
                         .build()))
                 .build();
-    }
-
-    private void setField(Object target, String fieldName, Object value) throws Exception {
-        Field field = target.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(target, value);
     }
 }

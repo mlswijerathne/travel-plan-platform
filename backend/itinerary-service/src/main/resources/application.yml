@@ -20,6 +20,16 @@ spring:
     baseline-on-migrate: true
     schemas: itinerary
     create-schemas: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: itinerary-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 supabase:
   jwt:
     secret: ${SUPABASE_JWT_SECRET:O7htcXf6lOb4l+Th+tsyhDGq2c+e1mS2uo2Zt2gd6qMClVGPjKwfYdShmva33q3GhJBEtWJIwrkN2DO7P3KF4w==}
@@ -44,12 +54,6 @@ management:
       enabled: true
     readinessState:
       enabled: true
-
-aws:
-  sqs:
-    booking-events-queue: ${BOOKING_EVENTS_QUEUE:booking-events}
-    review-trigger-queue: ${REVIEW_TRIGGER_QUEUE:review-triggers}
-  region: ${AWS_REGION:ap-northeast-1}
 
 scheduling:
   trip-completion:

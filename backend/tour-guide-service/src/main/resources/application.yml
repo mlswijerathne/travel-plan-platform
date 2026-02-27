@@ -4,17 +4,16 @@ server:
 spring:
   application:
     name: tour-guide-service
-  cloud:
-    aws:
-      region:
-        static: ${AWS_REGION:us-east-1}
-      credentials:
-        access-key: ${AWS_ACCESS_KEY_ID:test}
-        secret-key: ${AWS_SECRET_ACCESS_KEY:test}
-      sqs:
-        endpoint: ${AWS_SQS_ENDPOINT:http://localhost:4566}
-        listener:
-          auto-startup: ${AWS_SQS_LISTENER_AUTO_STARTUP:false}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: tour-guide-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://ep-misty-king-aiv2kum3.c-4.us-east-1.aws.neon.tech/guide_db?sslmode=require}
     username: ${DATABASE_USERNAME:neondb_owner}
@@ -53,7 +52,3 @@ management:
       exposure:
         include: health,info,metrics
 
-app:
-  sqs:
-    enabled: ${APP_SQS_ENABLED:false}
-    rating-update-queue: ${SQS_RATING_UPDATE_QUEUE:rating-updates-queue}
