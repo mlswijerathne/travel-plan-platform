@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Data
 @Builder
@@ -47,12 +46,14 @@ public class CreateEventRequest {
     @DecimalMin(value = "0.0", message = "Ticket price cannot be negative")
     private BigDecimal ticketPrice;
 
-    @NotBlank
-    @Builder.Default
+    // Optional — defaults to "LKR" when omitted from JSON
     private String currency = "LKR";
 
     private String imageUrl;
     private String tags;
+    private java.util.List<String> vibes;
+    private boolean authenticCultural;
+    private java.util.List<TicketTierRequest> ticketTiers;
 
     @AssertTrue(message = "End date must be after start date")
     private boolean isDateRangeValid() {
