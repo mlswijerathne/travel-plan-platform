@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: hotel-service
+  profiles:
+    active: ${SPRING_PROFILE:dev}  # Default to 'dev' profile for easier testing
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hotel_db}
     username: ${DATABASE_USERNAME:postgres}

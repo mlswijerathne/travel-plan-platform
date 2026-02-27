@@ -10,6 +10,30 @@ Hotel Service manages hotel and room CRUD operations, availability checking, and
 All endpoints (except GET operations for public data) require JWT authentication via Supabase.
 Include the JWT token in the Authorization header: `Authorization: Bearer <token>`
 
+### Development/Testing Mode
+For testing purposes during development, the service supports a **dev mode** that bypasses JWT authentication:
+
+**Enable Dev Mode:**
+```bash
+mvn spring-boot:run -Dspring-boot.run.arguments=--spring.profiles.active=dev
+```
+
+**Testing Protected Endpoints:**
+- Default: Automatically authenticated as `test-owner-123`
+- Custom User: Add header `X-Test-User-Id: your-user-id`
+
+**Example:**
+```bash
+curl -X POST http://localhost:8083/api/hotels \
+  -H "Content-Type: application/json" \
+  -H "X-Test-User-Id: test-owner-456" \
+  -d '{...hotel data...}'
+```
+
+⚠️ **WARNING:** Dev mode is for testing only. DO NOT use in production!
+
+For complete testing instructions, see: `QUICK_START_TESTING.md`
+
 ---
 
 ## Hotel Endpoints
