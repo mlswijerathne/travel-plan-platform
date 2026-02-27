@@ -7,16 +7,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
-// THIS LINE FIXES THE ERROR: It tells Spring exactly where to find your HotelServiceClient
-@EnableFeignClients(basePackages = "com.travelplan.ecommerce.client") 
+@EnableFeignClients(basePackages = "com.travelplan.ecommerce.client")
 @ComponentScan(
     basePackages = {"com.travelplan.ecommerce", "com.travelplan.common"},
     excludeFilters = @ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE,
         classes = {
             com.travelplan.common.config.SecurityConfig.class,
-            com.travelplan.common.config.CorsConfig.class,
-            com.travelplan.common.config.JwtValidationFilter.class
+            com.travelplan.common.config.CorsConfig.class
         }
     )
 )

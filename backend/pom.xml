@@ -26,13 +26,13 @@
         <module>hotel-service</module>
         <module>tour-guide-service</module>
         <module>vehicle-service</module>
-        <!-- <module>booking-service</module> -->
-        <!-- <module>itinerary-service</module> -->
-        <!-- <module>review-service</module> -->
-        <!-- <module>trip-plan-service</module> -->
-        <!-- <module>event-service</module> -->
-        <!-- <module>ecommerce-service</module> -->
-        <!-- <module>ai-agent-service</module> -->
+        <module>booking-service</module>
+        <module>itinerary-service</module>
+        <module>review-service</module>
+        <module>trip-plan-service</module>
+        <module>event-service</module>
+        <module>ecommerce-service</module>
+        <module>ai-agent-service</module>
     </modules>
 
     <properties>

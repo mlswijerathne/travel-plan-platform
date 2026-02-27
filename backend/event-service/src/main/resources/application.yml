@@ -4,9 +4,9 @@ spring:
   application:
     name: event-service
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://ep-orange-bread-aij9mdkb.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require}
-    username: ${DATABASE_USERNAME:neondb_owner}
-    password: ${DATABASE_PASSWORD:npg_zqke8miInwD9}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
@@ -23,7 +23,7 @@ spring:
     baseline-on-migrate: true
 supabase:
   jwt:
-    secret: ${SUPABASE_JWT_SECRET:O7htcXf6lOb4l+Th+tsyhDGq2c+e1mS2uo2Zt2gd6qMClVGPjKwfYdShmva33q3GhJBEtWJIwrkN2DO7P3KF4w==}
+    secret: ${SUPABASE_JWT_SECRET}
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
 eureka:

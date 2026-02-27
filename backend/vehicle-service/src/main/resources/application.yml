@@ -2,32 +2,29 @@ server:
   port: 8085
 
 spring:
-  main:
-    # Essential to allow custom SecurityConfig to override common-lib beans
-    allow-bean-definition-overriding: true
   application:
     name: vehicle-service
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://ep-weathered-bread-akyxm9o8.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require}
-    username: ${DATABASE_USERNAME:neondb_owner}
-    password: ${DATABASE_PASSWORD:npg_4HRqkXLxObW8}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
       minimum-idle: 1
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    enabled: false
+    enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
 supabase:
   jwt:
-    secret: ${SUPABASE_JWT_SECRET:O7htcXf6lOb4l+Th+tsyhDGq2c+e1mS2uo2Zt2gd6qMClVGPjKwfYdShmva33q3GhJBEtWJIwrkN2DO7P3KF4w==}
+    secret: ${SUPABASE_JWT_SECRET}
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
 eureka:
