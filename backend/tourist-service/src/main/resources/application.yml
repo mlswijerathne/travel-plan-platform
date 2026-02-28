@@ -26,6 +26,7 @@ spring:
     baseline-on-migrate: true
 
 supabase:
+  url: ${SUPABASE_URL}
   jwt:
     secret: ${SUPABASE_JWT_SECRET}
 

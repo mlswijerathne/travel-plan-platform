@@ -33,6 +33,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 supabase:
+  url: ${SUPABASE_URL}
   jwt:
     secret: ${SUPABASE_JWT_SECRET}
 cors:

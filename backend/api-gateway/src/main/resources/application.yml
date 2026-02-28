@@ -110,6 +110,7 @@ eureka:
     prefer-ip-address: true
 
 supabase:
+  url: ${SUPABASE_URL}
   jwt:
     secret: ${SUPABASE_JWT_SECRET}
 

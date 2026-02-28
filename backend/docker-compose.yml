@@ -99,6 +99,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
     depends_on:
       discovery-server:
@@ -117,6 +118,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - DATABASE_URL=${TOURIST_DB_URL}
       - DATABASE_USERNAME=${TOURIST_DB_USERNAME}
       - DATABASE_PASSWORD=${TOURIST_DB_PASSWORD}
@@ -137,6 +139,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - DATABASE_URL=${HOTEL_DB_URL}
       - DATABASE_USERNAME=${HOTEL_DB_USERNAME}
@@ -160,6 +163,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - DATABASE_URL=${TOUR_GUIDE_DB_URL}
       - DATABASE_USERNAME=${TOUR_GUIDE_DB_USERNAME}
@@ -183,6 +187,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - DATABASE_URL=${VEHICLE_DB_URL}
       - DATABASE_USERNAME=${VEHICLE_DB_USERNAME}
       - DATABASE_PASSWORD=${VEHICLE_DB_PASSWORD}
@@ -203,6 +208,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - DATABASE_URL=${BOOKING_DB_URL}
       - DATABASE_USERNAME=${BOOKING_DB_USERNAME}
@@ -232,6 +238,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - DATABASE_URL=${ITINERARY_DB_URL}
       - DATABASE_USERNAME=${ITINERARY_DB_USERNAME}
@@ -255,6 +262,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - DATABASE_URL=${REVIEW_DB_URL}
       - DATABASE_USERNAME=${REVIEW_DB_USERNAME}
@@ -278,6 +286,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - DATABASE_URL=${TRIP_PLAN_DB_URL}
       - DATABASE_USERNAME=${TRIP_PLAN_DB_USERNAME}
       - DATABASE_PASSWORD=${TRIP_PLAN_DB_PASSWORD}
@@ -298,6 +307,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - DATABASE_URL=${EVENT_DB_URL}
       - DATABASE_USERNAME=${EVENT_DB_USERNAME}
       - DATABASE_PASSWORD=${EVENT_DB_PASSWORD}
@@ -318,6 +328,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
       - DATABASE_URL=${ECOMMERCE_DB_URL}
       - DATABASE_USERNAME=${ECOMMERCE_DB_USERNAME}
       - DATABASE_PASSWORD=${ECOMMERCE_DB_PASSWORD}
@@ -338,6 +349,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
     depends_on:
       discovery-server:
         condition: service_healthy

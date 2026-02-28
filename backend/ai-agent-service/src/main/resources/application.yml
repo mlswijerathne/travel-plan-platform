@@ -17,6 +17,7 @@ spring:
             readTimeout: 10000
 
 supabase:
+  url: ${SUPABASE_URL}
   jwt:
     secret: ${SUPABASE_JWT_SECRET}
 

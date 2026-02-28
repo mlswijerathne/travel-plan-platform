@@ -29,6 +29,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 supabase:
+  url: ${SUPABASE_URL}
   jwt:
     secret: ${SUPABASE_JWT_SECRET}
 cors:
