@@ -35,6 +35,9 @@ class HotelSearchToolsTest {
     @Mock
     private com.travelplan.aiagent.client.TripPlanServiceClient tripPlanServiceClient;
 
+    @Mock
+    private com.travelplan.aiagent.service.GoogleMapsService googleMapsService;
+
     private ToolRegistry toolRegistry;
 
     @BeforeEach
@@ -44,7 +47,8 @@ class HotelSearchToolsTest {
                 tourGuideServiceClient,
                 vehicleServiceClient,
                 reviewServiceClient,
-                tripPlanServiceClient
+                tripPlanServiceClient,
+                googleMapsService
         );
         toolRegistry.init();
     }

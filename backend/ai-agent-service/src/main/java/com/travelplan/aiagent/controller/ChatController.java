@@ -24,7 +24,7 @@ public class ChatController {
     public Flux<ServerSentEvent<ChatStreamEvent>> chat(
             @Valid @RequestBody ChatRequest request,
             Authentication authentication) {
-        String userId = authentication.getName();
+        String userId = authentication != null ? authentication.getName() : "anonymous";
         log.info("Chat request from user: {}, session: {}", userId, request.getSessionId());
         return chatService.chat(userId, request);
     }
@@ -40,7 +40,7 @@ public class ChatController {
     public ApiResponse<RecommendationResponse> recommend(
             @Valid @RequestBody RecommendationRequest request,
             Authentication authentication) {
-        String userId = authentication.getName();
+        String userId = authentication != null ? authentication.getName() : "anonymous";
         log.info("Recommendation request from user: {} for {}", userId, request.getDestination());
         return ApiResponse.success(chatService.recommend(userId, request));
     }
@@ -49,7 +49,7 @@ public class ChatController {
     public ApiResponse<RecommendationResponse> recommendPackages(
             @Valid @RequestBody PackageRecommendationRequest request,
             Authentication authentication) {
-        String userId = authentication.getName();
+        String userId = authentication != null ? authentication.getName() : "anonymous";
         log.info("Package recommendation request from user: {} for {}", userId, request.getDestination());
         return ApiResponse.success(chatService.recommendPackages(userId, request));
     }
@@ -58,7 +58,7 @@ public class ChatController {
     public Flux<ServerSentEvent<ChatStreamEvent>> generatePlan(
             @Valid @RequestBody TripPlanRequest request,
             Authentication authentication) {
-        String userId = authentication.getName();
+        String userId = authentication != null ? authentication.getName() : "anonymous";
         log.info("Generate plan request from user: {} for {}", userId, request.getDestination());
         return chatService.generatePlan(userId, request);
     }

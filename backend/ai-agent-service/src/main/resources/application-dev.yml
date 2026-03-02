@@ -1,0 +1,7 @@
+## Dev profile - Feign clients are disabled via FeignConfig @Profile("!dev")
+## MockFeignClients provides mock implementations for all service clients
+## To test with REAL services via Eureka, run WITHOUT this profile (no --spring.profiles.active=dev)
+
+eureka:
+  client:
+    enabled: false

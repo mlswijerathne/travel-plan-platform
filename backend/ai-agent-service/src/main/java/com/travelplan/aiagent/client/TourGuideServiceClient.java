@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@FeignClient(name = "tour-guide-service", url = "${services.tour-guide-url}")
+@FeignClient(name = "tour-guide-service")
 public interface TourGuideServiceClient {
 
     @GetMapping("/api/tour-guides")
@@ -22,6 +22,6 @@ public interface TourGuideServiceClient {
     @GetMapping("/api/tour-guides/{id}")
     ApiResponse<Object> getTourGuideById(@PathVariable String id);
 
-    @GetMapping("/api/tour-guides/search")
+    @GetMapping("/api/tour-guides")
     ApiResponse<Object> searchTourGuidesByQuery(@RequestParam Map<String, String> params);
 }
