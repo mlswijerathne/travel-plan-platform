@@ -1,3 +1,31 @@
 {$DOMAIN} {
-    reverse_proxy api-gateway:8060
+    # ── CORS: handle preflight OPTIONS directly at the edge ──
+    @cors_preflight {
+        method OPTIONS
+    }
+    handle @cors_preflight {
+        header Access-Control-Allow-Origin {$CORS_ORIGIN:https://travel-plan.live}
+        header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        header Access-Control-Allow-Headers "*"
+        header Access-Control-Allow-Credentials "true"
+        header Access-Control-Max-Age "3600"
+        respond 204
+    }
+
+    # ── Proxy all other requests to API Gateway ──
+    reverse_proxy api-gateway:8060 {
+        # Strip upstream CORS headers to avoid duplicates with Caddy's
+        header_down -Access-Control-Allow-Origin
+        header_down -Access-Control-Allow-Methods
+        header_down -Access-Control-Allow-Headers
+        header_down -Access-Control-Allow-Credentials
+        header_down -Access-Control-Max-Age
+        header_down -Access-Control-Expose-Headers
+    }
+
+    # ── Add CORS headers to all proxied responses ──
+    header {
+        Access-Control-Allow-Origin {$CORS_ORIGIN:https://travel-plan.live}
+        Access-Control-Allow-Credentials "true"
+    }
 }
