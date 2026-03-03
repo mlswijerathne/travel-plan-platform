@@ -47,6 +47,7 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: azureuser
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+          command_timeout: 30m
           script: |
             cd /opt/travel-plan
             git fetch origin main
