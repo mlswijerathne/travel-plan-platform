@@ -1,6 +1,7 @@
 name: Backend CI/CD — Azure VM
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
