@@ -13,7 +13,7 @@ import org.springframework.context.annotation.FilterType;
     excludeFilters = @ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE,
         classes = {
-            com.travelplan.common.config.SecurityConfig.class,
+            com.travelplan.common.config.CommonSecurityConfig.class,
             com.travelplan.common.config.CorsConfig.class
         }
     )

@@ -13,7 +13,11 @@ public interface GuideService {
 
     GuideResponse updateGuide(Long id, GuideRequest request);
 
+    GuideResponse updateGuide(Long id, GuideUpdateRequest request);
+
     GuideResponse updateGuideByUserId(String userId, GuideRequest request);
+
+    GuideResponse updateGuideByUserId(String userId, GuideUpdateRequest request);
 
     void deleteGuide(Long id);
 

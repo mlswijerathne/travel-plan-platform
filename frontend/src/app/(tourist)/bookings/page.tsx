@@ -6,8 +6,9 @@ import { BookingCard } from '@/components/bookings/BookingCard'
 import { Pagination } from '@/components/shared/Pagination'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Button } from '@/components/ui/button'
-import { Calendar } from 'lucide-react'
+import { Calendar, Plus } from 'lucide-react'
 import { BOOKING_STATUSES, type BookingStatus } from '@/types/booking'
+import Link from 'next/link'
 
 export default function BookingsPage() {
   const [page, setPage] = useState(0)
@@ -24,9 +25,16 @@ export default function BookingsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">My Bookings</h1>
-        <p className="text-muted-foreground">View and manage your travel bookings</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">My Bookings</h1>
+          <p className="text-muted-foreground">View and manage your travel bookings</p>
+        </div>
+        <Link href="/bookings/new">
+          <Button>
+            <Plus className="h-4 w-4 mr-2" /> New Booking
+          </Button>
+        </Link>
       </div>
 
       <div className="flex flex-wrap gap-1.5">

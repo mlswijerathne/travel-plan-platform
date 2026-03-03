@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -26,14 +27,16 @@ public class ItineraryController {
     private final MapVisualizationService mapVisualizationService;
 
     @GetMapping
-    public ResponseEntity<List<ItineraryDTO>> getItineraries(@RequestHeader("X-Tourist-Id") String touristId) {
+    public ResponseEntity<List<ItineraryDTO>> getItineraries(Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("GET /api/v1/itineraries for tourist {}", touristId);
         List<ItineraryDTO> itineraries = itineraryService.getItinerariesByTourist(touristId);
         return ResponseEntity.ok(itineraries);
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<ItineraryDTO>> getActiveItineraries(@RequestHeader("X-Tourist-Id") String touristId) {
+    public ResponseEntity<List<ItineraryDTO>> getActiveItineraries(Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("GET /api/v1/itineraries/active for tourist {}", touristId);
         List<ItineraryDTO> itineraries = itineraryService.getActiveItineraries(touristId);
         return ResponseEntity.ok(itineraries);
@@ -42,7 +45,8 @@ public class ItineraryController {
     @GetMapping("/{id}")
     public ResponseEntity<ItineraryDTO> getItinerary(
             @PathVariable Long id,
-            @RequestHeader("X-Tourist-Id") String touristId) {
+            Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("GET /api/v1/itineraries/{} for tourist {}", id, touristId);
         ItineraryDTO itinerary = itineraryService.getItinerary(id, touristId);
         return ResponseEntity.ok(itinerary);
@@ -50,8 +54,9 @@ public class ItineraryController {
 
     @PostMapping
     public ResponseEntity<ItineraryDTO> createItinerary(
-            @RequestHeader("X-Tourist-Id") String touristId,
+            Authentication authentication,
             @RequestBody CreateItineraryRequest request) {
+        String touristId = authentication.getName();
         log.info("POST /api/v1/itineraries for tourist {}", touristId);
         ItineraryDTO itinerary = itineraryService.createItinerary(
                 touristId,
@@ -66,8 +71,9 @@ public class ItineraryController {
     @PutMapping("/{id}")
     public ResponseEntity<ItineraryDTO> updateItinerary(
             @PathVariable Long id,
-            @RequestHeader("X-Tourist-Id") String touristId,
+            Authentication authentication,
             @RequestBody ItineraryDTO request) {
+        String touristId = authentication.getName();
         log.info("PUT /api/v1/itineraries/{} for tourist {}", id, touristId);
         ItineraryDTO itinerary = itineraryService.updateItinerary(id, touristId, request);
         return ResponseEntity.ok(itinerary);
@@ -76,7 +82,8 @@ public class ItineraryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteItinerary(
             @PathVariable Long id,
-            @RequestHeader("X-Tourist-Id") String touristId) {
+            Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("DELETE /api/v1/itineraries/{} for tourist {}", id, touristId);
         itineraryService.deleteItinerary(id, touristId);
         return ResponseEntity.noContent().build();
@@ -85,7 +92,8 @@ public class ItineraryController {
     @PostMapping("/{id}/activate")
     public ResponseEntity<ItineraryDTO> activateItinerary(
             @PathVariable Long id,
-            @RequestHeader("X-Tourist-Id") String touristId) {
+            Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("POST /api/v1/itineraries/{}/activate for tourist {}", id, touristId);
         ItineraryDTO itinerary = itineraryService.activateItinerary(id, touristId);
         return ResponseEntity.ok(itinerary);
@@ -94,7 +102,8 @@ public class ItineraryController {
     @PostMapping("/{id}/complete")
     public ResponseEntity<ItineraryDTO> completeItinerary(
             @PathVariable Long id,
-            @RequestHeader("X-Tourist-Id") String touristId) {
+            Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("POST /api/v1/itineraries/{}/complete for tourist {}", id, touristId);
         ItineraryDTO itinerary = itineraryService.completeItinerary(id, touristId);
         return ResponseEntity.ok(itinerary);
@@ -103,7 +112,8 @@ public class ItineraryController {
     @GetMapping("/{id}/pdf")
     public ResponseEntity<byte[]> downloadPDF(
             @PathVariable Long id,
-            @RequestHeader("X-Tourist-Id") String touristId) {
+            Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("GET /api/v1/itineraries/{}/pdf for tourist {}", id, touristId);
 
         try {
@@ -124,7 +134,8 @@ public class ItineraryController {
     @GetMapping("/{id}/map")
     public ResponseEntity<MapDataDTO> getItineraryMap(
             @PathVariable Long id,
-            @RequestHeader("X-Tourist-Id") String touristId) {
+            Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("GET /api/v1/itineraries/{}/map for tourist {}", id, touristId);
         MapDataDTO mapData = mapVisualizationService.generateItineraryMapData(id, touristId);
         return ResponseEntity.ok(mapData);
@@ -134,7 +145,8 @@ public class ItineraryController {
     public ResponseEntity<MapDataDTO> getDayMap(
             @PathVariable Long id,
             @PathVariable Long dayId,
-            @RequestHeader("X-Tourist-Id") String touristId) {
+            Authentication authentication) {
+        String touristId = authentication.getName();
         log.info("GET /api/v1/itineraries/{}/days/{}/map for tourist {}", id, dayId, touristId);
         MapDataDTO mapData = mapVisualizationService.generateDayMapData(id, dayId, touristId);
         return ResponseEntity.ok(mapData);

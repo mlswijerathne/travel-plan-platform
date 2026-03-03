@@ -29,7 +29,7 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ORGANIZER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a new event")
     public ResponseEntity<ApiResponse<EventResponse>> createEvent(
             @Valid @RequestBody CreateEventRequest request,
@@ -68,7 +68,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ORGANIZER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update event details")
     public ResponseEntity<ApiResponse<EventResponse>> updateEvent(
             @PathVariable Long id,
@@ -80,7 +80,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ORGANIZER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Cancel or delete an event")
     public ResponseEntity<ApiResponse<Void>> deleteEvent(
             @PathVariable Long id,
@@ -98,8 +98,8 @@ public class EventController {
     }
 
     @GetMapping("/organizer/my")
-    @PreAuthorize("hasRole('ORGANIZER')")
-    @Operation(summary = "Get all events created by the logged-in organizer")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Get all events created by the logged-in admin")
     public ResponseEntity<PaginatedResponse<EventSummaryResponse>> getMyEvents(
             @RequestParam(required = false) EventStatus status,
             @PageableDefault(size = 20, sort = "startDateTime", direction = org.springframework.data.domain.Sort.Direction.DESC) Pageable pageable,

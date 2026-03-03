@@ -55,6 +55,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             String touristId, EntityType entityType, Long entityId, Long bookingId);
 
     /**
+     * Checks whether a tourist has already submitted any review for an entity
+     * (regardless of booking ID).  Used to prevent duplicate reviews when
+     * no bookingId is provided.
+     */
+    boolean existsByTouristIdAndEntityTypeAndEntityId(
+            String touristId, EntityType entityType, Long entityId);
+
+    /**
      * Fetches a single review by ID, eagerly loading its provider responses
      * to avoid the N+1 query problem on the detail endpoint.
      *

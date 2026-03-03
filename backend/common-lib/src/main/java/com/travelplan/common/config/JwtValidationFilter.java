@@ -78,9 +78,12 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                 String userId = claims.getSubject();
                 String role = extractAppRole(claims);
 
-                List<SimpleGrantedAuthority> authorities = List.of(
-                        new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())
-                );
+                // Build authorities list — empty if no role is set in app_metadata.
+                // An authenticated-but-roleless user passes JWT validation but is
+                // rejected by any @PreAuthorize role check (403), which is correct.
+                List<SimpleGrantedAuthority> authorities = (role != null)
+                        ? List.of(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                        : List.of();
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userId, token, authorities);
@@ -201,19 +204,31 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         return kf.generatePublic(pubSpec);
     }
 
+    /**
+     * Extracts the application role exclusively from {@code app_metadata.role}.
+     *
+     * <p><strong>Why only app_metadata?</strong><br>
+     * {@code user_metadata} is writable by any authenticated user via the Supabase
+     * client SDK ({@code supabase.auth.updateUser()}), making it trivially exploitable
+     * for privilege escalation. {@code app_metadata} is writable only by the
+     * service role (Admin API), so it is the only trustworthy source of truth.
+     *
+     * <p>The DB trigger {@code on_auth_user_created} copies the role from
+     * {@code user_metadata} into {@code app_metadata} at signup time, so legitimate
+     * registrations always have the role present here.
+     *
+     * @return the role string (e.g. "ADMIN", "TOURIST") or {@code null} if unset
+     */
     @SuppressWarnings("unchecked")
     private String extractAppRole(Claims claims) {
         Map<String, Object> appMetadata = claims.get("app_metadata", Map.class);
         if (appMetadata != null && appMetadata.get("role") != null) {
             return (String) appMetadata.get("role");
         }
-
-        Map<String, Object> userMetadata = claims.get("user_metadata", Map.class);
-        if (userMetadata != null && userMetadata.get("role") != null) {
-            return (String) userMetadata.get("role");
-        }
-
-        return "TOURIST";
+        // No role in app_metadata — user has no granted authority.
+        // user_metadata is intentionally NOT consulted (user-writable, untrusted).
+        log.warn("JWT has no app_metadata.role for subject={}", claims.getSubject());
+        return null;
     }
 
     @Override
@@ -222,6 +237,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         return path.startsWith("/actuator") ||
                 path.equals("/health") ||
                 path.startsWith("/v3/api-docs") ||
-                path.startsWith("/swagger-ui");
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/api/public/");
     }
 }

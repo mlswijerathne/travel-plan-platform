@@ -1,82 +1,56 @@
-name: Backend CI
+name: Backend CI/CD — Azure VM
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
     paths:
       - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
   pull_request:
-    branches: [main, develop]
+    branches: [main]
     paths:
       - 'backend/**'
 
 jobs:
-  build:
+  build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: 21
           cache: maven
 
-      - name: Build with Maven
-        run: mvn -B package --file backend/pom.xml -DskipTests
+      - name: Build all modules (skip tests on PR)
+        if: github.event_name == 'pull_request'
+        run: mvn clean package -DskipTests -B
 
-      - name: Run Tests
-        run: mvn -B test --file backend/pom.xml
+      - name: Build & test all modules
+        if: github.event_name == 'push'
+        run: mvn clean verify -B
 
-      - name: Upload Coverage
-        uses: codecov/codecov-action@v4
-        with:
-          files: backend/**/target/site/jacoco/jacoco.xml
-          fail_ci_if_error: false
-
-  docker:
-    needs: build
+  deploy:
+    name: Deploy to Azure VM
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    strategy:
-      matrix:
-        service:
-          - tourist-service
-          - hotel-service
-          - tour-guide-service
-          - vehicle-service
-          - booking-service
-          - itinerary-service
-          - review-service
-          - trip-plan-service
-          - event-service
-          - ecommerce-service
-          - ai-agent-service
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build and push Docker image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: travel-plan/${{ matrix.service }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG backend/${{ matrix.service }}
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          host: ${{ secrets.VM_HOST }}
+          username: azureuser
+          key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/travel-plan
+            git fetch origin main
+            git reset --hard origin/main
+            cd backend
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --remove-orphans
+            docker image prune -f

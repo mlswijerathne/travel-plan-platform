@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jpa:
+    show-sql: false
+
+springdoc:
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    root: WARN
+    com.travelplan: INFO
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true

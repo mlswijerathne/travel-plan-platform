@@ -41,8 +41,8 @@ public class EventRegistrationController {
     }
 
     @GetMapping("/{id}/registrations")
-    @PreAuthorize("hasRole('ORGANIZER')")
-    @Operation(summary = "List all ticket bookings for an event (Organizer only)")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "List all ticket bookings for an event (Admin only)")
     public ResponseEntity<PaginatedResponse<TicketResponse>> getEventRegistrations(
             @PathVariable Long id,
             @RequestParam(required = false) RegistrationStatus status,

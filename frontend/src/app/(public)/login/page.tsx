@@ -40,7 +40,7 @@ export default function LoginPage() {
         const role = payload.user_metadata?.role || payload.app_metadata?.role || 'TOURIST'
         const providerRoles = ['HOTEL_OWNER', 'TOUR_GUIDE', 'VEHICLE_OWNER']
         if (providerRoles.includes(role)) redirectTo = '/provider/dashboard'
-        else if (role === 'ADMIN') redirectTo = '/dashboard'
+        else if (role === 'ADMIN') redirectTo = '/admin'
       }
 
       router.push(redirectTo)

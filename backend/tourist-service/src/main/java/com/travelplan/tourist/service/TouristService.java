@@ -17,4 +17,6 @@ public interface TouristService {
     PreferenceResponse updatePreferences(String userId, PreferenceRequest request);
 
     WalletResponse getWallet(String userId);
+
+    void creditWallet(String userId, java.math.BigDecimal amount, String description, String referenceId);
 }

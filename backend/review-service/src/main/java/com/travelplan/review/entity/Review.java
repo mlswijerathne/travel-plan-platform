@@ -84,9 +84,10 @@ public class Review {
      * Mapped to a PostgreSQL {@code TEXT[]} column using Hibernate 6's
      * native array JDBC type.
      */
+    @Builder.Default
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "images", columnDefinition = "text[]")
-    private String[] images;
+    private List<String> images = new ArrayList<>();
 
     /**
      * {@code true} when the review was made against a confirmed booking,

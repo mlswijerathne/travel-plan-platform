@@ -1,5 +1,6 @@
 package com.travelplan.hotel.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,4 +48,8 @@ public class CreateHotelRequest {
     private LocalTime checkInTime;
 
     private LocalTime checkOutTime;
+
+    /** Optional: rooms to create together with the hotel in a single request. */
+    @Valid
+    private List<InlineRoomRequest> rooms;
 }

@@ -1,6 +1,7 @@
 package com.travelplan.hotel.mapper;
 
 import com.travelplan.hotel.dto.request.CreateRoomRequest;
+import com.travelplan.hotel.dto.request.InlineRoomRequest;
 import com.travelplan.hotel.dto.request.UpdateRoomRequest;
 import com.travelplan.hotel.dto.response.RoomResponse;
 import com.travelplan.hotel.entity.Hotel;
@@ -16,6 +17,20 @@ import java.util.stream.Collectors;
 public class RoomMapper {
 
     public Room toEntity(CreateRoomRequest request, Hotel hotel) {
+        return Room.builder()
+                .hotel(hotel)
+                .roomType(request.getRoomType())
+                .name(request.getName())
+                .description(request.getDescription())
+                .pricePerNight(request.getPricePerNight())
+                .maxOccupancy(request.getMaxOccupancy() != null ? request.getMaxOccupancy() : 2)
+                .amenities(request.getAmenities() != null ?
+                        request.getAmenities().toArray(new String[0]) : new String[0])
+                .totalRooms(request.getTotalRooms() != null ? request.getTotalRooms() : 1)
+                .build();
+    }
+
+    public Room toEntity(InlineRoomRequest request, Hotel hotel) {
         return Room.builder()
                 .hotel(hotel)
                 .roomType(request.getRoomType())

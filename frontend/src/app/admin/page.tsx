@@ -1,208 +1,188 @@
-"use client";
+'use client'
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { Navbar } from "@/components/Navbar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Trash2, CheckCircle, Pencil } from "lucide-react";
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { getPackages } from '@/lib/api/packages'
+import { getMyAdminEvents } from '@/lib/api/events'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Package, Ticket, Plus, ArrowRight, TrendingUp, Users } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { toast } from 'sonner'
 
-export default function AdminDashboard() {
-    const [bookings, setBookings] = useState<any[]>([]);
-    const [vehicles, setVehicles] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+export default function AdminDashboardPage() {
+  const [stats, setStats] = useState<{
+    totalPackages: number
+    totalEvents: number
+    featuredPackages: number
+    publishedEvents: number
+  } | null>(null)
+  const [recentPackages, setRecentPackages] = useState<any[]>([])
+  const [recentEvents, setRecentEvents] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-    // Fetch both Vehicles and Bookings from the backend
-    const fetchData = async () => {
-        try {
-            const [bookingsRes, vehiclesRes] = await Promise.all([
-                fetch("http://localhost:8085/api/bookings"),
-                fetch("http://localhost:8085/api/vehicles?size=100") // Fetch up to 100 vehicles
-            ]);
+  useEffect(() => {
+    async function load() {
+      try {
+        const [pkgRes, evtRes] = await Promise.allSettled([
+          getPackages({ page: 0, size: 5 }),
+          getMyAdminEvents({ page: 0, size: 5 }),
+        ])
 
-            if (bookingsRes.ok) {
-                setBookings(await bookingsRes.json());
-            }
-            if (vehiclesRes.ok) {
-                const vehiclePage = await vehiclesRes.json();
-                // Extract the content array from Spring's Page object
-                setVehicles(vehiclePage.content ?? vehiclePage);
-            }
-        } catch (error) {
-            console.error("Failed to load admin data", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        const packages = pkgRes.status === 'fulfilled' ? pkgRes.value.data ?? [] : []
+        const events = evtRes.status === 'fulfilled' ? evtRes.value.data ?? [] : []
 
-    // Load data on page mount
-    useEffect(() => {
-        fetchData();
-    }, []);
+        setRecentPackages(packages)
+        setRecentEvents(events)
+        setStats({
+          totalPackages: pkgRes.status === 'fulfilled' ? (pkgRes.value.pagination?.totalItems ?? packages.length) : 0,
+          totalEvents: evtRes.status === 'fulfilled' ? (evtRes.value.pagination?.totalItems ?? events.length) : 0,
+          featuredPackages: packages.filter((p: any) => p.isFeatured).length,
+          publishedEvents: events.filter((e: any) => e.status === 'PUBLISHED').length,
+        })
+      } catch {
+        toast.error('Failed to load dashboard data')
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
 
-    // COMPLETE BOOKING LOGIC
-    const handleCompleteBooking = async (bookingId: number) => {
-        if (!bookingId) {
-            alert("Error: No Booking ID found!");
-            return;
-        }
-
-        if (!confirm("Has the customer returned the car? This will mark the car as available again.")) return;
-
-        try {
-            const res = await fetch(`http://localhost:8085/api/bookings/${bookingId}/complete`, {
-                method: "PUT"
-            });
-
-            if (res.ok) {
-                alert("Car returned successfully! It is now available for rent.");
-                fetchData(); // Refresh the tables instantly
-            } else if (res.status === 404) {
-                alert("Error 404: The server couldn't find this booking. It may have been deleted.");
-            } else {
-                alert("Failed to complete booking.");
-            }
-        } catch (error) {
-            console.error("Error completing booking:", error);
-            alert("Network error: Could not reach the server.");
-        }
-    };
-
-    // DELETE VEHICLE LOGIC
-    const handleDeleteVehicle = async (vehicleId: number) => {
-        if (!confirm("Are you sure you want to delete this vehicle?")) return;
-
-        try {
-            const res = await fetch(`http://localhost:8085/api/vehicles/${vehicleId}`, {
-                method: "DELETE",
-                headers: { "X-User-Id": "admin" } // Pass admin context
-            });
-
-            if (res.ok) {
-                fetchData(); // Refresh the table instantly
-            } else {
-                alert("Failed to delete vehicle.");
-            }
-        } catch (error) {
-            console.error("Failed to delete vehicle", error);
-        }
-    };
-
-    if (loading) return <div className="text-center py-20">Loading Admin Dashboard...</div>;
-
+  if (loading) {
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
-            <Navbar />
-            <div className="container mx-auto px-4 py-12">
-                <h1 className="text-3xl font-bold mb-8">Admin Control Center</h1>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-                    {/* Vehicles Table */}
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-xl">Fleet Management</CardTitle>
-                            <Badge className="bg-black text-white">{vehicles.length} Cars</Badge>
-                        </CardHeader>
-                        <CardContent>
-                            <table className="w-full text-sm">
-                                <thead>
-                                    <tr className="border-b text-gray-500">
-                                        <th className="text-left pb-3 font-medium">ID</th>
-                                        <th className="text-left pb-3 font-medium">Vehicle</th>
-                                        <th className="text-center pb-3 font-medium">Status</th>
-                                        <th className="text-right pb-3 font-medium">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {vehicles.map((vehicle) => (
-                                        <tr key={vehicle.id} className="border-b last:border-0">
-                                            <td className="py-4 font-medium">#{vehicle.id}</td>
-                                            <td className="py-4 font-bold">{vehicle.make} {vehicle.model}</td>
-                                            <td className="py-4 text-center">
-                                                <Badge variant={vehicle.isAvailable ? "outline" : "secondary"}>
-                                                    {vehicle.isAvailable ? "Available" : "Booked"}
-                                                </Badge>
-                                            </td>
-                                            <td className="py-4 text-right flex justify-end gap-2">
-                                                {/* Edit Button */}
-                                                <Link href={`/vehicles/${vehicle.id}/edit`}>
-                                                    <Button variant="outline" size="icon" className="text-blue-600 border-blue-600 hover:bg-blue-50">
-                                                        <Pencil size={16} />
-                                                    </Button>
-                                                </Link>
-                                                {/* Delete Button */}
-                                                <Button variant="outline" size="icon" className="text-red-600 border-red-600 hover:bg-red-50" onClick={() => handleDeleteVehicle(vehicle.id)}>
-                                                    <Trash2 size={16} />
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {vehicles.length === 0 && (
-                                        <tr>
-                                            <td colSpan={4} className="text-center py-4 text-gray-500">No vehicles found.</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </CardContent>
-                    </Card>
-
-                    {/* Bookings Table */}
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-xl">Recent Bookings</CardTitle>
-                            <Badge className="bg-blue-600 text-white">{bookings.length} Orders</Badge>
-                        </CardHeader>
-                        <CardContent>
-                            <table className="w-full text-sm">
-                                <thead>
-                                    <tr className="border-b text-gray-500">
-                                        <th className="text-left pb-3 font-medium">ID</th>
-                                        <th className="text-left pb-3 font-medium">Customer</th>
-                                        <th className="text-center pb-3 font-medium">Status</th>
-                                        <th className="text-right pb-3 font-medium">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {bookings.map((booking) => (
-                                        <tr key={booking.id} className="border-b last:border-0">
-                                            <td className="py-4 font-medium">#{booking.id}</td>
-                                            <td className="py-4">
-                                                <div className="font-bold">{booking.customerName}</div>
-                                                <div className="text-xs text-gray-500">Car #{booking.vehicleId}</div>
-                                            </td>
-                                            <td className="py-4 text-center">
-                                                <Badge className={booking.status === "COMPLETED" ? "bg-gray-200 text-gray-600" : "bg-blue-50 text-blue-700"}>
-                                                    {booking.status}
-                                                </Badge>
-                                            </td>
-                                            <td className="p-3 text-right">
-                                                {booking.status !== "COMPLETED" && (
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className="text-green-600 border-green-600 hover:bg-green-50"
-                                                        onClick={() => handleCompleteBooking(booking.id)}
-                                                    >
-                                                        <CheckCircle size={16} className="mr-2" /> Complete
-                                                    </Button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {bookings.length === 0 && (
-                                        <tr>
-                                            <td colSpan={4} className="text-center py-4 text-gray-500">No bookings yet.</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </CardContent>
-                    </Card>
-
-                </div>
-            </div>
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-48" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 rounded-xl" />)}
         </div>
-    );
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Skeleton className="h-64 rounded-xl" />
+          <Skeleton className="h-64 rounded-xl" />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-foreground">Admin Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Manage packages, events, and platform content</p>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Total Packages', value: stats?.totalPackages ?? 0, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50' },
+          { label: 'Featured Packages', value: stats?.featuredPackages ?? 0, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+          { label: 'Total Events', value: stats?.totalEvents ?? 0, icon: Ticket, color: 'text-violet-600', bg: 'bg-violet-50' },
+          { label: 'Published Events', value: stats?.publishedEvents ?? 0, icon: Users, color: 'text-amber-600', bg: 'bg-amber-50' },
+        ].map(({ label, value, icon: Icon, color, bg }) => (
+          <Card key={label} className="shadow-sm">
+            <CardContent className="flex items-center gap-4 py-5">
+              <div className={`h-11 w-11 rounded-xl ${bg} flex items-center justify-center`}>
+                <Icon className={`h-5 w-5 ${color}`} />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{value}</p>
+                <p className="text-xs text-muted-foreground">{label}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Recent content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Recent Packages */}
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-base font-semibold">Recent Packages</CardTitle>
+            <div className="flex items-center gap-2">
+              <Link href="/admin/packages/new">
+                <Button size="sm" className="h-8 gap-1.5 text-xs">
+                  <Plus className="h-3.5 w-3.5" />
+                  New
+                </Button>
+              </Link>
+              <Link href="/admin/packages">
+                <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs text-muted-foreground">
+                  View all <ArrowRight className="h-3 w-3" />
+                </Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {recentPackages.length === 0 ? (
+              <div className="text-center py-6 text-muted-foreground text-sm">
+                No packages yet.{' '}
+                <Link href="/admin/packages/new" className="text-primary hover:underline">Create one</Link>
+              </div>
+            ) : (
+              recentPackages.map((pkg: any) => (
+                <Link key={pkg.id} href={`/admin/packages/${pkg.id}/edit`}
+                  className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent transition-colors">
+                  <Package className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{pkg.name}</p>
+                    <p className="text-xs text-muted-foreground">{pkg.durationDays} days · Rs {pkg.basePrice?.toLocaleString()}</p>
+                  </div>
+                  {pkg.isFeatured && <Badge variant="secondary" className="text-xs shrink-0">Featured</Badge>}
+                </Link>
+              ))
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Recent Events */}
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-base font-semibold">Recent Events</CardTitle>
+            <div className="flex items-center gap-2">
+              <Link href="/admin/events/new">
+                <Button size="sm" className="h-8 gap-1.5 text-xs">
+                  <Plus className="h-3.5 w-3.5" />
+                  New
+                </Button>
+              </Link>
+              <Link href="/admin/events">
+                <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs text-muted-foreground">
+                  View all <ArrowRight className="h-3 w-3" />
+                </Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {recentEvents.length === 0 ? (
+              <div className="text-center py-6 text-muted-foreground text-sm">
+                No events yet.{' '}
+                <Link href="/admin/events/new" className="text-primary hover:underline">Create one</Link>
+              </div>
+            ) : (
+              recentEvents.map((evt: any) => (
+                <Link key={evt.id} href={`/admin/events/${evt.id}/edit`}
+                  className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent transition-colors">
+                  <Ticket className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{evt.title}</p>
+                    <p className="text-xs text-muted-foreground">{evt.location} · {evt.availableSeats ?? '?'} seats left</p>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={`text-xs shrink-0 ${evt.status === 'PUBLISHED' ? 'border-emerald-300 text-emerald-700 bg-emerald-50' : 'border-gray-200 text-gray-500'}`}
+                  >
+                    {evt.status}
+                  </Badge>
+                </Link>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
 }

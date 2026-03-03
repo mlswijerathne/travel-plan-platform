@@ -61,3 +61,15 @@ scheduling:
   trip-completion:
     enabled: true
     cron: ${TRIP_COMPLETION_CRON:0 0 0 * * *}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "Itinerary Service API"
+    description: "Manages trip lifecycle — schedule, expense tracking, and post-trip review triggers"
+    version: "1.0.0"

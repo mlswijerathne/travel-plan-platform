@@ -4,6 +4,16 @@ server:
 spring:
   application:
     name: vehicle-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: vehicle-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
@@ -44,4 +54,16 @@ management:
         include: health,info,metrics
 
 file:
-  upload-dir: "E:/travel-plan-platform/travel-plan-uploads/"
+  upload-dir: ${FILE_UPLOAD_DIR:./uploads}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "Vehicle Service API"
+    description: "Manages vehicle listings, availability, and rental pricing"
+    version: "1.0.0"

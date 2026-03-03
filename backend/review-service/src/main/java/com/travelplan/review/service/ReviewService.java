@@ -85,6 +85,12 @@ public class ReviewService {
             throw new ValidationException(
                     "You have already reviewed this provider for booking #" + request.getBookingId());
         }
+        // Prevent duplicate no-booking reviews for the same entity
+        if (request.getBookingId() == null
+                && reviewRepository.existsByTouristIdAndEntityTypeAndEntityId(
+                        touristId, request.getEntityType(), request.getEntityId())) {
+            throw new ValidationException("You have already reviewed this provider");
+        }
 
         // Validate image count
         if (request.getImages() != null && request.getImages().size() > MAX_IMAGES) {
@@ -100,8 +106,8 @@ public class ReviewService {
                 .title(request.getTitle())
                 .content(request.getContent())
                 .images(request.getImages() != null
-                        ? request.getImages().toArray(String[]::new)
-                        : null)
+                        ? new java.util.ArrayList<>(request.getImages())
+                        : new java.util.ArrayList<>())
                 .isVerified(request.getBookingId() != null)
                 .isVisible(true)
                 .build();
@@ -140,7 +146,7 @@ public class ReviewService {
             if (request.getImages().size() > MAX_IMAGES) {
                 throw new ValidationException("A review can contain at most " + MAX_IMAGES + " images");
             }
-            review.setImages(request.getImages().toArray(String[]::new));
+            review.setImages(request.getImages());
         }
 
         review = reviewRepository.save(review);

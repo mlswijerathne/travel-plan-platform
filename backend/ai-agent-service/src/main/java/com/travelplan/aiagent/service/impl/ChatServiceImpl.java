@@ -184,6 +184,16 @@ public class ChatServiceImpl implements ChatService {
                                 sse.data().getQuickReplies()
                         );
                     }
+                })
+                .doOnError(error -> {
+                    log.error("Error in generate-plan stream for session {}: {}", sessionId, error.getMessage());
+                    sessionManager.addAssistantMessage(sessionId,
+                            "I encountered an error generating your plan. Please try again.",
+                            null);
+                })
+                .onErrorResume(error -> {
+                    log.error("Terminating generate-plan stream due to error: {}", error.getMessage());
+                    return Flux.empty();
                 });
     }
 

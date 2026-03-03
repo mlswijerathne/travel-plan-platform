@@ -56,3 +56,15 @@ management:
       exposure:
         include: health,info,metrics
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "Tour Guide Service API"
+    description: "Manages tour guide profiles, skills, availability, and ratings"
+    version: "1.0.0"
+

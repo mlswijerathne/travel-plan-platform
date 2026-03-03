@@ -1,0 +1,20 @@
+springdoc:
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    root: WARN
+    com.travelplan: INFO
+    org.springframework.cloud.gateway: WARN
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true

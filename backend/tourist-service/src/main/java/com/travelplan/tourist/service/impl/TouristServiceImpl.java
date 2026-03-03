@@ -116,6 +116,22 @@ public class TouristServiceImpl implements TouristService {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public void creditWallet(String userId, BigDecimal amount, String description, String referenceId) {
+        Tourist tourist = findTouristByUserId(userId);
+        com.travelplan.tourist.entity.WalletTransaction transaction =
+                com.travelplan.tourist.entity.WalletTransaction.builder()
+                        .tourist(tourist)
+                        .amount(amount)
+                        .type(com.travelplan.tourist.entity.WalletTransaction.TransactionType.REFUND)
+                        .description(description)
+                        .referenceId(referenceId)
+                        .build();
+        walletTransactionRepository.save(transaction);
+        log.info("Wallet credited: userId={}, amount={}, ref={}", userId, amount, referenceId);
+    }
+
     private Tourist findTouristByUserId(String userId) {
         return touristRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tourist", "userId", userId));

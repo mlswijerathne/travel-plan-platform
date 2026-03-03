@@ -48,3 +48,15 @@ management:
     web:
       exposure:
         include: health,info,metrics
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "E-Commerce Service API"
+    description: "Travel merchandise catalog and order management for trip-related products"
+    version: "1.0.0"

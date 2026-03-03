@@ -28,8 +28,8 @@ public class ProductMapper {
         return new ProductDTO(
             product.getId(),
             product.getName(),
-            product.getDescription(),
             categoryStr,
+            product.getDescription(),
             product.getPrice(),
             product.getStockQuantity(),
             imageUrl,

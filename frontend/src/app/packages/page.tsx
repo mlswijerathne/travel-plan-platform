@@ -31,7 +31,8 @@ export default function PackagesPage() {
             params.append("page", "0");
             params.append("size", "20");
 
-            const res = await fetch(`http://localhost:8089/api/packages?${params.toString()}`);
+            const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060';
+            const res = await fetch(`${apiBase}/api/packages?${params.toString()}`);
             if (!res.ok) throw new Error("Failed to fetch packages");
 
             const json = await res.json();

@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { TripPackage } from "@/types/trip-package";
-import { MapPin, Clock, Users, ArrowLeft, Info, Edit, Trash2, Loader2 } from "lucide-react";
+import { MapPin, Clock, Users, ArrowLeft, Edit, Trash2, Loader2 } from "lucide-react";
+import { getPackage, deletePackage } from "@/lib/api/packages";
 
 export default function PackageDetailsPage() {
     const { id } = useParams();
@@ -13,18 +15,12 @@ export default function PackageDetailsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // UI States
-    const [showBookingNotice, setShowBookingNotice] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         if (!id) return;
 
-        fetch(`http://localhost:8089/api/packages/${id}`)
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to load package details");
-                return res.json();
-            })
+        getPackage(Number(id))
             .then((json) => {
                 setPkg(json.data);
                 setLoading(false);
@@ -45,18 +41,8 @@ export default function PackageDetailsPage() {
         setIsDeleting(true);
 
         try {
-            // 2. Send the DELETE request to your Spring Boot backend
-            const res = await fetch(`http://localhost:8089/api/packages/${id}`, {
-                method: "DELETE",
-            });
-
-            if (!res.ok) {
-                throw new Error("Failed to delete the package from the database.");
-            }
-
-            // 3. Success! Redirect the user back to the main packages grid
+            await deletePackage(Number(id));
             router.push("/packages");
-
         } catch (err) {
             console.error("Delete Error:", err);
             alert("An error occurred while trying to delete the package.");
@@ -113,32 +99,16 @@ export default function PackageDetailsPage() {
                             </div>
                         </div>
 
-                        {/* The Safe "Book" Button */}
-                        <button
-                            onClick={() => setShowBookingNotice(true)}
+                        {/* Book This Package → navigates to booking wizard */}
+                        <Link
+                            href={`/bookings/new?packageId=${id}&packageName=${encodeURIComponent(pkg.name)}&price=${finalPrice}&days=${pkg.durationDays}`}
                             className="w-full font-bold py-4 rounded-lg shadow-md transition-colors text-lg flex justify-center items-center bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
                             Book This Package
-                        </button>
-
-                        {/* The Professional Service Notice */}
-                        {showBookingNotice && (
-                            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start animate-fade-in-up">
-                                <Info className="w-5 h-5 text-blue-600 mr-3 shrink-0 mt-0.5" />
-                                <div className="text-sm text-blue-900">
-                                    <p className="font-bold mb-1">Managed by Booking Service</p>
-                                    <p className="text-blue-800 opacity-90">
-                                        Reservations are handled by the dedicated Booking Microservice. This integration will be active once the partner module is fully deployed.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
-                        {!showBookingNotice && (
-                            <p className="text-center text-xs text-gray-400 mt-4">
-                                Instant confirmation via email.
-                            </p>
-                        )}
+                        </Link>
+                        <p className="text-center text-xs text-gray-400 mt-4">
+                            Instant confirmation via email.
+                        </p>
 
                         {/* Admin Actions Section */}
                         <div className="mt-8 pt-6 border-t border-gray-200">

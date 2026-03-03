@@ -5,3 +5,7 @@
 eureka:
   client:
     enabled: false
+
+google:
+  maps:
+    use-dummy: true  # Return realistic Sri Lanka dummy data instead of calling Google Maps API

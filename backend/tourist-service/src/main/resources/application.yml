@@ -4,6 +4,16 @@ server:
 spring:
   application:
     name: tourist-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: tourist-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
@@ -56,3 +66,9 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "Tourist Service API"
+    description: "Manages tourist profiles, travel preferences, and wallet credits"
+    version: "1.0.0"

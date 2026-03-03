@@ -63,6 +63,27 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Optional<Product> updateProduct(Long id, Product updated) {
+        return productRepository.findById(id).map(existing -> {
+            if (updated.getName() != null) existing.setName(updated.getName());
+            if (updated.getDescription() != null) existing.setDescription(updated.getDescription());
+            if (updated.getCategory() != null) existing.setCategory(updated.getCategory());
+            if (updated.getPrice() != null) existing.setPrice(updated.getPrice());
+            if (updated.getStockQuantity() != null) existing.setStockQuantity(updated.getStockQuantity());
+            if (updated.getIsPhysical() != null) existing.setIsPhysical(updated.getIsPhysical());
+            if (updated.getEventId() != null) existing.setEventId(updated.getEventId());
+            return productRepository.save(existing);
+        });
+    }
+
+    public boolean deleteProduct(Long id) {
+        return productRepository.findById(id).map(product -> {
+            product.setIsActive(false);
+            productRepository.save(product);
+            return true;
+        }).orElse(false);
+    }
+
     public List<Product> searchProducts(String categoryStr, BigDecimal minPrice, BigDecimal maxPrice, String eventId) {
         if (categoryStr == null && minPrice == null && maxPrice == null && eventId == null) {
             return productRepository.findAll();

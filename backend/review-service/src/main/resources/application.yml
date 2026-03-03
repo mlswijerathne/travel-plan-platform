@@ -52,3 +52,15 @@ management:
     web:
       exposure:
         include: health,info,metrics
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "Review Service API"
+    description: "Tourist reviews and ratings for hotels, tour guides, and vehicles — propagates rating updates via Kafka"
+    version: "1.0.0"

@@ -2,9 +2,10 @@
 
 import { useMyHotels } from '@/hooks/use-hotels'
 import { useMyGuideProfile } from '@/hooks/use-guides'
+import { useMyVehicles } from '@/hooks/use-vehicles'
 import { useUserRole } from '@/hooks/use-user-role'
 import { StatCard } from '@/components/provider/StatCard'
-import { Hotel, MapPin, Calendar, Star } from 'lucide-react'
+import { Hotel, MapPin, Calendar, Star, Car } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
@@ -12,6 +13,7 @@ export default function ProviderDashboardPage() {
   const { role, isLoading: roleLoading } = useUserRole()
   const { data: hotelsData } = useMyHotels({ size: 5 })
   const { data: guideData } = useMyGuideProfile()
+  const { data: vehiclesData } = useMyVehicles({ size: 5 })
 
   if (roleLoading) {
     return (
@@ -26,13 +28,14 @@ export default function ProviderDashboardPage() {
 
   const hotels = hotelsData?.data ?? []
   const guide = guideData?.data
+  const vehicles = (vehiclesData as any)?.content ?? []
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome back! Here&apos;s an overview of your {role === 'HOTEL_OWNER' ? 'properties' : 'guide profile'}.
+          Welcome back! Here&apos;s an overview of your {role === 'HOTEL_OWNER' ? 'properties' : role === 'VEHICLE_OWNER' ? 'fleet' : 'guide profile'}.
         </p>
       </div>
 
@@ -116,6 +119,54 @@ export default function ProviderDashboardPage() {
               </Link>
             </div>
           )}
+        </>
+      )}
+
+      {role === 'VEHICLE_OWNER' && (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <StatCard icon={Car} label="Total Vehicles" value={vehicles.length} />
+            <StatCard icon={Calendar} label="Available" value={vehicles.filter((v: any) => v.isAvailable).length} />
+            <StatCard icon={Star} label="Avg Rating" value={vehicles.length > 0 ? (vehicles.reduce((a: number, v: any) => a + (v.averageRating ?? 0), 0) / vehicles.length).toFixed(1) : '—'} />
+            <StatCard icon={MapPin} label="Types" value={new Set(vehicles.map((v: any) => v.vehicleType)).size} />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">My Vehicles</h2>
+              <Link href="/provider/vehicles">
+                <Button variant="outline" size="sm">View All</Button>
+              </Link>
+            </div>
+            {vehicles.length === 0 ? (
+              <div className="text-center py-8 border rounded-xl">
+                <p className="text-muted-foreground mb-2">No vehicles yet</p>
+                <Link href="/provider/vehicles/new">
+                  <Button size="sm">Add Your First Vehicle</Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {vehicles.slice(0, 5).map((vehicle: any) => (
+                  <Link key={vehicle.id} href={`/provider/vehicles/${vehicle.id}`} className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent transition-colors">
+                    <span className="text-xl">🚗</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{vehicle.make} {vehicle.model}</p>
+                      <p className="text-xs text-muted-foreground">{vehicle.vehicleType} · Rs. {vehicle.dailyRate ?? vehicle.pricePerDay}/day</p>
+                    </div>
+                    <div className="text-right text-sm">
+                      {vehicle.reviewCount > 0 && (
+                        <div className="flex items-center gap-1">
+                          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                          <span className="font-medium">{vehicle.averageRating?.toFixed(1)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </>
       )}
     </div>

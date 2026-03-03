@@ -30,6 +30,10 @@ import {
   MapPin,
   Star,
   LayoutDashboard,
+  Ticket,
+  Map,
+  Car,
+  ShoppingBag,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useUserRole } from '@/hooks/use-user-role'
@@ -38,13 +42,18 @@ const TOURIST_NAV = [
   { href: '/chat', label: 'Plan Trip', icon: MessageSquare },
   { href: '/hotels', label: 'Hotels', icon: Hotel },
   { href: '/guides', label: 'Guides', icon: MapPin },
+  { href: '/vehicles', label: 'Vehicles', icon: Car },
+  { href: '/events', label: 'Events', icon: Ticket },
+  { href: '/shop', label: 'Shop', icon: ShoppingBag },
+  { href: '/itineraries', label: 'Itineraries', icon: Map },
   { href: '/bookings', label: 'Bookings', icon: Calendar },
   { href: '/reviews', label: 'Reviews', icon: Star },
   { href: '/profile', label: 'Profile', icon: User },
 ]
 
-const PROVIDER_NAV = [
+const VEHICLE_OWNER_NAV = [
   { href: '/provider/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/provider/vehicles', label: 'My Vehicles', icon: Car },
   { href: '/provider/bookings', label: 'Bookings', icon: Calendar },
   { href: '/provider/reviews', label: 'Reviews', icon: Star },
   { href: '/profile', label: 'Profile', icon: User },
@@ -76,7 +85,7 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
   let navItems = TOURIST_NAV
   if (role === 'HOTEL_OWNER') navItems = HOTEL_OWNER_NAV
   else if (role === 'TOUR_GUIDE') navItems = GUIDE_NAV
-  else if (role === 'VEHICLE_OWNER') navItems = PROVIDER_NAV
+  else if (role === 'VEHICLE_OWNER') navItems = VEHICLE_OWNER_NAV
 
   const roleLabel = role === 'HOTEL_OWNER' ? 'Hotel Owner'
     : role === 'TOUR_GUIDE' ? 'Tour Guide'

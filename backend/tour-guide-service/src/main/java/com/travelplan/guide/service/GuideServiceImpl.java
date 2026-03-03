@@ -5,6 +5,7 @@ import com.travelplan.guide.domain.Guide;
 import com.travelplan.guide.dto.AvailabilityResponse;
 import com.travelplan.guide.dto.GuideRequest;
 import com.travelplan.guide.dto.GuideResponse;
+import com.travelplan.guide.dto.GuideUpdateRequest;
 import com.travelplan.guide.repository.AvailabilityRepository;
 import com.travelplan.guide.repository.GuideRepository;
 import com.travelplan.guide.Exception.ResourceNotFoundException;
@@ -169,6 +170,26 @@ public class GuideServiceImpl implements GuideService {
         return new AvailabilityResponse(guide.getId(), isAvailable, guide.getDailyRate(), bookedDates);
     }
 
+    @Override
+    @Transactional
+    public GuideResponse updateGuide(Long id, GuideUpdateRequest request) {
+        Guide guide = guideRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tour guide not found with id: " + id));
+        mapUpdateRequestToGuide(request, guide);
+        Guide savedGuide = guideRepository.save(guide);
+        return mapToResponse(savedGuide);
+    }
+
+    @Override
+    @Transactional
+    public GuideResponse updateGuideByUserId(String userId, GuideUpdateRequest request) {
+        Guide guide = guideRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tour guide not found with user id: " + userId));
+        mapUpdateRequestToGuide(request, guide);
+        Guide savedGuide = guideRepository.save(guide);
+        return mapToResponse(savedGuide);
+    }
+
     private void mapRequestToGuide(GuideRequest request, Guide guide) {
         guide.setFirstName(request.getFirstName());
         guide.setLastName(request.getLastName());
@@ -181,6 +202,20 @@ public class GuideServiceImpl implements GuideService {
         guide.setHourlyRate(request.getHourlyRate());
         guide.setDailyRate(request.getDailyRate());
         guide.setProfileImageUrl(request.getProfileImageUrl());
+    }
+
+    private void mapUpdateRequestToGuide(GuideUpdateRequest request, Guide guide) {
+        if (request.getFirstName() != null) guide.setFirstName(request.getFirstName());
+        if (request.getLastName() != null) guide.setLastName(request.getLastName());
+        if (request.getEmail() != null) guide.setEmail(request.getEmail());
+        if (request.getPhoneNumber() != null) guide.setPhoneNumber(request.getPhoneNumber());
+        if (request.getBio() != null) guide.setBio(request.getBio());
+        if (request.getLanguages() != null) guide.setLanguages(request.getLanguages());
+        if (request.getSpecializations() != null) guide.setSpecializations(request.getSpecializations());
+        if (request.getExperienceYears() != null) guide.setExperienceYears(request.getExperienceYears());
+        if (request.getHourlyRate() != null) guide.setHourlyRate(request.getHourlyRate());
+        if (request.getDailyRate() != null) guide.setDailyRate(request.getDailyRate());
+        if (request.getProfileImageUrl() != null) guide.setProfileImageUrl(request.getProfileImageUrl());
     }
 
     private GuideResponse mapToResponse(Guide guide) {

@@ -15,6 +15,10 @@ public class GoogleMapsConfig {
     @Value("${google.maps.api-key:}")
     private String apiKey;
 
+    @Getter
+    @Value("${google.maps.use-dummy:false}")
+    private boolean useDummy;
+
     @Value("${google.maps.base-url:https://maps.googleapis.com/maps/api}")
     private String baseUrl;
 

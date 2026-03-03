@@ -3,6 +3,7 @@ package com.travelplan.vehicle.service;
 import com.travelplan.vehicle.dto.AvailabilityResponse;
 import com.travelplan.vehicle.dto.VehicleRequest;
 import com.travelplan.vehicle.dto.VehicleResponse;
+import com.travelplan.vehicle.dto.VehicleUpdateRequest;
 import com.travelplan.vehicle.entity.Vehicle;
 import com.travelplan.vehicle.mapper.VehicleMapper;
 import com.travelplan.vehicle.repository.BookingRepository;
@@ -114,12 +115,29 @@ public class VehicleService {
                 .filter(v -> v.getOwnerId().equals(ownerId) || "admin".equals(ownerId))
                 .map(existing -> {
                     // NEW: Ensure they aren't changing the plate to one that belongs to another car
-                    if (!existing.getLicensePlate().equals(request.licensePlate()) && 
+                    if (!existing.getLicensePlate().equals(request.licensePlate()) &&
                         vehicleRepository.existsByLicensePlate(request.licensePlate())) {
                         throw new IllegalStateException("Vehicle already exists with licensePlate: '" + request.licensePlate() + "'");
                     }
 
                     updateVehicleFromRequest(existing, request);
+                    Vehicle saved = vehicleRepository.save(existing);
+                    return vehicleMapper.toDTO(saved, isVehicleCurrentlyAvailable(saved));
+                });
+    }
+
+    @Transactional
+    public Optional<VehicleResponse> updateVehicle(Long id, VehicleUpdateRequest request, String ownerId) {
+        return vehicleRepository.findById(id)
+                .filter(v -> v.getOwnerId().equals(ownerId) || "admin".equals(ownerId))
+                .map(existing -> {
+                    if (request.licensePlate() != null
+                            && !existing.getLicensePlate().equals(request.licensePlate())
+                            && vehicleRepository.existsByLicensePlate(request.licensePlate())) {
+                        throw new IllegalStateException(
+                                "Vehicle already exists with licensePlate: '" + request.licensePlate() + "'");
+                    }
+                    updateVehicleFromUpdateRequest(existing, request);
                     Vehicle saved = vehicleRepository.save(existing);
                     return vehicleMapper.toDTO(saved, isVehicleCurrentlyAvailable(saved));
                 });
@@ -156,9 +174,22 @@ public class VehicleService {
         vehicle.setDailyRate(request.dailyRate());
         vehicle.setFeatures(request.features());
         vehicle.setImages(request.images());
-        
+
         if (request.isAvailable() != null) {
             vehicle.setIsAvailable(request.isAvailable());
         }
+    }
+
+    private void updateVehicleFromUpdateRequest(Vehicle vehicle, VehicleUpdateRequest request) {
+        if (request.vehicleType() != null) vehicle.setVehicleType(request.vehicleType());
+        if (request.make() != null) vehicle.setMake(request.make());
+        if (request.model() != null) vehicle.setModel(request.model());
+        if (request.year() != null) vehicle.setYear(request.year());
+        if (request.licensePlate() != null) vehicle.setLicensePlate(request.licensePlate());
+        if (request.seatingCapacity() != null) vehicle.setSeatingCapacity(request.seatingCapacity());
+        if (request.dailyRate() != null) vehicle.setDailyRate(request.dailyRate());
+        if (request.features() != null) vehicle.setFeatures(request.features());
+        if (request.images() != null) vehicle.setImages(request.images());
+        if (request.isAvailable() != null) vehicle.setIsAvailable(request.isAvailable());
     }
 }

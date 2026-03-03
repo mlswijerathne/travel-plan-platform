@@ -1,0 +1,12 @@
+**/target/
+**/node_modules/
+**/.idea/
+**/.vscode/
+**/*.iml
+**/logs/
+**/.git/
+**/.DS_Store
+**/docker-compose*.yml
+**/.running-pids
+**/Dockerfile
+**/*.md

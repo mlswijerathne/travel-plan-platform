@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -92,6 +93,18 @@ public class OrderService {
 
     public Page<Order> getTouristOrders(String touristId, Pageable pageable) {
         return orderRepository.findByTouristId(touristId, pageable);
+    }
+
+    public Optional<Order> getOrderForTourist(Long orderId, String touristId) {
+        return orderRepository.findByIdAndTouristId(orderId, touristId);
+    }
+
+    public Page<Order> getAllOrders(String statusStr, Pageable pageable) {
+        if (statusStr != null && !statusStr.isEmpty()) {
+            OrderStatus status = OrderStatus.valueOf(statusStr.toUpperCase());
+            return orderRepository.findByStatus(status, pageable);
+        }
+        return orderRepository.findAll(pageable);
     }
 
     public Order updateOrderStatus(Long orderId, OrderStatus status) {

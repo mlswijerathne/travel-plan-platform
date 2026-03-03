@@ -1,0 +1,27 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - git
+
+runcmd:
+  # Install Docker
+  - curl -fsSL https://get.docker.com | sh
+  # Add default user to docker group
+  - usermod -aG docker azureuser
+  # Enable and start Docker
+  - systemctl enable docker
+  - systemctl start docker
+  # Install Docker Compose plugin
+  - mkdir -p /usr/local/lib/docker/cli-plugins
+  - curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
+  - chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+  # Create app directory
+  - mkdir -p /opt/travel-plan
+  - chown azureuser:azureuser /opt/travel-plan

@@ -68,3 +68,9 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "Hotel Service API"
+    description: "Manages hotel listings, room types, availability, and provider ratings"
+    version: "1.0.0"

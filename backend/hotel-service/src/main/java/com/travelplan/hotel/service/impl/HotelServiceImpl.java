@@ -44,7 +44,17 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelMapper.toEntity(request, ownerId);
         Hotel savedHotel = hotelRepository.save(hotel);
         log.info("Hotel created with id: {}", savedHotel.getId());
-        return hotelMapper.toResponse(savedHotel);
+
+        if (request.getRooms() != null && !request.getRooms().isEmpty()) {
+            log.info("Creating {} inline room(s) for hotel {}", request.getRooms().size(), savedHotel.getId());
+            request.getRooms().forEach(roomReq -> {
+                Room room = roomMapper.toEntity(roomReq, savedHotel);
+                roomRepository.save(room);
+            });
+        }
+
+        return hotelMapper.toResponseWithRooms(savedHotel,
+                roomMapper.toResponseList(roomRepository.findByHotelId(savedHotel.getId())));
     }
 
     @Override

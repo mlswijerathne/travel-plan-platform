@@ -54,9 +54,11 @@ public class Itinerary {
     @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "itinerary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ItineraryDay> days = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "itinerary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Expense> expenses = new ArrayList<>();
 

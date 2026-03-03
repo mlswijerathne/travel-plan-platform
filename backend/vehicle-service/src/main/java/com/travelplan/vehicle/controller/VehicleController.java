@@ -3,13 +3,14 @@ package com.travelplan.vehicle.controller;
 import com.travelplan.vehicle.dto.AvailabilityResponse;
 import com.travelplan.vehicle.dto.VehicleRequest;
 import com.travelplan.vehicle.dto.VehicleResponse;
+import com.travelplan.vehicle.dto.VehicleUpdateRequest;
 import com.travelplan.vehicle.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -37,7 +38,6 @@ public class VehicleController {
                     vehicleService.searchVehicles(vehicleType, minCapacity, minDailyRate, maxDailyRate, query, page,
                             size));
         } catch (Exception e) {
-            // Expose real error for debugging
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(java.util.Map.of(
                             "error", e.getClass().getName(),
@@ -56,18 +56,17 @@ public class VehicleController {
     @PostMapping
     public ResponseEntity<VehicleResponse> createVehicle(
             @Valid @RequestBody VehicleRequest request,
-            @RequestHeader(value = "X-User-Id", required = false) String userId) {
-        // In a real scenario,userId would come from JWT security context
-        String ownerId = userId != null ? userId : "admin";
+            Authentication authentication) {
+        String ownerId = authentication.getName();
         return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.createVehicle(request, ownerId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<VehicleResponse> updateVehicle(
             @PathVariable Long id,
-            @Valid @RequestBody VehicleRequest request,
-            @RequestHeader(value = "X-User-Id", required = false) String userId) {
-        String ownerId = userId != null ? userId : "admin";
+            @RequestBody VehicleUpdateRequest request,
+            Authentication authentication) {
+        String ownerId = authentication.getName();
         return vehicleService.updateVehicle(id, request, ownerId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
@@ -76,8 +75,8 @@ public class VehicleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(
             @PathVariable Long id,
-            @RequestHeader(value = "X-User-Id", required = false) String userId) {
-        String ownerId = userId != null ? userId : "admin";
+            Authentication authentication) {
+        String ownerId = authentication.getName();
         if (vehicleService.deleteVehicle(id, ownerId)) {
             return ResponseEntity.noContent().build();
         }
@@ -93,9 +92,8 @@ public class VehicleController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<List<VehicleResponse>> getOwnerVehicles(
-            @RequestHeader(value = "X-User-Id", required = false) String userId) {
-        String ownerId = userId != null ? userId : "admin";
+    public ResponseEntity<List<VehicleResponse>> getOwnerVehicles(Authentication authentication) {
+        String ownerId = authentication.getName();
         return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
     }
 }

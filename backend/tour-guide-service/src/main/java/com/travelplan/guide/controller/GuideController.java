@@ -5,6 +5,7 @@ import com.travelplan.common.dto.PaginatedResponse;
 import com.travelplan.guide.dto.AvailabilityResponse;
 import com.travelplan.guide.dto.GuideRequest;
 import com.travelplan.guide.dto.GuideResponse;
+import com.travelplan.guide.dto.GuideUpdateRequest;
 import com.travelplan.guide.service.GuideService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class GuideController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<ApiResponse<GuideResponse>> updateMyProfile(@Valid @RequestBody GuideRequest request) {
+    public ResponseEntity<ApiResponse<GuideResponse>> updateMyProfile(@RequestBody GuideUpdateRequest request) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         if ("anonymousUser".equals(userId)) {
             userId = "mock-postman-user-id";
@@ -66,7 +67,7 @@ public class GuideController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<GuideResponse>> updateGuide(@PathVariable Long id,
-            @Valid @RequestBody GuideRequest request) {
+            @RequestBody GuideUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(guideService.updateGuide(id, request)));
     }
 

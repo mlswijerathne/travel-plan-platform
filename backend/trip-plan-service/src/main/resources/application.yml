@@ -41,3 +41,15 @@ management:
     web:
       exposure:
         include: health,info,metrics
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+openapi:
+  info:
+    title: "Trip Plan Service API"
+    description: "Admin-curated pre-built travel packages with bundle pricing and availability management"
+    version: "1.0.0"

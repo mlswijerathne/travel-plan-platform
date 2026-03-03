@@ -6,7 +6,6 @@ import com.travelplan.review.entity.Review;
 import com.travelplan.review.entity.ReviewProviderResponse;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,9 +41,8 @@ public class ReviewMapper {
                 .rating(review.getRating())
                 .title(review.getTitle())
                 .content(review.getContent())
-                // Convert String[] (PostgreSQL TEXT[]) to List<String>
                 .images(review.getImages() != null
-                        ? Arrays.asList(review.getImages())
+                        ? review.getImages()
                         : Collections.emptyList())
                 .isVerified(review.getIsVerified())
                 .isVisible(review.getIsVisible())

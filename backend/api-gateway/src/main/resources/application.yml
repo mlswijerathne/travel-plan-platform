@@ -64,11 +64,11 @@ spring:
           predicates:
             - Path=/api/bookings/**
 
-        # Itinerary Service
+        # Itinerary Service (v1 prefix used by controller)
         - id: itinerary-service
           uri: lb://itinerary-service
           predicates:
-            - Path=/api/itineraries/**
+            - Path=/api/v1/itineraries/**
 
         # Review Service
         - id: review-service
@@ -82,11 +82,23 @@ spring:
           predicates:
             - Path=/api/trip-plans/**,/api/packages/**
 
-        # Event Service
+        # Event Service (admin + authenticated endpoints)
         - id: event-service
           uri: lb://event-service
           predicates:
             - Path=/api/events/**
+
+        # Event Service (public discovery endpoints - no auth required)
+        - id: event-service-public
+          uri: lb://event-service
+          predicates:
+            - Path=/api/public/events/**
+
+        # Event Service (geospatial / route-based search)
+        - id: event-service-geo
+          uri: lb://event-service
+          predicates:
+            - Path=/api/geo/events/**
 
         # E-Commerce Service
         - id: ecommerce-service
@@ -94,11 +106,85 @@ spring:
           predicates:
             - Path=/api/products/**,/api/orders/**
 
-        # AI Agent Service (direct URL - Eureka disabled due to WebFlux conflict)
+        # AI Agent Service (direct URL — WebFlux conflict prevents Eureka lb://)
         - id: ai-agent-service
-          uri: http://localhost:8093
+          uri: ${AI_AGENT_SERVICE_URL:http://localhost:8093}
           predicates:
             - Path=/api/chat/**
+
+        # ── Swagger / OpenAPI doc aggregation routes ──────────────────────────
+        # Each route proxies a service's /v3/api-docs through the gateway so the
+        # unified Swagger UI (hosted here) can fetch all specs from one origin.
+
+        - id: tourist-service-docs
+          uri: lb://tourist-service
+          predicates:
+            - Path=/tourist-service/v3/api-docs
+          filters:
+            - RewritePath=/tourist-service/v3/api-docs, /v3/api-docs
+
+        - id: hotel-service-docs
+          uri: lb://hotel-service
+          predicates:
+            - Path=/hotel-service/v3/api-docs
+          filters:
+            - RewritePath=/hotel-service/v3/api-docs, /v3/api-docs
+
+        - id: tour-guide-service-docs
+          uri: lb://tour-guide-service
+          predicates:
+            - Path=/tour-guide-service/v3/api-docs
+          filters:
+            - RewritePath=/tour-guide-service/v3/api-docs, /v3/api-docs
+
+        - id: vehicle-service-docs
+          uri: lb://vehicle-service
+          predicates:
+            - Path=/vehicle-service/v3/api-docs
+          filters:
+            - RewritePath=/vehicle-service/v3/api-docs, /v3/api-docs
+
+        - id: booking-service-docs
+          uri: lb://booking-service
+          predicates:
+            - Path=/booking-service/v3/api-docs
+          filters:
+            - RewritePath=/booking-service/v3/api-docs, /v3/api-docs
+
+        - id: itinerary-service-docs
+          uri: lb://itinerary-service
+          predicates:
+            - Path=/itinerary-service/v3/api-docs
+          filters:
+            - RewritePath=/itinerary-service/v3/api-docs, /v3/api-docs
+
+        - id: review-service-docs
+          uri: lb://review-service
+          predicates:
+            - Path=/review-service/v3/api-docs
+          filters:
+            - RewritePath=/review-service/v3/api-docs, /v3/api-docs
+
+        - id: trip-plan-service-docs
+          uri: lb://trip-plan-service
+          predicates:
+            - Path=/trip-plan-service/v3/api-docs
+          filters:
+            - RewritePath=/trip-plan-service/v3/api-docs, /v3/api-docs
+
+        - id: event-service-docs
+          uri: lb://event-service
+          predicates:
+            - Path=/event-service/v3/api-docs
+          filters:
+            - RewritePath=/event-service/v3/api-docs, /v3/api-docs
+
+        - id: ecommerce-service-docs
+          uri: lb://ecommerce-service
+          predicates:
+            - Path=/ecommerce-service/v3/api-docs
+          filters:
+            - RewritePath=/ecommerce-service/v3/api-docs, /v3/api-docs
 
 eureka:
   client:
@@ -116,6 +202,41 @@ supabase:
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    # Service dropdown — one entry per microservice
+    urls:
+      - name: Tourist Service
+        url: /tourist-service/v3/api-docs
+      - name: Hotel Service
+        url: /hotel-service/v3/api-docs
+      - name: Tour Guide Service
+        url: /tour-guide-service/v3/api-docs
+      - name: Vehicle Service
+        url: /vehicle-service/v3/api-docs
+      - name: Booking Service
+        url: /booking-service/v3/api-docs
+      - name: Itinerary Service
+        url: /itinerary-service/v3/api-docs
+      - name: Review Service
+        url: /review-service/v3/api-docs
+      - name: Trip Plan Service
+        url: /trip-plan-service/v3/api-docs
+      - name: Event Service
+        url: /event-service/v3/api-docs
+      - name: E-Commerce Service
+        url: /ecommerce-service/v3/api-docs
+    # UX improvements
+    display-request-duration: true
+    groups-order: asc
+    operations-sorter: alpha
+    disable-swagger-default-url: true
+    default-models-expand-depth: 1
 
 management:
   endpoints:
