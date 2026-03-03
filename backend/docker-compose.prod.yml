@@ -16,7 +16,8 @@ services:
     networks:
       - travel-plan-network
     depends_on:
-      - api-gateway
+      api-gateway:
+        condition: service_healthy
     restart: unless-stopped
 
   kafka-ui:
@@ -57,6 +58,7 @@ services:
   vehicle-service:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - APP_BASE_URL=https://${DOMAIN:-api.travel-plan.live}
     restart: unless-stopped
 
   booking-service:
@@ -87,6 +89,7 @@ services:
   ecommerce-service:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - APP_BASE_URL=https://${DOMAIN:-api.travel-plan.live}
     restart: unless-stopped
 
   ai-agent-service:

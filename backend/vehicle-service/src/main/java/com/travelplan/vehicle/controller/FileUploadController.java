@@ -17,10 +17,11 @@ import java.util.UUID;
 @RequestMapping("/api/upload")
 public class FileUploadController {
 
-    // Reads the "E:/travel-plan-platform/travel-plan-uploads/" path from your
-    // application.yml
     @Value("${file.upload-dir}")
     private String uploadDir;
+
+    @Value("${app.base-url:http://localhost:8085}")
+    private String baseUrl;
 
     @PostMapping
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
@@ -39,7 +40,7 @@ public class FileUploadController {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             // 3. Generate the URL that the frontend can use to display the image
-            String fileUrl = "http://localhost:8085/uploads/" + filename;
+            String fileUrl = baseUrl + "/uploads/" + filename;
 
             return ResponseEntity.ok(fileUrl);
 

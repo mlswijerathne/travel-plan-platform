@@ -106,9 +106,9 @@ spring:
           predicates:
             - Path=/api/products/**,/api/orders/**
 
-        # AI Agent Service (direct URL — WebFlux conflict prevents Eureka lb://)
+        # AI Agent Service
         - id: ai-agent-service
-          uri: ${AI_AGENT_SERVICE_URL:http://localhost:8093}
+          uri: lb://ai-agent-service
           predicates:
             - Path=/api/chat/**
 

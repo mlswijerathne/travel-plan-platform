@@ -106,6 +106,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8060/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
 
   # Tourist Service
   tourist-service:
@@ -119,14 +125,23 @@ services:
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - SUPABASE_URL=${SUPABASE_URL}
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - DATABASE_URL=${TOURIST_DB_URL}
       - DATABASE_USERNAME=${TOURIST_DB_USERNAME}
       - DATABASE_PASSWORD=${TOURIST_DB_PASSWORD}
     depends_on:
       discovery-server:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8082/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Hotel Service
   hotel-service:
@@ -151,6 +166,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8083/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Tour Guide Service
   tour-guide-service:
@@ -175,6 +196,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8084/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Vehicle Service
   vehicle-service:
@@ -188,14 +215,24 @@ services:
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - SUPABASE_URL=${SUPABASE_URL}
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - APP_BASE_URL=${VEHICLE_BASE_URL:http://vehicle-service:8085}
       - DATABASE_URL=${VEHICLE_DB_URL}
       - DATABASE_USERNAME=${VEHICLE_DB_USERNAME}
       - DATABASE_PASSWORD=${VEHICLE_DB_PASSWORD}
     depends_on:
       discovery-server:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8085/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Booking Service
   booking-service:
@@ -219,13 +256,19 @@ services:
       kafka:
         condition: service_healthy
       hotel-service:
-        condition: service_started
+        condition: service_healthy
       tour-guide-service:
         condition: service_started
       vehicle-service:
         condition: service_started
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8086/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Itinerary Service
   itinerary-service:
@@ -250,6 +293,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8087/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Review Service
   review-service:
@@ -274,6 +323,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8088/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Trip Plan Service
   trip-plan-service:
@@ -295,6 +350,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8089/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # Event Service
   event-service:
@@ -316,6 +377,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8090/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # E-Commerce Service
   ecommerce-service:
@@ -329,6 +396,7 @@ services:
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - SUPABASE_URL=${SUPABASE_URL}
+      - APP_BASE_URL=${ECOMMERCE_BASE_URL:http://ecommerce-service:8091}
       - DATABASE_URL=${ECOMMERCE_DB_URL}
       - DATABASE_USERNAME=${ECOMMERCE_DB_USERNAME}
       - DATABASE_PASSWORD=${ECOMMERCE_DB_PASSWORD}
@@ -337,6 +405,12 @@ services:
         condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8091/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   # AI Agent Service
   ai-agent-service:
@@ -354,15 +428,21 @@ services:
       discovery-server:
         condition: service_healthy
       hotel-service:
-        condition: service_started
+        condition: service_healthy
       tour-guide-service:
         condition: service_started
       vehicle-service:
         condition: service_started
       review-service:
-        condition: service_started
+        condition: service_healthy
     networks:
       - travel-plan-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8093/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
 volumes:
   kafka-data:

@@ -29,6 +29,9 @@ public class ProductService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    @Value("${app.base-url:http://localhost:8091}")
+    private String baseUrl;
+
     @PostConstruct
     public void init() {
         try {
@@ -52,7 +55,7 @@ public class ProductService {
             Path filePath = Paths.get(uploadDir).resolve(fileName);
             Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             
-            String imageUrl = "http://localhost:8091/api/products/images/" + fileName;
+            String imageUrl = baseUrl + "/api/products/images/" + fileName;
             
             // Map the single uploaded image to the new List format
             if (product.getImages() == null) {

@@ -2,6 +2,31 @@ springdoc:
   swagger-ui:
     enabled: false
 
+spring:
+  cloud:
+    gateway:
+      # Global timeouts — prevent 502 when backends are slow to respond
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 60s
+        pool:
+          type: elastic
+          max-idle-time: 15s
+          eviction-interval: 60s
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Access-Control-Allow-Methods Access-Control-Allow-Headers, RETAIN_FIRST
+        # Retry on connection errors and 502/503 (GET only by default)
+        - name: Retry
+          args:
+            retries: 3
+            statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE
+            methods: GET
+            backoff:
+              firstBackoff: 100ms
+              maxBackoff: 500ms
+              factor: 2
+              basedOnPreviousValue: false
+
 logging:
   level:
     root: WARN
