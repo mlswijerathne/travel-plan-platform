@@ -62,7 +62,8 @@ describe('Tourist - Itineraries Page', () => {
   it('should navigate to itinerary detail on click', () => {
     cy.login('tourist')
     cy.visit('/itineraries')
-    cy.contains('Colombo Weekend Getaway').click()
+    cy.wait('@getItineraries')
+    cy.get('a[href*="/itineraries/"]').first().click()
     cy.url().should('include', '/itineraries/')
   })
 

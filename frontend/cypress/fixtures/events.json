@@ -1,6 +1,6 @@
 {
   "eventList": {
-    "content": [
+    "data": [
       {
         "id": 1,
         "title": "Kandy Esala Perahera",
@@ -9,7 +9,7 @@
         "category": "CULTURAL",
         "startDate": "2026-08-01",
         "endDate": "2026-08-10",
-        "price": 25.00,
+        "ticketPrice": 25.00,
         "maxParticipants": 500,
         "registeredCount": 320,
         "status": "PUBLISHED",
@@ -23,17 +23,18 @@
         "category": "FOOD",
         "startDate": "2026-06-15",
         "endDate": "2026-06-17",
-        "price": 15.00,
+        "ticketPrice": 15.00,
         "maxParticipants": 200,
         "registeredCount": 150,
         "status": "PUBLISHED",
         "coverImageUrl": null
       }
     ],
-    "page": 0,
-    "size": 12,
-    "totalElements": 2,
-    "totalPages": 1,
-    "last": true
+    "pagination": {
+      "page": 0,
+      "pageSize": 12,
+      "totalItems": 2,
+      "totalPages": 1
+    }
   }
 }

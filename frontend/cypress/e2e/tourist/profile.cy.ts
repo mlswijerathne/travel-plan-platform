@@ -59,7 +59,6 @@ describe('Tourist - Profile Page', () => {
     cy.login('tourist')
     cy.visit('/profile')
     cy.contains('Preferences').click()
-    cy.wait('@getPreferences')
     cy.contains('Budget Level').should('be.visible')
   })
 
@@ -67,7 +66,6 @@ describe('Tourist - Profile Page', () => {
     cy.login('tourist')
     cy.visit('/profile')
     cy.contains('Preferences').click()
-    cy.wait('@getPreferences')
     cy.contains('Adventure').should('exist')
     cy.contains('Culture').should('exist')
     cy.contains('Nature').should('exist')
@@ -82,7 +80,6 @@ describe('Tourist - Profile Page', () => {
     cy.login('tourist')
     cy.visit('/profile')
     cy.contains('Preferences').click()
-    cy.wait('@getPreferences')
     cy.contains('Save Preferences').click()
     cy.wait('@updatePreferences')
   })

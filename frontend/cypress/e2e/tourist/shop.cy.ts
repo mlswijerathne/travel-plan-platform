@@ -28,8 +28,8 @@ describe('Tourist - Shop Page', () => {
 
   it('should show product prices', () => {
     cy.wait('@getProducts')
-    cy.contains('$35').should('exist')
-    cy.contains('$89').should('exist')
+    cy.contains('Rs. 35').should('exist')
+    cy.contains('Rs. 89').should('exist')
   })
 
   it('should show stock information', () => {

@@ -1,41 +1,55 @@
 {
   "myReviews": {
-    "content": [
-      {
-        "id": 1,
-        "entityType": "HOTEL",
-        "entityId": 1,
-        "entityName": "Grand Colombo Hotel",
-        "rating": 5,
-        "title": "Amazing stay",
-        "content": "The hotel was fantastic with great amenities",
-        "isVerified": true,
-        "createdAt": "2026-02-15T10:00:00",
-        "responses": []
+    "data": {
+      "data": [
+        {
+          "id": 1,
+          "entityType": "HOTEL",
+          "entityId": 1,
+          "entityName": "Grand Colombo Hotel",
+          "rating": 5,
+          "title": "Amazing stay",
+          "content": "The hotel was fantastic with great amenities",
+          "isVerified": true,
+          "createdAt": "2026-02-15T10:00:00",
+          "responses": []
+        }
+      ],
+      "pagination": {
+        "page": 0,
+        "pageSize": 10,
+        "totalItems": 1,
+        "totalPages": 1
       }
-    ],
-    "page": 0,
-    "size": 10,
-    "totalElements": 1,
-    "totalPages": 1,
-    "last": true
+    },
+    "meta": {
+      "timestamp": "2026-03-05T00:00:00Z",
+      "requestId": null
+    }
   },
   "pendingReviews": {
-    "content": [
-      {
-        "bookingId": 2,
-        "entityType": "TOUR_GUIDE",
-        "entityId": 1,
-        "entityName": "Kamal Perera",
-        "startDate": "2026-03-01",
-        "endDate": "2026-03-02"
+    "data": {
+      "data": [
+        {
+          "bookingId": 2,
+          "entityType": "TOUR_GUIDE",
+          "entityId": 1,
+          "entityName": "Kamal Perera",
+          "startDate": "2026-03-01",
+          "endDate": "2026-03-02"
+        }
+      ],
+      "pagination": {
+        "page": 0,
+        "pageSize": 10,
+        "totalItems": 1,
+        "totalPages": 1
       }
-    ],
-    "page": 0,
-    "size": 10,
-    "totalElements": 1,
-    "totalPages": 1,
-    "last": true
+    },
+    "meta": {
+      "timestamp": "2026-03-05T00:00:00Z",
+      "requestId": null
+    }
   },
   "reviewSummary": {
     "entityType": "HOTEL",

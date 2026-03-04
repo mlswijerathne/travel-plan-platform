@@ -1,14 +1,27 @@
 {
   "profile": {
-    "id": 1,
-    "userId": "test-user-id",
-    "email": "tourist@test.com",
-    "firstName": "John",
-    "lastName": "Doe",
-    "phoneNumber": "+94771234567",
-    "nationality": "British",
-    "preferredBudget": "MODERATE",
-    "createdAt": "2026-01-15T10:00:00"
+    "data": {
+      "id": 1,
+      "userId": "test-user-id",
+      "email": "tourist@test.com",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phoneNumber": "+94771234567",
+      "nationality": "British",
+      "preferredBudget": "MODERATE",
+      "createdAt": "2026-01-15T10:00:00",
+      "preferences": {
+        "preferredBudget": "MODERATE",
+        "travelStyle": "Solo",
+        "interests": ["Adventure", "Culture", "Nature"],
+        "preferredLanguages": ["English"],
+        "accessibilityNeeds": ""
+      }
+    },
+    "meta": {
+      "timestamp": "2026-03-05T00:00:00Z",
+      "requestId": null
+    }
   },
   "preferences": {
     "preferredBudget": "MODERATE",
@@ -18,16 +31,22 @@
     "accessibilityNeeds": ""
   },
   "wallet": {
-    "balance": 250.00,
-    "currency": "USD",
-    "transactions": [
-      {
-        "id": 1,
-        "amount": 100.00,
-        "type": "CREDIT",
-        "description": "Welcome bonus",
-        "createdAt": "2026-01-15T10:00:00"
-      }
-    ]
+    "data": {
+      "balance": 250.00,
+      "currency": "USD",
+      "transactions": [
+        {
+          "id": 1,
+          "amount": 100.00,
+          "type": "CREDIT",
+          "description": "Welcome bonus",
+          "createdAt": "2026-01-15T10:00:00"
+        }
+      ]
+    },
+    "meta": {
+      "timestamp": "2026-03-05T00:00:00Z",
+      "requestId": null
+    }
   }
 }

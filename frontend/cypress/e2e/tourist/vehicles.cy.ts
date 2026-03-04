@@ -27,8 +27,8 @@ describe('Tourist - Vehicles Page', () => {
   })
 
   it('should show vehicle details', () => {
-    cy.contains('$45').should('exist')
-    cy.contains('$85').should('exist')
+    cy.contains('Rs 45').should('exist')
+    cy.contains('Rs 85').should('exist')
     cy.contains('CAR').should('exist')
     cy.contains('VAN').should('exist')
   })
@@ -39,7 +39,7 @@ describe('Tourist - Vehicles Page', () => {
   })
 
   it('should navigate to vehicle detail on click', () => {
-    cy.contains('Prius').click()
+    cy.get('a[href*="/vehicles/"]').first().click()
     cy.url().should('include', '/vehicles/')
   })
 

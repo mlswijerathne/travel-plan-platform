@@ -35,8 +35,8 @@ describe('Tourist - Guides Page', () => {
 
   it('should show guide rates', () => {
     cy.wait('@getGuides')
-    cy.contains('$25').should('exist')
-    cy.contains('$150').should('exist')
+    cy.contains('25.00').should('exist')
+    cy.contains('150.00').should('exist')
   })
 
   it('should navigate to guide detail on click', () => {

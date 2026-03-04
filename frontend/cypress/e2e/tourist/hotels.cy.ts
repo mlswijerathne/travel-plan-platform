@@ -119,15 +119,15 @@ describe('Tourist - Hotel Detail Page', () => {
   })
 
   it('should display amenities', () => {
-    cy.contains('wifi').should('be.visible')
-    cy.contains('pool').should('be.visible')
+    cy.contains('Wifi').should('be.visible')
+    cy.contains('Pool').should('be.visible')
   })
 
   it('should display rooms section', () => {
     cy.contains('DELUXE').should('be.visible')
     cy.contains('SUITE').should('be.visible')
-    cy.contains('$150').should('be.visible')
-    cy.contains('$350').should('be.visible')
+    cy.contains('150.00').should('be.visible')
+    cy.contains('350.00').should('be.visible')
   })
 
   it('should have availability check inputs', () => {

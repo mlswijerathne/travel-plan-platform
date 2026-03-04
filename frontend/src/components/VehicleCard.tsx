@@ -57,7 +57,9 @@ export function VehicleCard({
             <CardContent className="p-5 grow">
                 <div className="flex justify-between items-start mb-2">
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900">{make} {model}</h3>
+                        <h3 className="text-xl font-bold text-gray-900">
+                            <Link href={`/vehicles/${id}`} className="hover:underline">{make} {model}</Link>
+                        </h3>
                         <p className="text-xs text-gray-500 uppercase tracking-wider">{type}</p>
                     </div>
                     <span className="text-sm font-medium text-gray-400">{year}</span>

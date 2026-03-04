@@ -1,6 +1,6 @@
 {
   "hotelList": {
-    "content": [
+    "data": [
       {
         "id": 1,
         "name": "Grand Colombo Hotel",
@@ -47,13 +47,15 @@
         "rooms": []
       }
     ],
-    "page": 0,
-    "size": 9,
-    "totalElements": 3,
-    "totalPages": 1,
-    "last": true
+    "pagination": {
+      "page": 0,
+      "pageSize": 9,
+      "totalItems": 3,
+      "totalPages": 1
+    }
   },
   "hotelDetail": {
+    "data": {
     "id": 1,
     "name": "Grand Colombo Hotel",
     "description": "A luxury hotel in the heart of Colombo with world-class amenities",
@@ -85,14 +87,24 @@
         "totalRooms": 5,
         "isActive": true
       }
-    ]
+    },
+    "meta": {
+      "timestamp": "2026-03-05T00:00:00Z",
+      "requestId": null
+    }
   },
   "availability": {
-    "hotelId": 1,
-    "hotelName": "Grand Colombo Hotel",
-    "available": true,
-    "availableRooms": 15,
-    "message": "Rooms available for booking"
+    "data": {
+      "hotelId": 1,
+      "hotelName": "Grand Colombo Hotel",
+      "available": true,
+      "availableRooms": 15,
+      "message": "Rooms available for booking"
+    },
+    "meta": {
+      "timestamp": "2026-03-05T00:00:00Z",
+      "requestId": null
+    }
   },
   "ownerHotels": {
     "content": [

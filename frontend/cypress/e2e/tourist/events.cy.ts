@@ -29,8 +29,8 @@ describe('Tourist - Events Page', () => {
   it('should show event details on cards', () => {
     cy.contains('Kandy').should('be.visible')
     cy.contains('Colombo').should('be.visible')
-    cy.contains('$25').should('exist')
-    cy.contains('$15').should('exist')
+    cy.contains('Rs 25').should('exist')
+    cy.contains('Rs 15').should('exist')
   })
 
   it('should have search and filter controls', () => {

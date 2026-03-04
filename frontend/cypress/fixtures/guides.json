@@ -1,6 +1,6 @@
 {
   "guideList": {
-    "content": [
+    "data": [
       {
         "id": 1,
         "userId": "user-1",
@@ -38,10 +38,11 @@
         "isAvailable": true
       }
     ],
-    "page": 0,
-    "size": 9,
-    "totalElements": 2,
-    "totalPages": 1,
-    "last": true
+    "pagination": {
+      "page": 0,
+      "pageSize": 9,
+      "totalItems": 2,
+      "totalPages": 1
+    }
   }
 }
