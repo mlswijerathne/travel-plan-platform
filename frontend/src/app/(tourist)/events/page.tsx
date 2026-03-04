@@ -129,12 +129,12 @@ export default function EventsPage() {
             className="pl-9 h-10"
           />
         </div>
-        <Select value={category} onValueChange={setCategory}>
+        <Select value={category || 'all'} onValueChange={val => setCategory(val === 'all' ? '' : val)}>
           <SelectTrigger className="w-full sm:w-44 h-10">
             <SelectValue placeholder="All categories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All categories</SelectItem>
+            <SelectItem value="all">All categories</SelectItem>
             {EVENT_CATEGORIES.map(c => (
               <SelectItem key={c} value={c}>{c.charAt(0) + c.slice(1).toLowerCase()}</SelectItem>
             ))}

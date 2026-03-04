@@ -1,0 +1,13 @@
+11915:discovery-server:8761
+11960:api-gateway:8060
+12003:tourist-service:8082
+12004:vehicle-service:8085
+12005:trip-plan-service:8089
+12006:event-service:8090
+12007:ecommerce-service:8091
+12009:ai-agent-service:8093
+12221:hotel-service:8083
+12222:tour-guide-service:8084
+12223:booking-service:8086
+12225:itinerary-service:8087
+12227:review-service:8088

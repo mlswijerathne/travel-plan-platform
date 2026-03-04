@@ -1,0 +1,119 @@
+{
+  "hotelList": {
+    "content": [
+      {
+        "id": 1,
+        "name": "Grand Colombo Hotel",
+        "description": "A luxury hotel in the heart of Colombo",
+        "address": "123 Galle Road",
+        "city": "Colombo",
+        "starRating": 5,
+        "averageRating": 4.5,
+        "reviewCount": 120,
+        "isActive": true,
+        "checkInTime": "14:00",
+        "checkOutTime": "12:00",
+        "amenities": ["wifi", "pool", "spa", "restaurant"],
+        "rooms": []
+      },
+      {
+        "id": 2,
+        "name": "Kandy Hills Resort",
+        "description": "A beautiful resort overlooking Kandy Lake",
+        "address": "45 Temple Road",
+        "city": "Kandy",
+        "starRating": 4,
+        "averageRating": 4.2,
+        "reviewCount": 85,
+        "isActive": true,
+        "checkInTime": "15:00",
+        "checkOutTime": "11:00",
+        "amenities": ["wifi", "pool", "garden"],
+        "rooms": []
+      },
+      {
+        "id": 3,
+        "name": "Galle Beach House",
+        "description": "Beachfront hotel near Galle Fort",
+        "address": "78 Beach Road",
+        "city": "Galle",
+        "starRating": 3,
+        "averageRating": 4.0,
+        "reviewCount": 62,
+        "isActive": true,
+        "checkInTime": "14:00",
+        "checkOutTime": "11:00",
+        "amenities": ["wifi", "beach_access"],
+        "rooms": []
+      }
+    ],
+    "page": 0,
+    "size": 9,
+    "totalElements": 3,
+    "totalPages": 1,
+    "last": true
+  },
+  "hotelDetail": {
+    "id": 1,
+    "name": "Grand Colombo Hotel",
+    "description": "A luxury hotel in the heart of Colombo with world-class amenities",
+    "address": "123 Galle Road",
+    "city": "Colombo",
+    "starRating": 5,
+    "averageRating": 4.5,
+    "reviewCount": 120,
+    "isActive": true,
+    "checkInTime": "14:00",
+    "checkOutTime": "12:00",
+    "amenities": ["wifi", "pool", "spa", "restaurant", "gym", "parking"],
+    "rooms": [
+      {
+        "id": 1,
+        "roomType": "DELUXE",
+        "description": "Spacious deluxe room",
+        "pricePerNight": 150.00,
+        "capacity": 2,
+        "totalRooms": 10,
+        "isActive": true
+      },
+      {
+        "id": 2,
+        "roomType": "SUITE",
+        "description": "Premium suite with ocean view",
+        "pricePerNight": 350.00,
+        "capacity": 4,
+        "totalRooms": 5,
+        "isActive": true
+      }
+    ]
+  },
+  "availability": {
+    "hotelId": 1,
+    "hotelName": "Grand Colombo Hotel",
+    "available": true,
+    "availableRooms": 15,
+    "message": "Rooms available for booking"
+  },
+  "ownerHotels": {
+    "content": [
+      {
+        "id": 1,
+        "name": "Grand Colombo Hotel",
+        "city": "Colombo",
+        "starRating": 5,
+        "averageRating": 4.5,
+        "reviewCount": 120,
+        "isActive": true,
+        "rooms": [
+          { "id": 1, "roomType": "DELUXE", "totalRooms": 10, "isActive": true },
+          { "id": 2, "roomType": "SUITE", "totalRooms": 5, "isActive": true }
+        ]
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 1,
+    "totalPages": 1,
+    "last": true
+  }
+}

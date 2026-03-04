@@ -1,0 +1,24 @@
+{
+  "productList": [
+    {
+      "id": 1,
+      "name": "Ceylon Tea Gift Box",
+      "description": "Premium Ceylon tea collection",
+      "category": "SOUVENIRS",
+      "price": 35.00,
+      "stockQuantity": 50,
+      "isActive": true,
+      "imageUrl": null
+    },
+    {
+      "id": 2,
+      "name": "Travel Backpack",
+      "description": "Durable travel backpack with rain cover",
+      "category": "GEAR",
+      "price": 89.00,
+      "stockQuantity": 0,
+      "isActive": true,
+      "imageUrl": null
+    }
+  ]
+}

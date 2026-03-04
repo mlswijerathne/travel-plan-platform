@@ -1,0 +1,24 @@
+{
+  "itineraryList": [
+    {
+      "id": 1,
+      "title": "Colombo Weekend Getaway",
+      "description": "A relaxing weekend in Colombo",
+      "startDate": "2026-04-01",
+      "endDate": "2026-04-03",
+      "status": "PLANNING",
+      "totalDays": 3,
+      "createdAt": "2026-03-01T10:00:00"
+    },
+    {
+      "id": 2,
+      "title": "Cultural Triangle Tour",
+      "description": "Exploring ancient cities",
+      "startDate": "2026-05-10",
+      "endDate": "2026-05-17",
+      "status": "ACTIVE",
+      "totalDays": 8,
+      "createdAt": "2026-02-20T10:00:00"
+    }
+  ]
+}

@@ -7,8 +7,10 @@ import type { Hotel } from '@/types/hotel'
 import { formatCurrency, formatRating, formatAmenity } from '@/lib/utils'
 
 export function HotelCard({ hotel }: { hotel: Hotel }) {
-  const minPrice = hotel.rooms.length > 0
-    ? Math.min(...hotel.rooms.filter(r => r.isActive).map(r => r.pricePerNight))
+  const rooms = hotel.rooms ?? []
+  const amenities = hotel.amenities ?? []
+  const minPrice = rooms.length > 0
+    ? Math.min(...rooms.filter(r => r.isActive).map(r => r.pricePerNight))
     : null
 
   return (
@@ -51,16 +53,16 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
             )}
           </div>
 
-          {hotel.amenities.length > 0 && (
+          {amenities.length > 0 && (
             <div className="flex flex-wrap gap-1">
-              {hotel.amenities.slice(0, 4).map((a) => (
+              {amenities.slice(0, 4).map((a) => (
                 <Badge key={a} variant="secondary" className="text-[10px] px-1.5 py-0">
                   {formatAmenity(a)}
                 </Badge>
               ))}
-              {hotel.amenities.length > 4 && (
+              {amenities.length > 4 && (
                 <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                  +{hotel.amenities.length - 4}
+                  +{amenities.length - 4}
                 </Badge>
               )}
             </div>

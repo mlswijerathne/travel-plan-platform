@@ -1,0 +1,37 @@
+{
+  "vehicleList": {
+    "content": [
+      {
+        "id": 1,
+        "make": "Toyota",
+        "model": "Prius",
+        "year": 2022,
+        "vehicleType": "CAR",
+        "seatingCapacity": 4,
+        "dailyRate": 45.00,
+        "isAvailable": true,
+        "description": "Comfortable sedan for city travel",
+        "averageRating": 4.3,
+        "reviewCount": 15
+      },
+      {
+        "id": 2,
+        "make": "Toyota",
+        "model": "HiAce",
+        "year": 2021,
+        "vehicleType": "VAN",
+        "seatingCapacity": 12,
+        "dailyRate": 85.00,
+        "isAvailable": true,
+        "description": "Spacious van for group travel",
+        "averageRating": 4.6,
+        "reviewCount": 22
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true
+  }
+}

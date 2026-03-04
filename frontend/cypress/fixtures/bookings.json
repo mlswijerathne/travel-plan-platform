@@ -1,0 +1,35 @@
+{
+  "bookingList": {
+    "content": [
+      {
+        "id": 1,
+        "referenceNumber": "BK-2026-001",
+        "entityType": "HOTEL",
+        "entityId": 1,
+        "entityName": "Grand Colombo Hotel",
+        "startDate": "2026-04-01",
+        "endDate": "2026-04-05",
+        "totalAmount": 600.00,
+        "status": "CONFIRMED",
+        "createdAt": "2026-03-01T10:00:00"
+      },
+      {
+        "id": 2,
+        "referenceNumber": "BK-2026-002",
+        "entityType": "TOUR_GUIDE",
+        "entityId": 1,
+        "entityName": "Kamal Perera",
+        "startDate": "2026-04-02",
+        "endDate": "2026-04-03",
+        "totalAmount": 150.00,
+        "status": "PENDING",
+        "createdAt": "2026-03-02T14:00:00"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true
+  }
+}

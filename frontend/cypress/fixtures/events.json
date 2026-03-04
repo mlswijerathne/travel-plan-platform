@@ -1,0 +1,39 @@
+{
+  "eventList": {
+    "content": [
+      {
+        "id": 1,
+        "title": "Kandy Esala Perahera",
+        "description": "Annual Buddhist festival",
+        "location": "Kandy",
+        "category": "CULTURAL",
+        "startDate": "2026-08-01",
+        "endDate": "2026-08-10",
+        "price": 25.00,
+        "maxParticipants": 500,
+        "registeredCount": 320,
+        "status": "PUBLISHED",
+        "coverImageUrl": null
+      },
+      {
+        "id": 2,
+        "title": "Colombo Food Festival",
+        "description": "Taste the best of Sri Lankan cuisine",
+        "location": "Colombo",
+        "category": "FOOD",
+        "startDate": "2026-06-15",
+        "endDate": "2026-06-17",
+        "price": 15.00,
+        "maxParticipants": 200,
+        "registeredCount": 150,
+        "status": "PUBLISHED",
+        "coverImageUrl": null
+      }
+    ],
+    "page": 0,
+    "size": 12,
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true
+  }
+}

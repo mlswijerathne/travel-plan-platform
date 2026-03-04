@@ -180,7 +180,7 @@ export default function EventDetailPage() {
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Ticket Price</p>
                 <p className="text-sm font-semibold">
-                  {event.ticketPrice === 0 ? 'Free Entry' : `Rs ${event.ticketPrice.toLocaleString()}`}
+                  {!event.ticketPrice ? 'Free Entry' : `Rs ${event.ticketPrice.toLocaleString()}`}
                 </p>
                 <p className="text-xs text-muted-foreground">per person</p>
               </div>

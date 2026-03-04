@@ -1,0 +1,47 @@
+{
+  "guideList": {
+    "content": [
+      {
+        "id": 1,
+        "userId": "user-1",
+        "firstName": "Kamal",
+        "lastName": "Perera",
+        "email": "kamal@test.com",
+        "phoneNumber": "+94771234567",
+        "bio": "Experienced guide specializing in cultural tours",
+        "hourlyRate": 25.00,
+        "dailyRate": 150.00,
+        "experienceYears": 10,
+        "languages": ["English", "Sinhala", "Tamil"],
+        "specializations": ["cultural", "historical", "wildlife"],
+        "averageRating": 4.8,
+        "reviewCount": 45,
+        "isVerified": true,
+        "isAvailable": true
+      },
+      {
+        "id": 2,
+        "userId": "user-2",
+        "firstName": "Nimal",
+        "lastName": "Silva",
+        "email": "nimal@test.com",
+        "phoneNumber": "+94779876543",
+        "bio": "Adventure and trekking specialist",
+        "hourlyRate": 20.00,
+        "dailyRate": 120.00,
+        "experienceYears": 5,
+        "languages": ["English", "Sinhala"],
+        "specializations": ["adventure", "trekking"],
+        "averageRating": 4.5,
+        "reviewCount": 28,
+        "isVerified": true,
+        "isAvailable": true
+      }
+    ],
+    "page": 0,
+    "size": 9,
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true
+  }
+}

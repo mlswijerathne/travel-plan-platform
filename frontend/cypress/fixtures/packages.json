@@ -1,0 +1,37 @@
+{
+  "packageList": {
+    "content": [
+      {
+        "id": 1,
+        "name": "Sri Lanka Classic Tour",
+        "description": "7-day tour covering major attractions",
+        "durationDays": 7,
+        "price": 899.00,
+        "originalPrice": 1099.00,
+        "maxParticipants": 15,
+        "destinations": ["Colombo", "Kandy", "Sigiriya", "Galle"],
+        "isFeatured": true,
+        "isActive": true,
+        "imageUrl": null
+      },
+      {
+        "id": 2,
+        "name": "Beach Paradise Package",
+        "description": "5-day beach vacation",
+        "durationDays": 5,
+        "price": 599.00,
+        "originalPrice": null,
+        "maxParticipants": 10,
+        "destinations": ["Mirissa", "Unawatuna", "Hikkaduwa"],
+        "isFeatured": false,
+        "isActive": true,
+        "imageUrl": null
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true
+  }
+}

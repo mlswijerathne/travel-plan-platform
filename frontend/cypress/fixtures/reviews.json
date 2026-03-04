@@ -1,0 +1,53 @@
+{
+  "myReviews": {
+    "content": [
+      {
+        "id": 1,
+        "entityType": "HOTEL",
+        "entityId": 1,
+        "entityName": "Grand Colombo Hotel",
+        "rating": 5,
+        "title": "Amazing stay",
+        "content": "The hotel was fantastic with great amenities",
+        "isVerified": true,
+        "createdAt": "2026-02-15T10:00:00",
+        "responses": []
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 1,
+    "totalPages": 1,
+    "last": true
+  },
+  "pendingReviews": {
+    "content": [
+      {
+        "bookingId": 2,
+        "entityType": "TOUR_GUIDE",
+        "entityId": 1,
+        "entityName": "Kamal Perera",
+        "startDate": "2026-03-01",
+        "endDate": "2026-03-02"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 1,
+    "totalPages": 1,
+    "last": true
+  },
+  "reviewSummary": {
+    "entityType": "HOTEL",
+    "entityId": 1,
+    "averageRating": 4.5,
+    "totalReviews": 120,
+    "ratingDistribution": {
+      "5": 60,
+      "4": 35,
+      "3": 15,
+      "2": 7,
+      "1": 3
+    }
+  }
+}

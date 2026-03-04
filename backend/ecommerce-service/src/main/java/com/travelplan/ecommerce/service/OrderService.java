@@ -107,10 +107,13 @@ public class OrderService {
         return orderRepository.findAll(pageable);
     }
 
+    @Transactional
     public Order updateOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
-        return orderRepository.save(order);
+        Order saved = orderRepository.save(order);
+        saved.getItems().size(); // force-initialize lazy collection within the transaction
+        return saved;
     }
 }

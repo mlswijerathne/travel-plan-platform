@@ -48,6 +48,10 @@ PID_FILE="$SCRIPT_DIR/.running-pids"
 LOG_DIR="$SCRIPT_DIR/logs"
 mkdir -p "$LOG_DIR"
 
+# ── Health tracking ──
+FAILED_SERVICES=()
+SERVICE_STATUS=()   # "name:port:UP|DOWN"
+
 # ── Cleanup handler ──
 cleanup() {
     echo ""
@@ -253,19 +257,50 @@ wait_for_service() {
     local port=$2
     local max_wait=${3:-120}
     local elapsed=0
+    local pid=""
+
+    # Find the PID for this service so we can detect early crashes
+    if [ -f "$PID_FILE" ]; then
+        pid=$(grep "^[0-9]*:${name}:" "$PID_FILE" 2>/dev/null | tail -1 | cut -d: -f1)
+    fi
 
     echo -n "  Waiting for ${name} (port ${port})..."
     while [ $elapsed -lt $max_wait ]; do
-        if curl -s "http://localhost:${port}/actuator/health" > /dev/null 2>&1; then
+        # Check if process already died
+        if [ -n "$pid" ] && ! kill -0 "$pid" 2>/dev/null; then
+            echo -e " ${RED}CRASHED${NC} (check logs/${name}.log)"
+            FAILED_SERVICES+=("${name}:${port}")
+            SERVICE_STATUS+=("${name}:${port}:CRASHED")
+            return 1
+        fi
+        if curl -s --max-time 2 "http://localhost:${port}/actuator/health" > /dev/null 2>&1; then
             echo -e " ${GREEN}UP${NC}"
+            SERVICE_STATUS+=("${name}:${port}:UP")
             return 0
         fi
-        sleep 2
-        elapsed=$((elapsed + 2))
+        sleep 3
+        elapsed=$((elapsed + 3))
         echo -n "."
     done
-    echo -e " ${RED}TIMEOUT (check logs/${name}.log)${NC}"
+    echo -e " ${RED}TIMEOUT${NC} (check logs/${name}.log)"
+    FAILED_SERVICES+=("${name}:${port}")
+    SERVICE_STATUS+=("${name}:${port}:TIMEOUT")
     return 1
+}
+
+# Verify a service that should already be running (for final health table)
+check_service_health() {
+    local name=$1
+    local port=$2
+    local response
+    response=$(curl -s --max-time 3 "http://localhost:${port}/actuator/health" 2>/dev/null)
+    if echo "$response" | grep -q '"status":"UP"'; then
+        echo "UP"
+    elif [ -n "$response" ]; then
+        echo "DEGRADED"
+    else
+        echo "DOWN"
+    fi
 }
 
 # ============================================================
@@ -275,10 +310,10 @@ echo ""
 echo -e "${BLUE}[4/6] Starting infrastructure services...${NC}"
 
 start_service "discovery-server" 8761
-wait_for_service "discovery-server" 8761 90
+wait_for_service "discovery-server" 8761 90 || true
 
 start_service "api-gateway" 8060
-wait_for_service "api-gateway" 8060 90
+wait_for_service "api-gateway" 8060 90 || true
 
 # ============================================================
 # STEP 5: Start Core Services (no Kafka dependency)
@@ -286,12 +321,21 @@ wait_for_service "api-gateway" 8060 90
 echo ""
 echo -e "${BLUE}[5/6] Starting core services...${NC}"
 
-start_service "tourist-service" 8082 "TOURIST_DB_URL" "TOURIST_DB_USERNAME" "TOURIST_DB_PASSWORD"
-start_service "vehicle-service" 8085 "VEHICLE_DB_URL" "VEHICLE_DB_USERNAME" "VEHICLE_DB_PASSWORD"
-start_service "trip-plan-service" 8089 "TRIP_PLAN_DB_URL" "TRIP_PLAN_DB_USERNAME" "TRIP_PLAN_DB_PASSWORD"
-start_service "event-service" 8090 "EVENT_DB_URL" "EVENT_DB_USERNAME" "EVENT_DB_PASSWORD"
-start_service "ecommerce-service" 8091 "ECOMMERCE_DB_URL" "ECOMMERCE_DB_USERNAME" "ECOMMERCE_DB_PASSWORD"
-start_service "ai-agent-service" 8093
+start_service "tourist-service"   8082 "TOURIST_DB_URL"    "TOURIST_DB_USERNAME"    "TOURIST_DB_PASSWORD"
+start_service "vehicle-service"   8085 "VEHICLE_DB_URL"    "VEHICLE_DB_USERNAME"    "VEHICLE_DB_PASSWORD"
+start_service "trip-plan-service" 8089 "TRIP_PLAN_DB_URL"  "TRIP_PLAN_DB_USERNAME"  "TRIP_PLAN_DB_PASSWORD"
+start_service "event-service"     8090 "EVENT_DB_URL"      "EVENT_DB_USERNAME"      "EVENT_DB_PASSWORD"
+start_service "ecommerce-service" 8091 "ECOMMERCE_DB_URL"  "ECOMMERCE_DB_USERNAME"  "ECOMMERCE_DB_PASSWORD"
+start_service "ai-agent-service"  8093
+
+echo ""
+echo -e "${BLUE}  Waiting for core services to be ready...${NC}"
+wait_for_service "tourist-service"   8082 150 || true
+wait_for_service "vehicle-service"   8085 150 || true
+wait_for_service "trip-plan-service" 8089 150 || true
+wait_for_service "event-service"     8090 150 || true
+wait_for_service "ecommerce-service" 8091 150 || true
+wait_for_service "ai-agent-service"  8093 150 || true
 
 # ============================================================
 # STEP 6: Start Kafka-dependent Services
@@ -299,52 +343,99 @@ start_service "ai-agent-service" 8093
 echo ""
 if [ "$NO_KAFKA" = false ]; then
     echo -e "${BLUE}[6/6] Starting Kafka-dependent services...${NC}"
-    start_service "hotel-service" 8083 "HOTEL_DB_URL" "HOTEL_DB_USERNAME" "HOTEL_DB_PASSWORD"
+    start_service "hotel-service"      8083 "HOTEL_DB_URL"      "HOTEL_DB_USERNAME"      "HOTEL_DB_PASSWORD"
     start_service "tour-guide-service" 8084 "TOUR_GUIDE_DB_URL" "TOUR_GUIDE_DB_USERNAME" "TOUR_GUIDE_DB_PASSWORD"
-    start_service "booking-service" 8086 "BOOKING_DB_URL" "BOOKING_DB_USERNAME" "BOOKING_DB_PASSWORD"
-    start_service "itinerary-service" 8087 "ITINERARY_DB_URL" "ITINERARY_DB_USERNAME" "ITINERARY_DB_PASSWORD"
-    start_service "review-service" 8088 "REVIEW_DB_URL" "REVIEW_DB_USERNAME" "REVIEW_DB_PASSWORD"
+    start_service "booking-service"    8086 "BOOKING_DB_URL"    "BOOKING_DB_USERNAME"    "BOOKING_DB_PASSWORD"
+    start_service "itinerary-service" 8087 "ITINERARY_DB_URL"  "ITINERARY_DB_USERNAME"  "ITINERARY_DB_PASSWORD"
+    start_service "review-service"    8088 "REVIEW_DB_URL"     "REVIEW_DB_USERNAME"     "REVIEW_DB_PASSWORD"
+
+    echo ""
+    echo -e "${BLUE}  Waiting for Kafka-dependent services to be ready...${NC}"
+    wait_for_service "hotel-service"      8083 180 || true
+    wait_for_service "tour-guide-service" 8084 180 || true
+    wait_for_service "booking-service"    8086 180 || true
+    wait_for_service "itinerary-service"  8087 180 || true
+    wait_for_service "review-service"     8088 180 || true
 else
     echo -e "${YELLOW}[6/6] Skipped Kafka-dependent services${NC}"
 fi
 
 # ============================================================
-# SUMMARY + Wait for all health
+# FINAL HEALTH CHECK TABLE
 # ============================================================
 echo ""
-echo -e "${YELLOW}Waiting for services to become healthy (this may take 1-2 minutes)...${NC}"
-sleep 15
+echo -e "${BOLD}${CYAN}============================================================${NC}"
+echo -e "${BOLD}${CYAN}   TRAVEL PLAN PLATFORM - STARTUP COMPLETE${NC}"
+echo -e "${BOLD}${CYAN}============================================================${NC}"
+echo ""
+echo -e "${BOLD}  Verifying all services via /actuator/health...${NC}"
+echo ""
+
+print_status() {
+    local label=$1
+    local port=$2
+    local url=$3
+    local status
+    status=$(check_service_health "$label" "$port")
+    local color
+    case "$status" in
+        UP)       color="$GREEN" ;;
+        DEGRADED) color="$YELLOW" ;;
+        *)        color="$RED" ;;
+    esac
+    printf "  %-22s ${color}%-8s${NC} %s\n" "$label" "[$status]" "$url"
+}
+
+echo -e "  ${BOLD}Infrastructure:${NC}"
+print_status "Eureka Dashboard"  8761 "http://localhost:8761"
+print_status "API Gateway"       8060 "http://localhost:8060"
+if [ "$NO_KAFKA" = false ]; then
+    # Kafka UI uses root path, not actuator
+    if curl -s --max-time 3 "http://localhost:8080" > /dev/null 2>&1; then
+        printf "  %-22s ${GREEN}%-8s${NC} %s\n" "Kafka UI" "[UP]" "http://localhost:8080"
+    else
+        printf "  %-22s ${RED}%-8s${NC} %s\n" "Kafka UI" "[DOWN]" "http://localhost:8080"
+    fi
+fi
 
 echo ""
-echo -e "${BOLD}${GREEN}============================================${NC}"
-echo -e "${BOLD}${GREEN}    TRAVEL PLAN PLATFORM - RUNNING${NC}"
-echo -e "${BOLD}${GREEN}============================================${NC}"
-echo ""
-echo -e "  ${BOLD}Infrastructure:${NC}"
-echo -e "    Eureka Dashboard:  ${CYAN}http://localhost:8761${NC}"
-echo -e "    API Gateway:       ${CYAN}http://localhost:8060${NC}"
-if [ "$NO_KAFKA" = false ]; then
-echo -e "    Kafka UI:          ${CYAN}http://localhost:8080${NC}"
-fi
-echo ""
 echo -e "  ${BOLD}Core Services:${NC}"
-echo -e "    Tourist:           ${CYAN}http://localhost:8082${NC}"
-echo -e "    Vehicle:           ${CYAN}http://localhost:8085${NC}"
-echo -e "    Trip Plan:         ${CYAN}http://localhost:8089${NC}"
-echo -e "    Event:             ${CYAN}http://localhost:8090${NC}"
-echo -e "    Ecommerce:         ${CYAN}http://localhost:8091${NC}"
-echo -e "    AI Agent:          ${CYAN}http://localhost:8093${NC}"
+print_status "tourist-service"   8082 "http://localhost:8082"
+print_status "vehicle-service"   8085 "http://localhost:8085"
+print_status "trip-plan-service" 8089 "http://localhost:8089"
+print_status "event-service"     8090 "http://localhost:8090"
+print_status "ecommerce-service" 8091 "http://localhost:8091"
+print_status "ai-agent-service"  8093 "http://localhost:8093"
+
 if [ "$NO_KAFKA" = false ]; then
-echo ""
-echo -e "  ${BOLD}Kafka-dependent Services:${NC}"
-echo -e "    Hotel:             ${CYAN}http://localhost:8083${NC}"
-echo -e "    Tour Guide:        ${CYAN}http://localhost:8084${NC}"
-echo -e "    Booking:           ${CYAN}http://localhost:8086${NC}"
-echo -e "    Itinerary:         ${CYAN}http://localhost:8087${NC}"
-echo -e "    Review:            ${CYAN}http://localhost:8088${NC}"
+    echo ""
+    echo -e "  ${BOLD}Kafka-dependent Services:${NC}"
+    print_status "hotel-service"      8083 "http://localhost:8083"
+    print_status "tour-guide-service" 8084 "http://localhost:8084"
+    print_status "booking-service"    8086 "http://localhost:8086"
+    print_status "itinerary-service" 8087 "http://localhost:8087"
+    print_status "review-service"    8088 "http://localhost:8088"
 fi
+
+# ── Report failures ──
 echo ""
-echo -e "  ${BOLD}Logs:${NC} ${LOG_DIR}/"
+if [ ${#FAILED_SERVICES[@]} -eq 0 ]; then
+    echo -e "  ${BOLD}${GREEN}All services started successfully!${NC}"
+else
+    echo -e "  ${BOLD}${RED}${#FAILED_SERVICES[@]} service(s) failed to start:${NC}"
+    for svc in "${FAILED_SERVICES[@]}"; do
+        svc_name=$(echo "$svc" | cut -d: -f1)
+        echo -e "    ${RED}✗${NC} $svc_name  → check ${LOG_DIR}/${svc_name}.log"
+        # Show last 5 error lines from log
+        if [ -f "${LOG_DIR}/${svc_name}.log" ]; then
+            echo -e "      ${YELLOW}Last errors:${NC}"
+            grep -i "error\|exception\|failed" "${LOG_DIR}/${svc_name}.log" 2>/dev/null | tail -3 | sed 's/^/        /'
+        fi
+    done
+fi
+
+echo ""
+echo -e "  ${BOLD}Logs:${NC}   ${LOG_DIR}/"
 echo -e "  ${BOLD}Health:${NC} Run ${CYAN}./health-check.sh${NC} in another terminal"
 echo -e "  ${BOLD}Stop:${NC}   Press ${BOLD}Ctrl+C${NC} or run ${CYAN}./stop-all.sh${NC}"
 echo ""
