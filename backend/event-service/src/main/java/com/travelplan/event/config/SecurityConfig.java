@@ -30,7 +30,8 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/**", "/health", "/v3/api-docs/**",
                     "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/events", "/api/events/{id}",
-                    "/api/events/{id}/availability").permitAll()
+                    "/api/events/{id}/availability",
+                    "/api/public/events", "/api/public/events/{id}").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(jwtValidationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

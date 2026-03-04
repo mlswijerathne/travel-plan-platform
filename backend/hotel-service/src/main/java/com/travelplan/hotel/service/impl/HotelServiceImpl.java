@@ -96,7 +96,8 @@ public class HotelServiceImpl implements HotelService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Hotel> hotelPage = hotelRepository.findByOwnerId(ownerId, pageable);
         List<HotelResponse> hotels = hotelPage.getContent().stream()
-                .map(hotelMapper::toResponse)
+                .map(hotel -> hotelMapper.toResponseWithRooms(hotel,
+                        roomMapper.toResponseList(roomRepository.findByHotelId(hotel.getId()))))
                 .toList();
         return PaginatedResponse.of(hotels, page, size, hotelPage.getTotalElements());
     }

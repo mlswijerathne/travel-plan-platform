@@ -1,4 +1,4 @@
-package com.travelplan.review.config;
+package com.travelplan.tourist.config;
 
 import com.travelplan.common.config.JwtValidationFilter;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class ReviewSecurityConfig {
+public class TouristSecurityConfig {
 
     private final JwtValidationFilter jwtValidationFilter;
 
@@ -30,9 +30,7 @@ public class ReviewSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**", "/health", "/v3/api-docs/**",
                                 "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/reviews/entity/**",
-                                "/api/reviews/summary/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/reviews/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/tourists/register").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtValidationFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -66,14 +66,12 @@ public class JwtAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        String path = request.getPath().value();
-
-        if (isPublicPath(path)) {
-            return chain.filter(exchange);
-        }
 
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
+        // Always parse JWT if a Bearer token is present, even on public paths.
+        // This ensures authenticated POST/PUT/DELETE to paths like /api/hotels
+        // get their auth context set, while public GETs still work without a token.
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
@@ -202,42 +200,6 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         KeyFactory kf = KeyFactory.getInstance("EC");
         return kf.generatePublic(pubSpec);
-    }
-
-    private boolean isPublicPath(String path) {
-        return path.startsWith("/actuator") ||
-                path.equals("/health") ||
-                path.startsWith("/eureka") ||
-                path.equals("/api/tourists/register") ||
-                path.startsWith("/api/chat") ||
-                isPublicBrowsingPath(path);
-    }
-
-    private boolean isPublicBrowsingPath(String path) {
-        // Hotels public browsing
-        if (path.equals("/api/hotels") || path.equals("/api/hotels/search") ||
-                path.equals("/api/hotels/query") || path.matches("/api/hotels/\\d+") ||
-                path.matches("/api/hotels/\\d+/details") ||
-                path.matches("/api/hotels/\\d+/availability")) {
-            return true;
-        }
-        // Rooms public browsing
-        if (path.startsWith("/api/rooms")) {
-            return true;
-        }
-        // Guides public browsing
-        if (path.equals("/api/tour-guides") || path.equals("/api/tour-guides/search") ||
-                path.matches("/api/tour-guides/[^/]+") ||
-                path.matches("/api/tour-guides/[^/]+/availability")) {
-            return true;
-        }
-        // Reviews public browsing
-        if (path.startsWith("/api/reviews/entity/") ||
-                path.startsWith("/api/reviews/summary/") ||
-                path.matches("/api/reviews/\\d+")) {
-            return true;
-        }
-        return false;
     }
 
     @SuppressWarnings("unchecked")

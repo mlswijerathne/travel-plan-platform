@@ -56,7 +56,6 @@ const VEHICLE_OWNER_NAV = [
   { href: '/provider/vehicles', label: 'My Vehicles', icon: Car },
   { href: '/provider/bookings', label: 'Bookings', icon: Calendar },
   { href: '/provider/reviews', label: 'Reviews', icon: Star },
-  { href: '/profile', label: 'Profile', icon: User },
 ]
 
 const HOTEL_OWNER_NAV = [
@@ -64,7 +63,6 @@ const HOTEL_OWNER_NAV = [
   { href: '/provider/hotels', label: 'My Hotels', icon: Hotel },
   { href: '/provider/bookings', label: 'Bookings', icon: Calendar },
   { href: '/provider/reviews', label: 'Reviews', icon: Star },
-  { href: '/profile', label: 'Profile', icon: User },
 ]
 
 const GUIDE_NAV = [
@@ -72,7 +70,6 @@ const GUIDE_NAV = [
   { href: '/provider/profile', label: 'Guide Profile', icon: MapPin },
   { href: '/provider/bookings', label: 'Bookings', icon: Calendar },
   { href: '/provider/reviews', label: 'Reviews', icon: Star },
-  { href: '/profile', label: 'Profile', icon: User },
 ]
 
 export function AuthNav({ userEmail }: { userEmail: string }) {
@@ -148,18 +145,29 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
                 <p className="text-xs text-muted-foreground">{roleLabel}</p>
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/profile" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/wallet" className="flex items-center gap-2">
-                  <Wallet className="h-4 w-4" />
-                  Wallet
-                </Link>
-              </DropdownMenuItem>
+              {role === 'TOURIST' ? (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/wallet" className="flex items-center gap-2">
+                      <Wallet className="h-4 w-4" />
+                      Wallet
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <DropdownMenuItem asChild>
+                  <Link href={role === 'TOUR_GUIDE' ? '/provider/profile' : '/provider/dashboard'} className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    {role === 'TOUR_GUIDE' ? 'Guide Profile' : 'Dashboard'}
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive flex items-center gap-2">
                 <LogOut className="h-4 w-4" />
