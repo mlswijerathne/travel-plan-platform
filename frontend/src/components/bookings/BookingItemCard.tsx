@@ -1,9 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import type { BookingItem } from '@/types/booking'
+import type { EntityType } from '@/types/review'
 import { formatCurrency, formatDateRange, getBookingStatusColor, getProviderTypeLabel } from '@/lib/utils'
-import { Hotel, MapPin, Car } from 'lucide-react'
+import { Hotel, MapPin, Car, Star } from 'lucide-react'
+import { ReviewFormDialog } from '@/components/reviews/ReviewFormDialog'
 
 const PROVIDER_ICONS = {
   HOTEL: Hotel,
@@ -11,8 +15,22 @@ const PROVIDER_ICONS = {
   VEHICLE: Car,
 } as const
 
-export function BookingItemCard({ item }: { item: BookingItem }) {
+const ENTITY_TYPE_MAP: Record<string, EntityType> = {
+  HOTEL: 'HOTEL',
+  TOUR_GUIDE: 'TOUR_GUIDE',
+  VEHICLE: 'VEHICLE',
+}
+
+interface BookingItemCardProps {
+  item: BookingItem
+  bookingId?: number
+  bookingStatus?: string
+}
+
+export function BookingItemCard({ item, bookingId, bookingStatus }: BookingItemCardProps) {
+  const [dialogOpen, setDialogOpen] = useState(false)
   const Icon = PROVIDER_ICONS[item.providerType] ?? Hotel
+  const canReview = !!bookingId && (bookingStatus === 'CONFIRMED' || bookingStatus === 'COMPLETED')
 
   return (
     <div className="rounded-lg border bg-card p-4 flex gap-4">
@@ -27,9 +45,22 @@ export function BookingItemCard({ item }: { item: BookingItem }) {
               {getProviderTypeLabel(item.providerType)}
             </Badge>
           </div>
-          <div className="text-right shrink-0">
+          <div className="text-right shrink-0 space-y-1.5">
             <p className="font-semibold text-sm">{formatCurrency(item.subtotal)}</p>
             <Badge className={`text-[10px] ${getBookingStatusColor(item.status)}`}>{item.status}</Badge>
+            {canReview && (
+              <div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 text-xs"
+                  onClick={() => setDialogOpen(true)}
+                >
+                  <Star className="h-3 w-3 mr-1" />
+                  Review
+                </Button>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
@@ -40,6 +71,17 @@ export function BookingItemCard({ item }: { item: BookingItem }) {
           )}
         </div>
       </div>
+
+      {canReview && (
+        <ReviewFormDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          entityType={ENTITY_TYPE_MAP[item.providerType] ?? 'HOTEL'}
+          entityId={item.providerId}
+          bookingId={bookingId}
+          entityName={item.itemName}
+        />
+      )}
     </div>
   )
 }

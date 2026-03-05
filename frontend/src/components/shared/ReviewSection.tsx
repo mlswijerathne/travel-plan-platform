@@ -74,7 +74,10 @@ export function ReviewSection({ entityType, entityId }: ReviewSectionProps) {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold">Reviews</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Reviews</h3>
+      </div>
+
 
       {summary && summary.reviewCount > 0 && (
         <div className="flex flex-col sm:flex-row gap-6 p-4 rounded-lg bg-muted/30">

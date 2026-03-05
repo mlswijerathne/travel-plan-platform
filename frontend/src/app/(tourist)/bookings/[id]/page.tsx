@@ -109,7 +109,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         <h2 className="text-lg font-semibold mb-4">Booking Items ({booking.items.length})</h2>
         <div className="space-y-3">
           {booking.items.map((item) => (
-            <BookingItemCard key={item.id} item={item} />
+            <BookingItemCard key={item.id} item={item} bookingId={booking.id} bookingStatus={booking.status} />
           ))}
         </div>
       </div>

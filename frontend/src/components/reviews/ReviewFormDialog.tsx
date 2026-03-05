@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -37,6 +38,17 @@ export function ReviewFormDialog({
   const [rating, setRating] = useState(editReview?.rating ?? 0)
   const [title, setTitle] = useState(editReview?.title ?? '')
   const [content, setContent] = useState(editReview?.content ?? '')
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  // Reset form state whenever the dialog opens
+  useEffect(() => {
+    if (open) {
+      setRating(editReview?.rating ?? 0)
+      setTitle(editReview?.title ?? '')
+      setContent(editReview?.content ?? '')
+      setErrorMsg(null)
+    }
+  }, [open, editReview])
 
   const createMutation = useCreateReview()
   const updateMutation = useUpdateReview()
@@ -44,13 +56,25 @@ export function ReviewFormDialog({
 
   const isEditing = !!editReview
 
-  async function handleSubmit() {
+  function handleSuccess() {
+    toast.success(isEditing ? 'Review updated!' : 'Review submitted — thank you!')
+    onOpenChange(false)
+  }
+
+  function handleError(err: Error) {
+    const msg = err.message || 'Something went wrong. Please try again.'
+    setErrorMsg(msg)
+    toast.error(msg)
+  }
+
+  function handleSubmit() {
     if (rating === 0) return
+    setErrorMsg(null)
 
     if (isEditing) {
       updateMutation.mutate(
         { id: editReview.id, data: { rating, title: title || undefined, content: content || undefined } },
-        { onSuccess: () => onOpenChange(false) }
+        { onSuccess: handleSuccess, onError: handleError }
       )
     } else if (entityType && entityId) {
       createMutation.mutate(
@@ -62,7 +86,7 @@ export function ReviewFormDialog({
           title: title || undefined,
           content: content || undefined,
         },
-        { onSuccess: () => onOpenChange(false) }
+        { onSuccess: handleSuccess, onError: handleError }
       )
     }
   }
@@ -80,6 +104,7 @@ export function ReviewFormDialog({
           <div>
             <label className="text-sm text-muted-foreground mb-1 block">Rating</label>
             <StarRating rating={rating} interactive onChange={setRating} size="lg" />
+            {rating === 0 && <p className="text-xs text-muted-foreground mt-1">Please select a star rating</p>}
           </div>
           <div>
             <label className="text-sm text-muted-foreground mb-1 block">Title (optional)</label>
@@ -94,6 +119,9 @@ export function ReviewFormDialog({
               rows={4}
             />
           </div>
+          {errorMsg && (
+            <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">{errorMsg}</p>
+          )}
         </div>
 
         <DialogFooter>
@@ -106,3 +134,4 @@ export function ReviewFormDialog({
     </Dialog>
   )
 }
+

@@ -35,7 +35,7 @@ import {
   Car,
   ShoppingBag,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useUserRole } from '@/hooks/use-user-role'
 
 const TOURIST_NAV = [
@@ -78,6 +78,11 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
   const { role } = useUserRole()
   const initials = userEmail.slice(0, 2).toUpperCase()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   let navItems = TOURIST_NAV
   if (role === 'HOTEL_OWNER') navItems = HOTEL_OWNER_NAV
@@ -129,106 +134,124 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full hidden md:inline-flex">
+          {isMounted ? (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full hidden md:inline-flex">
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end">
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium truncate">{userEmail}</p>
+                    <p className="text-xs text-muted-foreground">{roleLabel}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  {role === 'TOURIST' ? (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile" className="flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          Profile
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/wallet" className="flex items-center gap-2">
+                          <Wallet className="h-4 w-4" />
+                          Wallet
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <DropdownMenuItem asChild>
+                      <Link href={role === 'TOUR_GUIDE' ? '/provider/profile' : '/provider/dashboard'} className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        {role === 'TOUR_GUIDE' ? 'Guide Profile' : 'Dashboard'}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive flex items-center gap-2">
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="md:hidden h-9 w-9 p-0">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-72 pt-10">
+                  <div className="flex items-center gap-3 mb-6 px-1">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{userEmail}</p>
+                      <p className="text-xs text-muted-foreground">{roleLabel}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    {navItems.map(({ href, label, icon: Icon }) => (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setMobileOpen(false)}
+                        className={cn(
+                          'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                          pathname === href || pathname.startsWith(href + '/')
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        )}
+                      >
+                        <Icon className="h-5 w-5" />
+                        {label}
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2 text-destructive border-destructive/20 hover:bg-destructive/5 hover:text-destructive"
+                      onClick={() => {
+                        setMobileOpen(false)
+                        handleSignOut()
+                      }}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </>
+          ) : (
+            /* Placeholder rendered during SSR to avoid Radix useId hydration mismatch */
+            <>
+              <div className="relative h-9 w-9 rounded-full hidden md:inline-flex items-center justify-center">
                 <Avatar className="h-9 w-9">
                   <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end">
-              <div className="px-3 py-2">
-                <p className="text-sm font-medium truncate">{userEmail}</p>
-                <p className="text-xs text-muted-foreground">{roleLabel}</p>
               </div>
-              <DropdownMenuSeparator />
-              {role === 'TOURIST' ? (
-                <>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/wallet" className="flex items-center gap-2">
-                      <Wallet className="h-4 w-4" />
-                      Wallet
-                    </Link>
-                  </DropdownMenuItem>
-                </>
-              ) : (
-                <DropdownMenuItem asChild>
-                  <Link href={role === 'TOUR_GUIDE' ? '/provider/profile' : '/provider/dashboard'} className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    {role === 'TOUR_GUIDE' ? 'Guide Profile' : 'Dashboard'}
-                  </Link>
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive flex items-center gap-2">
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="md:hidden h-9 w-9 p-0">
+              <Button variant="ghost" size="sm" className="md:hidden h-9 w-9 p-0" disabled>
                 <Menu className="h-5 w-5" />
               </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-72 pt-10">
-              <div className="flex items-center gap-3 mb-6 px-1">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{userEmail}</p>
-                  <p className="text-xs text-muted-foreground">{roleLabel}</p>
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                {navItems.map(({ href, label, icon: Icon }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setMobileOpen(false)}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                      pathname === href || pathname.startsWith(href + '/')
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                    {label}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="absolute bottom-6 left-6 right-6">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2 text-destructive border-destructive/20 hover:bg-destructive/5 hover:text-destructive"
-                  onClick={() => {
-                    setMobileOpen(false)
-                    handleSignOut()
-                  }}
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
+            </>
+          )}
         </div>
       </nav>
     </header>
