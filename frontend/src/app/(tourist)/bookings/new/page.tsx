@@ -348,7 +348,7 @@ export default function NewBookingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
                 {vehicles.map((vehicle: any) => {
                   const selected = isSelected('VEHICLE', vehicle.id)
-                  const price = vehicle.dailyRate ?? vehicle.pricePerDay ?? 0
+                  const price = vehicle.dailyRate ?? 0
                   return (
                     <Card
                       key={vehicle.id}
@@ -370,7 +370,7 @@ export default function NewBookingPage() {
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{vehicle.make} {vehicle.model}</p>
                           <p className="text-xs text-muted-foreground">
-                            {vehicle.vehicleType} · {vehicle.seatingCapacity ?? vehicle.capacity} seats · Rs. {price}/day
+                            {vehicle.vehicleType} · {vehicle.seatingCapacity} seats · Rs. {price}/day
                           </p>
                         </div>
                         {selected && <Check className="h-5 w-5 text-primary shrink-0" />}

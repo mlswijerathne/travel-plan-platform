@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useQueries } from '@tanstack/react-query'
 import { useMyHotels } from '@/hooks/use-hotels'
 import { useMyGuideProfile } from '@/hooks/use-guides'
+import { useMyVehicles } from '@/hooks/use-vehicles'
 import { useReviewsByEntity } from '@/hooks/use-reviews'
 import { useUserRole } from '@/hooks/use-user-role'
 import { StarRating } from '@/components/shared/StarRating'
@@ -12,6 +14,7 @@ import { ResponseDialog } from '@/components/provider/ResponseDialog'
 import { Star } from 'lucide-react'
 import { formatDate, getProviderTypeLabel } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import { getReviewsByEntity } from '@/lib/api/review'
 import type { Review } from '@/types/review'
 
 export default function ProviderReviewsPage() {
@@ -19,24 +22,51 @@ export default function ProviderReviewsPage() {
   const [page, setPage] = useState(0)
 
   const { data: hotelsData } = useMyHotels()
-  const { data: guideData } = useMyGuideProfile()
+  const { data: guideData } = useMyGuideProfile({ enabled: role === 'TOUR_GUIDE' })
+  const { data: vehiclesData } = useMyVehicles()
 
+  const vehicles = vehiclesData ?? []
   const firstHotelId = hotelsData?.data?.[0]?.id
   const guideId = guideData?.data?.id
+
+  // For VEHICLE_OWNER: fetch reviews for every vehicle in parallel
+  const vehicleReviewQueries = useQueries({
+    queries: role === 'VEHICLE_OWNER'
+      ? vehicles.map((v: any) => ({
+          queryKey: ['reviews', 'VEHICLE', v.id, { page: 0, size: 100 }],
+          queryFn: () => getReviewsByEntity('VEHICLE', v.id, { page: 0, size: 100 }),
+          enabled: true,
+        }))
+      : [],
+  })
 
   const entityType = role === 'HOTEL_OWNER' ? 'HOTEL' : 'TOUR_GUIDE'
   const entityId = role === 'HOTEL_OWNER' ? firstHotelId : guideId
 
-  const { data, isLoading } = useReviewsByEntity(entityType, entityId ?? 0, { page, size: 10 })
+  // For HOTEL_OWNER / TOUR_GUIDE use the existing single-entity hook with pagination
+  const { data: singleData, isLoading: singleLoading } = useReviewsByEntity(
+    entityType,
+    entityId ?? 0,
+    { page, size: 10 },
+  )
 
-  const reviews: Review[] = data?.data?.data ?? []
-  const pagination = data?.data?.pagination
+  // Merge and sort all vehicle reviews by date desc
+  const allVehicleReviews: Review[] = vehicleReviewQueries
+    .flatMap((q) => (q.data?.data?.data ?? []) as Review[])
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+  const vehicleReviewsLoading = vehicleReviewQueries.some((q) => q.isLoading)
+
+  const isLoading = role === 'VEHICLE_OWNER' ? vehicleReviewsLoading : singleLoading
+  const reviews: Review[] = role === 'VEHICLE_OWNER' ? allVehicleReviews : (singleData?.data?.data ?? [])
+  const pagination = role === 'VEHICLE_OWNER' ? undefined : singleData?.data?.pagination
+  const hasProvider = role === 'VEHICLE_OWNER' ? vehicles.length > 0 : !!entityId
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Reviews</h1>
-        <p className="text-muted-foreground">Reviews from tourists for your {role === 'HOTEL_OWNER' ? 'hotels' : 'guide services'}</p>
+        <p className="text-muted-foreground">Reviews from tourists for your {role === 'HOTEL_OWNER' ? 'hotels' : role === 'VEHICLE_OWNER' ? 'vehicles' : 'guide services'}</p>
       </div>
 
       {isLoading ? (
@@ -48,7 +78,7 @@ export default function ProviderReviewsPage() {
             </div>
           ))}
         </div>
-      ) : !entityId ? (
+      ) : !hasProvider ? (
         <EmptyState
           icon={Star}
           title="No provider profile"

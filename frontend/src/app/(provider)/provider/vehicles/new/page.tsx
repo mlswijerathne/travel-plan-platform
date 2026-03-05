@@ -21,10 +21,8 @@ export default function NewVehiclePage() {
     year: new Date().getFullYear(),
     vehicleType: 'CAR' as string,
     licensePlate: '',
-    capacity: 4,
-    pricePerDay: '',
-    description: '',
-    city: '',
+    seatingCapacity: 4,
+    dailyRate: '',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,10 +30,11 @@ export default function NewVehiclePage() {
     try {
       await createMutation.mutateAsync({
         ...form,
-        capacity: Number(form.capacity),
-        pricePerDay: Number(form.pricePerDay),
+        seatingCapacity: Number(form.seatingCapacity),
+        dailyRate: Number(form.dailyRate),
         year: Number(form.year),
-      } as any)
+        vehicleType: form.vehicleType as any,
+      })
       router.push('/provider/vehicles')
     } catch (err) {
       console.error('Failed to create vehicle:', err)
@@ -90,24 +89,15 @@ export default function NewVehiclePage() {
           </div>
           <div className="space-y-2">
             <Label>Seating Capacity</Label>
-            <Input type="number" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} required />
+            <Input type="number" value={form.seatingCapacity} onChange={(e) => setForm({ ...form, seatingCapacity: Number(e.target.value) })} required />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Daily Rate (Rs)</Label>
-            <Input type="number" step="0.01" placeholder="5000" value={form.pricePerDay} onChange={(e) => setForm({ ...form, pricePerDay: e.target.value })} required />
+            <Input type="number" step="0.01" placeholder="5000" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} required />
           </div>
-          <div className="space-y-2">
-            <Label>City</Label>
-            <Input placeholder="Colombo" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Description</Label>
-          <Input placeholder="Brief description of the vehicle" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         </div>
 
         <div className="flex justify-end gap-3 pt-4">

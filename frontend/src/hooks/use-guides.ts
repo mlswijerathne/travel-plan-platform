@@ -19,11 +19,12 @@ export function useGuide(id: number) {
   })
 }
 
-export function useMyGuideProfile() {
+export function useMyGuideProfile(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['myGuideProfile'],
     queryFn: () => getMyGuideProfile(),
     retry: false,
+    enabled: options?.enabled !== false,
   })
 }
 

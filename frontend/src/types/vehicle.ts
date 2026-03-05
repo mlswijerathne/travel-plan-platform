@@ -1,4 +1,4 @@
-export type VehicleType = 'CAR' | 'VAN' | 'BUS' | 'MOTORCYCLE' | 'TUKTU' | 'JEEP' | 'SUV'
+export type VehicleType = 'CAR' | 'SUV' | 'VAN' | 'BUS' | 'TUK_TUK' | 'MOTORBIKE'
 
 export interface Vehicle {
   id: number
@@ -8,17 +8,16 @@ export interface Vehicle {
   year: number
   vehicleType: VehicleType
   licensePlate: string
-  capacity: number
-  pricePerDay: number
-  description?: string
+  seatingCapacity: number
+  dailyRate: number
   features?: string[]
-  imageUrl?: string
+  images?: string[]
   isAvailable: boolean
   isActive: boolean
   averageRating: number
   reviewCount: number
-  city?: string
   createdAt: string
+  updatedAt?: string
 }
 
 export interface CreateVehicleRequest {
@@ -27,11 +26,10 @@ export interface CreateVehicleRequest {
   year: number
   vehicleType: VehicleType
   licensePlate: string
-  capacity: number
-  pricePerDay: number
-  description?: string
+  seatingCapacity: number
+  dailyRate: number
   features?: string[]
-  city?: string
+  isAvailable?: boolean
 }
 
 export interface VehicleUpdateRequest extends Partial<CreateVehicleRequest> {
@@ -41,10 +39,11 @@ export interface VehicleUpdateRequest extends Partial<CreateVehicleRequest> {
 export interface VehicleSearchParams {
   vehicleType?: string
   minCapacity?: number
-  maxPricePerDay?: number
-  city?: string
+  minDailyRate?: number
+  maxDailyRate?: number
+  query?: string
   page?: number
   size?: number
 }
 
-export const VEHICLE_TYPES: VehicleType[] = ['CAR', 'VAN', 'BUS', 'MOTORCYCLE', 'TUKTU', 'JEEP', 'SUV']
+export const VEHICLE_TYPES: VehicleType[] = ['CAR', 'SUV', 'VAN', 'BUS', 'TUK_TUK', 'MOTORBIKE']

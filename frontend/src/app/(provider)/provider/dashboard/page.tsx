@@ -12,8 +12,8 @@ import { Button } from '@/components/ui/button'
 export default function ProviderDashboardPage() {
   const { role, isLoading: roleLoading } = useUserRole()
   const { data: hotelsData } = useMyHotels({ size: 5 })
-  const { data: guideData } = useMyGuideProfile()
-  const { data: vehiclesData } = useMyVehicles({ size: 5 })
+  const { data: guideData } = useMyGuideProfile({ enabled: role === 'TOUR_GUIDE' })
+  const { data: vehiclesData } = useMyVehicles()
 
   if (roleLoading) {
     return (
@@ -28,7 +28,7 @@ export default function ProviderDashboardPage() {
 
   const hotels = hotelsData?.data ?? []
   const guide = guideData?.data
-  const vehicles = (vehiclesData as any)?.content ?? []
+  const vehicles = vehiclesData ?? []
 
   return (
     <div className="space-y-8">
@@ -152,7 +152,7 @@ export default function ProviderDashboardPage() {
                     <span className="text-xl">🚗</span>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{vehicle.make} {vehicle.model}</p>
-                      <p className="text-xs text-muted-foreground">{vehicle.vehicleType} · Rs. {vehicle.dailyRate ?? vehicle.pricePerDay}/day</p>
+                      <p className="text-xs text-muted-foreground">{vehicle.vehicleType} · Rs. {vehicle.dailyRate}/day</p>
                     </div>
                     <div className="text-right text-sm">
                       {vehicle.reviewCount > 0 && (

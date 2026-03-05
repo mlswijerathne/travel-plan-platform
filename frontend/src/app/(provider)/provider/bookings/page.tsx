@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useMyHotels } from '@/hooks/use-hotels'
 import { useMyGuideProfile } from '@/hooks/use-guides'
+import { useMyVehicles } from '@/hooks/use-vehicles'
 import { useProviderBookings } from '@/hooks/use-bookings'
 import { useUserRole } from '@/hooks/use-user-role'
 import { BookingCard } from '@/components/bookings/BookingCard'
@@ -18,13 +19,15 @@ export default function ProviderBookingsPage() {
   const [statusFilter, setStatusFilter] = useState<BookingStatus | 'ALL'>('ALL')
 
   const { data: hotelsData } = useMyHotels()
-  const { data: guideData } = useMyGuideProfile()
+  const { data: guideData } = useMyGuideProfile({ enabled: role === 'TOUR_GUIDE' })
+  const { data: vehiclesData } = useMyVehicles()
 
   const firstHotelId = hotelsData?.data?.[0]?.id
   const guideId = guideData?.data?.id
+  const firstVehicleId = vehiclesData?.[0]?.id
 
-  const providerType = role === 'HOTEL_OWNER' ? 'HOTEL' : 'TOUR_GUIDE'
-  const providerId = role === 'HOTEL_OWNER' ? firstHotelId : guideId
+  const providerType = role === 'HOTEL_OWNER' ? 'HOTEL' : role === 'VEHICLE_OWNER' ? 'VEHICLE' : 'TOUR_GUIDE'
+  const providerId = role === 'HOTEL_OWNER' ? firstHotelId : role === 'VEHICLE_OWNER' ? firstVehicleId : guideId
 
   const { data, isLoading } = useProviderBookings(
     providerType,
@@ -43,7 +46,7 @@ export default function ProviderBookingsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Provider Bookings</h1>
-        <p className="text-muted-foreground">Bookings for your {role === 'HOTEL_OWNER' ? 'hotels' : 'guide services'}</p>
+        <p className="text-muted-foreground">Bookings for your {role === 'HOTEL_OWNER' ? 'hotels' : role === 'VEHICLE_OWNER' ? 'vehicles' : 'guide services'}</p>
       </div>
 
       <div className="flex flex-wrap gap-1.5">

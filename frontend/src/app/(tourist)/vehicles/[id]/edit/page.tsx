@@ -39,8 +39,8 @@ export default function EditVehiclePage({ params }: { params: Promise<{ id: stri
                     vehicleType: data.vehicleType || "CAR",
                     year: data.year,
                     licensePlate: data.licensePlate || "",
-                    seatingCapacity: data.capacity,
-                    dailyRate: String(data.pricePerDay),
+                    seatingCapacity: data.seatingCapacity,
+                    dailyRate: String(data.dailyRate),
                     isAvailable: data.isAvailable,
                     imageUrl: ((data as any).images && (data as any).images[0]) ? (data as any).images[0] : ((data as any).imageUrl || ""),
                 });

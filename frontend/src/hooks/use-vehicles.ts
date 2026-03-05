@@ -9,7 +9,7 @@ import {
   updateVehicle,
   deleteVehicle,
 } from '@/lib/api/vehicles'
-import type { CreateVehicleRequest, VehicleUpdateRequest, VehicleSearchParams } from '@/types/vehicle'
+import type { CreateVehicleRequest, VehicleUpdateRequest, VehicleSearchParams, Vehicle } from '@/types/vehicle'
 
 export function useVehicles(params: VehicleSearchParams = {}) {
   return useQuery({
@@ -26,9 +26,9 @@ export function useVehicle(id: number) {
   })
 }
 
-export function useMyVehicles(params: { page?: number; size?: number } = {}) {
-  return useQuery({
-    queryKey: ['myVehicles', params],
+export function useMyVehicles() {
+  return useQuery<Vehicle[]>({
+    queryKey: ['myVehicles'],
     queryFn: () => getMyVehicles(),
   })
 }

@@ -10,7 +10,7 @@ export function getVehicle(id: number): Promise<Vehicle> {
   return apiGet(`/api/vehicles/${id}`)
 }
 
-export function getMyVehicles(): Promise<PaginatedResponse<Vehicle>> {
+export function getMyVehicles(): Promise<Vehicle[]> {
   return apiGet('/api/vehicles/owner')
 }
 

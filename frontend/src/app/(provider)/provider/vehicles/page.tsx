@@ -10,7 +10,7 @@ export default function ProviderVehiclesPage() {
   const { data, isLoading } = useMyVehicles()
   const deleteMutation = useDeleteVehicle()
 
-  const vehicles = (data as any)?.content ?? []
+  const vehicles = (data as any[] | undefined) ?? []
 
   if (isLoading) {
     return (
@@ -66,7 +66,7 @@ export default function ProviderVehiclesPage() {
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {vehicle.vehicleType} · {vehicle.seatingCapacity ?? vehicle.capacity} seats · Rs. {vehicle.dailyRate ?? vehicle.pricePerDay}/day
+                  {vehicle.vehicleType} · {vehicle.seatingCapacity} seats · Rs. {vehicle.dailyRate}/day
                 </p>
               </div>
               {vehicle.reviewCount > 0 && (

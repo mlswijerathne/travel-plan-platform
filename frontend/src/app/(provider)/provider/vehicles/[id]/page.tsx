@@ -49,10 +49,8 @@ function VehicleEditForm({ vehicle }: { vehicle: Vehicle }) {
     year: v.year ?? new Date().getFullYear(),
     vehicleType: v.vehicleType ?? 'CAR',
     licensePlate: v.licensePlate ?? '',
-    capacity: v.seatingCapacity ?? v.capacity ?? 4,
-    pricePerDay: v.dailyRate ?? v.pricePerDay ?? 0,
-    description: v.description ?? '',
-    city: v.city ?? '',
+    seatingCapacity: v.seatingCapacity ?? 4,
+    dailyRate: v.dailyRate ?? 0,
     isAvailable: v.isAvailable ?? true,
   })
 
@@ -64,8 +62,8 @@ function VehicleEditForm({ vehicle }: { vehicle: Vehicle }) {
         data: {
           ...form,
           vehicleType: form.vehicleType as VehicleType,
-          capacity: Number(form.capacity),
-          pricePerDay: Number(form.pricePerDay),
+          seatingCapacity: Number(form.seatingCapacity),
+          dailyRate: Number(form.dailyRate),
           year: Number(form.year),
         },
       })
@@ -123,24 +121,15 @@ function VehicleEditForm({ vehicle }: { vehicle: Vehicle }) {
           </div>
           <div className="space-y-2">
             <Label>Seating Capacity</Label>
-            <Input type="number" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} required />
+            <Input type="number" value={form.seatingCapacity} onChange={(e) => setForm({ ...form, seatingCapacity: Number(e.target.value) })} required />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Daily Rate (Rs)</Label>
-            <Input type="number" step="0.01" value={form.pricePerDay} onChange={(e) => setForm({ ...form, pricePerDay: Number(e.target.value) })} required />
+            <Input type="number" step="0.01" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: Number(e.target.value) })} required />
           </div>
-          <div className="space-y-2">
-            <Label>City</Label>
-            <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Description</Label>
-          <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         </div>
 
         <div className="flex items-center gap-3 pt-2">
