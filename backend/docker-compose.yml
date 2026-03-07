@@ -430,6 +430,13 @@ services:
       - DATABASE_PASSWORD=${AI_AGENT_DB_PASSWORD}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4.1-mini}
+      - FEIGN_HOTEL_SERVICE_URL=http://hotel-service:8083
+      - FEIGN_TOUR_GUIDE_SERVICE_URL=http://tour-guide-service:8084
+      - FEIGN_VEHICLE_SERVICE_URL=http://vehicle-service:8085
+      - FEIGN_REVIEW_SERVICE_URL=http://review-service:8088
+      - FEIGN_TRIP_PLAN_SERVICE_URL=http://trip-plan-service:8089
+      - FEIGN_EVENT_SERVICE_URL=http://event-service:8090
+      - FEIGN_ECOMMERCE_SERVICE_URL=http://ecommerce-service:8091
     depends_on:
       discovery-server:
         condition: service_healthy
