@@ -14,13 +14,16 @@ import com.travelplan.tripplan.exception.ResourceNotFoundException;
 import com.travelplan.tripplan.repository.PackageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,10 +79,49 @@ public class PackageService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PackageResponse> searchPackages(Pageable pageable) {
-        // Simple search for now, can be extended with Specifications for filtering
-        return packageRepository.findByIsActiveTrue(pageable)
-                .map(this::mapEntityToResponse);
+    public Page<PackageResponse> searchPackages(String destination, Integer durationDays,
+                                                 Double minBudget, Double maxBudget,
+                                                 String query, Pageable pageable) {
+        boolean hasFilters = destination != null || durationDays != null
+                || minBudget != null || maxBudget != null || query != null;
+
+        if (!hasFilters) {
+            return packageRepository.findByIsActiveTrue(pageable)
+                    .map(this::mapEntityToResponse);
+        }
+
+        Specification<TripPackage> spec = (root, cq, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.isTrue(root.get("isActive")));
+
+            if (destination != null) {
+                // Search in destinations array and name/description
+                String pattern = "%" + destination.toLowerCase() + "%";
+                predicates.add(cb.or(
+                        cb.like(cb.lower(root.get("name")), pattern),
+                        cb.like(cb.lower(root.get("description")), pattern)
+                ));
+            }
+            if (durationDays != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("durationDays"), durationDays));
+            }
+            if (minBudget != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("basePrice"), BigDecimal.valueOf(minBudget)));
+            }
+            if (maxBudget != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("basePrice"), BigDecimal.valueOf(maxBudget)));
+            }
+            if (query != null) {
+                String pattern = "%" + query.toLowerCase() + "%";
+                predicates.add(cb.or(
+                        cb.like(cb.lower(root.get("name")), pattern),
+                        cb.like(cb.lower(root.get("description")), pattern)
+                ));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return packageRepository.findAll(spec, pageable).map(this::mapEntityToResponse);
     }
 
     @Transactional(readOnly = true)

@@ -1,24 +1,46 @@
 package com.travelplan.aiagent.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.travelplan.aiagent.dto.ConversationHistory;
 import com.travelplan.aiagent.dto.QuickReplyChip;
+import com.travelplan.aiagent.entity.ChatSessionEntity;
+import com.travelplan.aiagent.repository.ChatMessageRepository;
+import com.travelplan.aiagent.repository.ChatSessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class SessionManagerTest {
+
+    @Mock
+    private ChatSessionRepository sessionRepository;
+
+    @Mock
+    private ChatMessageRepository messageRepository;
 
     private SessionManager sessionManager;
 
     @BeforeEach
     void setUp() {
-        sessionManager = new SessionManager();
+        sessionManager = new SessionManager(sessionRepository, messageRepository, new ObjectMapper());
         ReflectionTestUtils.setField(sessionManager, "sessionTtlMinutes", 30);
         ReflectionTestUtils.setField(sessionManager, "maxHistory", 50);
+
+        // Stub: no existing session in DB, save returns the entity
+        lenient().when(sessionRepository.findBySessionId(any())).thenReturn(Optional.empty());
+        lenient().when(sessionRepository.save(any(ChatSessionEntity.class))).thenAnswer(i -> i.getArgument(0));
     }
 
     @Test

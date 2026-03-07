@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
+import { uploadImage } from '@/lib/api/images'
 import Link from 'next/link'
 
 export default function NewEventPage() {
@@ -31,6 +32,7 @@ export default function NewEventPage() {
   const [maxCapacity, setMaxCapacity] = useState(100)
   const [vibe, setVibe] = useState('')
   const [authenticCultural, setAuthenticCultural] = useState(false)
+  const [coverImageFile, setCoverImageFile] = useState<File | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState('')
   const [requirements, setRequirements] = useState('')
   const [cancellationPolicy, setCancellationPolicy] = useState('')
@@ -43,12 +45,16 @@ export default function NewEventPage() {
     }
     setSaving(true)
     try {
+      let uploadedCoverUrl = coverImageUrl
+      if (coverImageFile) {
+        uploadedCoverUrl = await uploadImage(coverImageFile, 'events')
+      }
       const body: CreateEventRequest = {
         title, description, category, location, venueName,
         startDateTime, endDateTime, ticketPrice, maxCapacity,
         vibe: vibe || undefined,
         authenticCultural,
-        coverImageUrl: coverImageUrl || undefined,
+        coverImageUrl: uploadedCoverUrl || undefined,
         requirements: requirements || undefined,
         cancellationPolicy: cancellationPolicy || undefined,
       }
@@ -153,8 +159,8 @@ export default function NewEventPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Cover Image URL</Label>
-              <Input value={coverImageUrl} onChange={e => setCoverImageUrl(e.target.value)} placeholder="https://..." className="h-11" />
+              <Label>Cover Image</Label>
+              <Input type="file" accept="image/*" onChange={e => e.target.files?.[0] && setCoverImageFile(e.target.files[0])} className="h-11" />
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={authenticCultural} onCheckedChange={setAuthenticCultural} id="cultural" />

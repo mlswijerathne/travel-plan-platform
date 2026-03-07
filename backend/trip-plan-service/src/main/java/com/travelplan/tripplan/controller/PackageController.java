@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,15 @@ public class PackageController {
 
     @GetMapping
     public ResponseEntity<PaginatedResponse<PackageResponse>> searchPackages(
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Integer durationDays,
+            @RequestParam(required = false) Double minBudget,
+            @RequestParam(required = false) Double maxBudget,
+            @RequestParam(required = false) String query,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<PackageResponse> packagePage = packageService.searchPackages(PageRequest.of(page, size));
+        Page<PackageResponse> packagePage = packageService.searchPackages(
+                destination, durationDays, minBudget, maxBudget, query, PageRequest.of(page, size));
         PaginatedResponse<PackageResponse> response = PaginatedResponse.of(
                 packagePage.getContent(),
                 page,

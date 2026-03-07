@@ -144,3 +144,30 @@ export async function getChatHistory(sessionId: string) {
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
   return response.json()
 }
+
+export async function getChatSessions(): Promise<ChatSession[]> {
+  const token = await getToken()
+  const response = await fetch(`${AI_API_URL}/api/chat/sessions`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  return json.data ?? []
+}
+
+export async function deleteChatSession(sessionId: string): Promise<void> {
+  const token = await getToken()
+  const response = await fetch(`${AI_API_URL}/api/chat/sessions/${sessionId}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` },
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+}
+
+export interface ChatSession {
+  sessionId: string
+  title: string | null
+  messages: []
+  createdAt: string
+  lastActivityAt: string
+}

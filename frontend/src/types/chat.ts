@@ -41,11 +41,13 @@ export interface ChatMessage {
 
 export interface ConversationHistory {
   sessionId: string
+  title?: string
   messages: {
     role: string
     content: string
     timestamp: string
     quickReplies?: QuickReplyChip[]
+    providers?: ProviderResult[]
   }[]
   createdAt: string
   lastActivityAt: string

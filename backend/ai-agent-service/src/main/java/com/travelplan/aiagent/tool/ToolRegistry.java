@@ -1,7 +1,7 @@
 package com.travelplan.aiagent.tool;
 
 import com.travelplan.aiagent.client.*;
-import com.travelplan.aiagent.service.GoogleMapsService;
+import com.travelplan.aiagent.service.OpenStreetMapService;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -30,26 +30,34 @@ public class ToolRegistry {
     @Getter
     private final TripPlanServiceClient tripPlanServiceClient;
     @Getter
-    private final GoogleMapsService googleMapsService;
+    private final EventServiceClient eventServiceClient;
+    @Getter
+    private final EcommerceServiceClient ecommerceServiceClient;
+    @Getter
+    private final OpenStreetMapService openStreetMapService;
 
     public ToolRegistry(HotelServiceClient hotelServiceClient,
                         TourGuideServiceClient tourGuideServiceClient,
                         VehicleServiceClient vehicleServiceClient,
                         ReviewServiceClient reviewServiceClient,
                         TripPlanServiceClient tripPlanServiceClient,
-                        GoogleMapsService googleMapsService) {
+                        EventServiceClient eventServiceClient,
+                        EcommerceServiceClient ecommerceServiceClient,
+                        OpenStreetMapService openStreetMapService) {
         this.hotelServiceClient = hotelServiceClient;
         this.tourGuideServiceClient = tourGuideServiceClient;
         this.vehicleServiceClient = vehicleServiceClient;
         this.reviewServiceClient = reviewServiceClient;
         this.tripPlanServiceClient = tripPlanServiceClient;
-        this.googleMapsService = googleMapsService;
+        this.eventServiceClient = eventServiceClient;
+        this.ecommerceServiceClient = ecommerceServiceClient;
+        this.openStreetMapService = openStreetMapService;
     }
 
     @PostConstruct
     public void init() {
         instance = this;
-        log.info("ToolRegistry initialized with all Feign clients and GoogleMapsService");
+        log.info("ToolRegistry initialized with all Feign clients and OpenStreetMapService (hotels, guides, vehicles, reviews, trip-plan, events, products)");
     }
 
     public static ToolRegistry getInstance() {

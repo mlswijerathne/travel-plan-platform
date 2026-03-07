@@ -36,6 +36,22 @@ public class ChatController {
         return ApiResponse.success(chatService.getHistory(sessionId));
     }
 
+    @GetMapping("/sessions")
+    public ApiResponse<java.util.List<ConversationHistory>> getUserSessions(Authentication authentication) {
+        String userId = authentication != null ? authentication.getName() : "anonymous";
+        log.info("Listing sessions for user: {}", userId);
+        return ApiResponse.success(chatService.getUserSessions(userId));
+    }
+
+    @DeleteMapping("/sessions/{sessionId}")
+    public ApiResponse<Void> deleteSession(
+            @PathVariable String sessionId,
+            Authentication authentication) {
+        log.info("Deleting session: {} for user: {}", sessionId, authentication.getName());
+        chatService.deleteSession(sessionId);
+        return ApiResponse.success(null);
+    }
+
     @PostMapping("/recommend")
     public ApiResponse<RecommendationResponse> recommend(
             @Valid @RequestBody RecommendationRequest request,

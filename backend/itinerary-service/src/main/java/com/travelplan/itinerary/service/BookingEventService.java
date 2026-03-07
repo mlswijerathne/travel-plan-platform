@@ -1,5 +1,6 @@
 package com.travelplan.itinerary.service;
 
+import com.travelplan.itinerary.client.BookingServiceClient;
 import com.travelplan.itinerary.event.BookingConfirmedEvent;
 import com.travelplan.itinerary.model.ActivityType;
 import com.travelplan.itinerary.model.Itinerary;
@@ -21,6 +22,7 @@ public class BookingEventService {
     private final ItineraryRepository itineraryRepository;
     private final ItineraryDayService dayService;
     private final ItineraryActivityService activityService;
+    private final BookingServiceClient bookingServiceClient;
 
     public void handleBookingConfirmed(BookingConfirmedEvent event) {
         log.info("Handling booking confirmed event: {}", event.getEventId());
@@ -49,7 +51,16 @@ public class BookingEventService {
         
         // Add booking items to appropriate days
         addBookingItemsToItinerary(itinerary, event);
-        
+
+        // Link itinerary back to booking
+        try {
+            bookingServiceClient.linkItinerary(event.getPayload().getBookingId(), itinerary.getId());
+            log.info("Linked booking {} to itinerary {}", event.getPayload().getBookingId(), itinerary.getId());
+        } catch (Exception e) {
+            log.warn("Failed to link itinerary {} back to booking {}: {}",
+                    itinerary.getId(), event.getPayload().getBookingId(), e.getMessage());
+        }
+
         log.info("Booking {} added to itinerary {}", event.getPayload().getBookingId(), itinerary.getId());
     }
 
@@ -99,6 +110,7 @@ public class BookingEventService {
                         null, // location
                         event.getPayload().getBookingId(),
                         item.getProviderType(),
+                        item.getProviderId(),
                         activityType
                 );
 

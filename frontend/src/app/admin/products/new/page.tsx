@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
+import { uploadImage } from "@/lib/api/images";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060';
 
@@ -18,7 +19,7 @@ export default function AddProductPage() {
 
     const [formData, setFormData] = useState({
         name: "",
-        category: "Souvenirs", // Default category
+        category: "Souvenirs",
         description: "",
         price: "",
         stockQuantity: "10",
@@ -40,17 +41,15 @@ export default function AddProductPage() {
                 authHeaders['Authorization'] = `Bearer ${session.access_token}`;
             }
 
-            const data = new FormData();
-
-            // The backend expects the product details as a JSON string named "product"
-            data.append("product", new Blob([JSON.stringify(formData)], { type: "application/json" }));
-
-            // The backend expects the file named "image"
+            let imageUrl = "";
             if (imageFile) {
-                data.append("image", imageFile);
+                imageUrl = await uploadImage(imageFile, "products");
             }
 
-            // POST to E-Commerce Service via API Gateway
+            const productPayload = { ...formData, imageUrl };
+            const data = new FormData();
+            data.append("product", new Blob([JSON.stringify(productPayload)], { type: "application/json" }));
+
             const res = await fetch(`${API_BASE}/api/products`, {
                 method: "POST",
                 headers: authHeaders,
@@ -59,7 +58,7 @@ export default function AddProductPage() {
 
             if (res.ok) {
                 alert("Product successfully added to the shop!");
-                router.push("/shop"); // Redirect back to the main shop page
+                router.push("/admin/products");
             } else {
                 const errorText = await res.text();
                 alert(`Failed to add product: ${errorText}`);

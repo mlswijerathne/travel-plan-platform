@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -8,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { HOTEL_AMENITIES } from '@/types/hotel'
 import { formatAmenity } from '@/lib/utils'
+import { uploadImage } from '@/lib/api/images'
 import type { Hotel } from '@/types/hotel'
 
 const hotelSchema = z.object({
@@ -25,11 +27,13 @@ type HotelFormData = z.infer<typeof hotelSchema>
 
 interface HotelFormProps {
   hotel?: Hotel
-  onSubmit: (data: HotelFormData) => void
+  onSubmit: (data: HotelFormData & { imageUrl?: string }) => void
   isPending: boolean
 }
 
 export function HotelForm({ hotel, onSubmit, isPending }: HotelFormProps) {
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<HotelFormData>({
     resolver: zodResolver(hotelSchema),
     defaultValues: {
@@ -46,6 +50,19 @@ export function HotelForm({ hotel, onSubmit, isPending }: HotelFormProps) {
 
   const selectedAmenities = watch('amenities') ?? []
 
+  async function handleFormSubmit(data: HotelFormData) {
+    let imageUrl = hotel?.imageUrl ?? undefined
+    if (imageFile) {
+      setUploading(true)
+      try {
+        imageUrl = await uploadImage(imageFile, 'hotels')
+      } finally {
+        setUploading(false)
+      }
+    }
+    onSubmit({ ...data, imageUrl })
+  }
+
   function toggleAmenity(amenity: string) {
     const current = selectedAmenities
     const updated = current.includes(amenity)
@@ -55,7 +72,19 @@ export function HotelForm({ hotel, onSubmit, isPending }: HotelFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      <div>
+        <label className="text-sm font-medium mb-1 block">Hotel Image</label>
+        {hotel?.imageUrl && !imageFile && (
+          <img src={hotel.imageUrl} alt="Current hotel" className="h-32 w-full object-cover rounded-lg mb-2" />
+        )}
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => e.target.files?.[0] && setImageFile(e.target.files[0])}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium mb-1 block">Hotel Name *</label>
@@ -113,8 +142,8 @@ export function HotelForm({ hotel, onSubmit, isPending }: HotelFormProps) {
       </div>
 
       <div className="flex justify-end gap-3">
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Saving...' : hotel ? 'Update Hotel' : 'Create Hotel'}
+        <Button type="submit" disabled={isPending || uploading}>
+          {uploading ? 'Uploading image...' : isPending ? 'Saving...' : hotel ? 'Update Hotel' : 'Create Hotel'}
         </Button>
       </div>
     </form>

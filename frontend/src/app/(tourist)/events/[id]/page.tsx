@@ -215,7 +215,7 @@ export default function EventDetailPage() {
               <div className="flex items-center justify-between py-2">
                 <span className="text-sm text-muted-foreground">Price per ticket</span>
                 <span className="font-semibold">
-                  {event.ticketPrice === 0 ? 'Free' : `Rs ${event.ticketPrice.toLocaleString()}`}
+                  {!event.ticketPrice || event.ticketPrice === 0 ? 'Free' : `Rs ${event.ticketPrice.toLocaleString()}`}
                 </span>
               </div>
               <Separator />

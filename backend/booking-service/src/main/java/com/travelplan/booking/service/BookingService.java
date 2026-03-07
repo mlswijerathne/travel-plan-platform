@@ -20,4 +20,6 @@ public interface BookingService {
     PaginatedResponse<BookingResponse> getProviderBookings(String providerType, Long providerId, String status, int page, int size);
 
     BookingResponse getBookingByReference(String bookingReference);
+
+    void linkItinerary(Long bookingId, Long itineraryId);
 }

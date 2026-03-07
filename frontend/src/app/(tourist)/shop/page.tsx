@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { ShoppingBag, Plus } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { getProducts } from "@/lib/api/products";
 import type { ProductDTO } from "@/types/product";
 
@@ -34,11 +34,6 @@ export default function ShopPage() {
                 <h1 className="text-4xl font-bold mb-2">Travel Shop</h1>
                 <p className="text-emerald-200">Souvenirs, Gear & Essentials</p>
 
-                <Link href="/shop/add">
-                    <Button className="mt-6 bg-white text-emerald-900 hover:bg-gray-100 transition-colors">
-                        <Plus className="mr-2 h-4 w-4" /> List New Product
-                    </Button>
-                </Link>
             </div>
 
             {/* Product Grid */}
@@ -53,9 +48,6 @@ export default function ShopPage() {
                 ) : products.length === 0 ? (
                     <div className="text-center py-10">
                         <p className="text-gray-500 text-lg">No items in the shop yet.</p>
-                        <Link href="/shop/add" className="text-emerald-600 hover:underline mt-2 inline-block">
-                            Be the first to add one!
-                        </Link>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

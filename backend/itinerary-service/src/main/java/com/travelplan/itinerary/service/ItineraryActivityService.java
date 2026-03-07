@@ -90,7 +90,7 @@ public class ItineraryActivityService {
     }
 
     public void addBookingToItinerary(Long itineraryId, Long dayId, String title, LocalTime startTime, LocalTime endTime,
-                                     String location, Long bookingId, String providerType, ActivityType activityType) {
+                                     String location, Long bookingId, String providerType, Long providerId, ActivityType activityType) {
         ItineraryDay day = dayRepository.findById(dayId)
                 .orElseThrow(() -> new IllegalArgumentException("Day not found"));
 
@@ -103,6 +103,7 @@ public class ItineraryActivityService {
                 .location(location)
                 .bookingId(bookingId)
                 .providerType(providerType)
+                .providerId(providerId)
                 .sortOrder(0)
                 .build();
 

@@ -46,15 +46,23 @@ public class ChatServiceImpl implements ChatService {
                         sessionManager.addAssistantMessage(
                                 sessionId,
                                 sse.data().getContent(),
-                                sse.data().getQuickReplies()
+                                sse.data().getQuickReplies(),
+                                sse.data().getProviders()
                         );
                     }
                 })
                 .doOnError(error -> {
-                    log.error("Error in chat stream for session {}: {}", sessionId, error.getMessage());
+                    log.error("Error in chat stream for session {}: {}", sessionId, error.getMessage(), error);
                     sessionManager.addAssistantMessage(sessionId,
                             "I encountered an error processing your request. Please try again.",
-                            null);
+                            null, null);
+                })
+                .onErrorResume(error -> {
+                    log.error("Terminating chat stream due to error: {}", error.getMessage());
+                    return Flux.just(ServerSentEvent.<ChatStreamEvent>builder()
+                            .event("error")
+                            .data(ChatStreamEvent.error("Failed to connect to AI service. Please try again."))
+                            .build());
                 });
     }
 
@@ -69,6 +77,16 @@ public class ChatServiceImpl implements ChatService {
                     .build();
         }
         return history;
+    }
+
+    @Override
+    public List<ConversationHistory> getUserSessions(String userId) {
+        return sessionManager.getUserSessions(userId);
+    }
+
+    @Override
+    public void deleteSession(String sessionId) {
+        sessionManager.deleteSession(sessionId);
     }
 
     @Override
@@ -181,7 +199,8 @@ public class ChatServiceImpl implements ChatService {
                         sessionManager.addAssistantMessage(
                                 sessionId,
                                 sse.data().getContent(),
-                                sse.data().getQuickReplies()
+                                sse.data().getQuickReplies(),
+                                sse.data().getProviders()
                         );
                     }
                 })
@@ -189,7 +208,7 @@ public class ChatServiceImpl implements ChatService {
                     log.error("Error in generate-plan stream for session {}: {}", sessionId, error.getMessage());
                     sessionManager.addAssistantMessage(sessionId,
                             "I encountered an error generating your plan. Please try again.",
-                            null);
+                            null, null);
                 })
                 .onErrorResume(error -> {
                     log.error("Terminating generate-plan stream due to error: {}", error.getMessage());

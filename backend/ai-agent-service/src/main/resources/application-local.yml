@@ -1,0 +1,23 @@
+## Local profile - Uses REAL microservice endpoints via direct URLs (no Eureka, no mocks)
+## Run with: --spring.profiles.active=local
+## Requires all dependent services running locally on their respective ports
+
+eureka:
+  client:
+    enabled: false
+
+osm:
+  use-dummy: true  # Set to false for real OpenStreetMap API calls (free, no key needed)
+
+# Direct service URLs (bypasses Eureka service discovery)
+feign:
+  hotel-service:
+    url: http://localhost:8083
+  tour-guide-service:
+    url: http://localhost:8084
+  vehicle-service:
+    url: http://localhost:8085
+  review-service:
+    url: http://localhost:8088
+  trip-plan-service:
+    url: http://localhost:8089

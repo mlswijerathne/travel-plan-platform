@@ -43,6 +43,7 @@ services:
   tourist-service:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - AZURE_STORAGE_CONNECTION_STRING=${AZURE_STORAGE_CONNECTION_STRING}
     restart: unless-stopped
 
   hotel-service:
@@ -97,7 +98,6 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4.1-mini}
-      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
     restart: unless-stopped
 
 volumes:

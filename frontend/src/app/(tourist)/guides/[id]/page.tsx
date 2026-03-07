@@ -57,8 +57,12 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
         <div className="h-32 bg-gradient-to-br from-teal-50 to-teal-100/50" />
         <div className="p-6 -mt-12">
           <div className="flex flex-col sm:flex-row gap-4 items-start">
-            <div className="h-20 w-20 rounded-full bg-white border-4 border-white shadow-md flex items-center justify-center text-3xl">
-              🧭
+            <div className="h-20 w-20 rounded-full bg-white border-4 border-white shadow-md flex items-center justify-center text-3xl overflow-hidden">
+              {guide.profileImageUrl ? (
+                <img src={guide.profileImageUrl} alt={`${guide.firstName} ${guide.lastName}`} className="w-full h-full object-cover" />
+              ) : (
+                '🧭'
+              )}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">

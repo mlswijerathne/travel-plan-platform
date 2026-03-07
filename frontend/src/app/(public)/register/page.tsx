@@ -210,7 +210,7 @@ function RegisterContent() {
       })
 
       toast.success('Account created successfully!')
-      router.push('/profile')
+      router.push('/chat')
       router.refresh()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Registration failed')

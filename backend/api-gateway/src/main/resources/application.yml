@@ -12,6 +12,9 @@ spring:
           discovery:
             locator:
               enabled: false
+          httpclient:
+            connect-timeout: 5000
+            response-timeout: 300s
       globalcors:
         cors-configurations:
           '[/**]':
@@ -107,11 +110,19 @@ spring:
           predicates:
             - Path=/api/products/**,/api/orders/**
 
-        # AI Agent Service
+        # Image Upload Service (shared Azure Blob Storage, routed to tourist-service)
+        - id: image-upload
+          uri: lb://tourist-service
+          predicates:
+            - Path=/api/images/**
+
+        # AI Agent Service (SSE streaming — needs longer/no timeout)
         - id: ai-agent-service
           uri: lb://ai-agent-service
           predicates:
             - Path=/api/chat/**
+          metadata:
+            response-timeout: -1
 
         # ── Swagger / OpenAPI doc aggregation routes ──────────────────────────
         # Each route proxies a service's /v3/api-docs through the gateway so the

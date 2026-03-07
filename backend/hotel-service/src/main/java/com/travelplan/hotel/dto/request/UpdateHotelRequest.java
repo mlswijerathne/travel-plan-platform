@@ -41,6 +41,8 @@ public class UpdateHotelRequest {
 
     private List<String> amenities;
 
+    private String imageUrl;
+
     private LocalTime checkInTime;
 
     private LocalTime checkOutTime;

@@ -7,11 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -36,7 +34,13 @@ class HotelSearchToolsTest {
     private com.travelplan.aiagent.client.TripPlanServiceClient tripPlanServiceClient;
 
     @Mock
-    private com.travelplan.aiagent.service.GoogleMapsService googleMapsService;
+    private com.travelplan.aiagent.client.EventServiceClient eventServiceClient;
+
+    @Mock
+    private com.travelplan.aiagent.client.EcommerceServiceClient ecommerceServiceClient;
+
+    @Mock
+    private com.travelplan.aiagent.service.OpenStreetMapService openStreetMapService;
 
     private ToolRegistry toolRegistry;
 
@@ -48,23 +52,24 @@ class HotelSearchToolsTest {
                 vehicleServiceClient,
                 reviewServiceClient,
                 tripPlanServiceClient,
-                googleMapsService
+                eventServiceClient,
+                ecommerceServiceClient,
+                openStreetMapService
         );
         toolRegistry.init();
     }
 
     @Test
     void searchHotels_success_returnsResults() {
-        ApiResponse<Object> mockResponse = ApiResponse.success(List.of(
-                Map.of("name", "Hotel Colombo", "starRating", 4)
-        ));
+        Object mockResponse = Map.of(
+                "content", List.of(Map.of("name", "Hotel Colombo", "starRating", 4)),
+                "totalElements", 1
+        );
 
-        when(hotelServiceClient.searchHotels(eq("Colombo"), isNull(), isNull(), isNull(), isNull(), eq(0), eq(10)))
+        when(hotelServiceClient.searchHotels(eq("Colombo"), isNull(), eq(0), eq(10)))
                 .thenReturn(mockResponse);
 
-        Map<String, Object> result = HotelSearchTools.searchHotels(
-                "Colombo", Optional.empty(), Optional.empty(), Optional.empty()
-        );
+        Map<String, Object> result = HotelSearchTools.searchHotels("Colombo", 0);
 
         assertEquals("success", result.get("status"));
         assertEquals("Platform Partner", result.get("source"));
@@ -72,27 +77,23 @@ class HotelSearchToolsTest {
     }
 
     @Test
-    void searchHotels_withFilters_passesParameters() {
-        ApiResponse<Object> mockResponse = ApiResponse.success(List.of());
+    void searchHotels_withStarRating_passesParameters() {
+        Object mockResponse = Map.of("content", List.of(), "totalElements", 0);
 
-        when(hotelServiceClient.searchHotels(eq("Kandy"), isNull(), eq(4), eq(50.0), eq(200.0), eq(0), eq(10)))
+        when(hotelServiceClient.searchHotels(eq("Kandy"), eq(4), eq(0), eq(10)))
                 .thenReturn(mockResponse);
 
-        Map<String, Object> result = HotelSearchTools.searchHotels(
-                "Kandy", Optional.of(4), Optional.of(50.0), Optional.of(200.0)
-        );
+        Map<String, Object> result = HotelSearchTools.searchHotels("Kandy", 4);
 
         assertEquals("success", result.get("status"));
     }
 
     @Test
     void searchHotels_serviceUnavailable_returnsError() {
-        when(hotelServiceClient.searchHotels(any(), any(), any(), any(), any(), anyInt(), anyInt()))
+        when(hotelServiceClient.searchHotels(any(), any(), anyInt(), anyInt()))
                 .thenThrow(new RuntimeException("Connection refused"));
 
-        Map<String, Object> result = HotelSearchTools.searchHotels(
-                "Colombo", Optional.empty(), Optional.empty(), Optional.empty()
-        );
+        Map<String, Object> result = HotelSearchTools.searchHotels("Colombo", 0);
 
         assertEquals("error", result.get("status"));
         assertTrue(((String) result.get("message")).contains("unavailable"));

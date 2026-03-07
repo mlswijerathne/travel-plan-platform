@@ -1,41 +1,40 @@
 package com.travelplan.aiagent.tool;
 
 import com.google.adk.tools.Annotations.Schema;
-import com.travelplan.common.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 public class TourGuideSearchTools {
 
-    @Schema(description = "Search for tour guides in Sri Lanka by location, language, and specialization. Returns available tour guides from the platform.")
+    @Schema(description = "Search for tour guides in Sri Lanka by language, specialization, or text query. Use the query param to search by location or name. Returns available tour guides from the platform.")
     public static Map<String, Object> searchTourGuides(
-            @Schema(description = "Location/area for the tour guide, e.g. 'Colombo', 'Sigiriya', 'Ella'") String location,
-            @Schema(description = "Preferred language of the tour guide, e.g. 'English', 'French', 'German'") Optional<String> language,
-            @Schema(description = "Specialization area, e.g. 'Historical', 'Wildlife', 'Adventure', 'Cultural'") Optional<String> specialization) {
+            @Schema(description = "Preferred language of the tour guide, e.g. 'English', 'French', 'German'. Pass empty string to skip.") String language,
+            @Schema(description = "Specialization area, e.g. 'Historical', 'Wildlife', 'Adventure', 'Cultural'. Pass empty string to skip.") String specialization,
+            @Schema(description = "Text search query for name, location, or bio, e.g. 'Colombo', 'Sigiriya', 'Ella'. Pass empty string to skip.") String query) {
         try {
-            log.info("Searching tour guides - location: {}, language: {}, specialization: {}",
-                    location, language, specialization);
+            log.info("Searching tour guides - language: {}, specialization: {}, query: {}",
+                    language, specialization, query);
 
-            ApiResponse<Object> response = ToolRegistry.getInstance().getTourGuideServiceClient()
-                    .searchTourGuides(location,
-                            language.orElse(null),
-                            specialization.orElse(null),
-                            0, 10);
+            String langParam = (language != null && !language.isBlank()) ? language : null;
+            String specParam = (specialization != null && !specialization.isBlank()) ? specialization : null;
+            String queryParam = (query != null && !query.isBlank()) ? query : null;
+
+            Object response = ToolRegistry.getInstance().getTourGuideServiceClient()
+                    .searchTourGuides(langParam, specParam, queryParam, 0, 10);
 
             Map<String, Object> result = new HashMap<>();
             result.put("status", "success");
             result.put("source", "Platform Partner");
-            result.put("data", response.getData());
+            result.put("data", response);
             return result;
         } catch (Exception e) {
-            log.error("Error searching tour guides: {}", e.getMessage());
+            log.error("Error searching tour guides: {} - {}", e.getClass().getSimpleName(), e.getMessage(), e);
             Map<String, Object> result = new HashMap<>();
             result.put("status", "error");
-            result.put("message", "Tour guide service is currently unavailable. Please use your knowledge to suggest tour guide options marked as 'External Suggestion'.");
+            result.put("message", "Tour guide service is currently unavailable. Error: " + e.getMessage());
             return result;
         }
     }
@@ -46,7 +45,7 @@ public class TourGuideSearchTools {
         try {
             log.info("Getting tour guide details for ID: {}", guideId);
 
-            ApiResponse<Object> response = ToolRegistry.getInstance().getTourGuideServiceClient()
+            var response = ToolRegistry.getInstance().getTourGuideServiceClient()
                     .getTourGuideById(guideId);
 
             Map<String, Object> result = new HashMap<>();

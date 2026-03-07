@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,15 +40,18 @@ export function ReviewFormDialog({
   const [content, setContent] = useState(editReview?.content ?? '')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  // Reset form state whenever the dialog opens
-  useEffect(() => {
-    if (open) {
-      setRating(editReview?.rating ?? 0)
-      setTitle(editReview?.title ?? '')
-      setContent(editReview?.content ?? '')
-      setErrorMsg(null)
-    }
-  }, [open, editReview])
+  // Reset form state whenever the dialog opens (state-during-render pattern)
+  const [prevOpen, setPrevOpen] = useState(false)
+  if (open && !prevOpen) {
+    setPrevOpen(true)
+    setRating(editReview?.rating ?? 0)
+    setTitle(editReview?.title ?? '')
+    setContent(editReview?.content ?? '')
+    setErrorMsg(null)
+  }
+  if (!open && prevOpen) {
+    setPrevOpen(false)
+  }
 
   const createMutation = useCreateReview()
   const updateMutation = useUpdateReview()

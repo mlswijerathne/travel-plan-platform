@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -8,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { GUIDE_SPECIALIZATIONS, GUIDE_LANGUAGES } from '@/types/guide'
 import { capitalize } from '@/lib/utils'
+import { uploadImage } from '@/lib/api/images'
 import type { Guide } from '@/types/guide'
 
 const guideSchema = z.object({
@@ -27,11 +29,13 @@ type GuideFormData = z.infer<typeof guideSchema>
 
 interface GuideProfileFormProps {
   guide?: Guide
-  onSubmit: (data: GuideFormData) => void
+  onSubmit: (data: GuideFormData & { profileImageUrl?: string }) => void
   isPending: boolean
 }
 
 export function GuideProfileForm({ guide, onSubmit, isPending }: GuideProfileFormProps) {
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<GuideFormData>({
     resolver: zodResolver(guideSchema),
     defaultValues: {
@@ -51,6 +55,19 @@ export function GuideProfileForm({ guide, onSubmit, isPending }: GuideProfileFor
   const selectedLanguages = watch('languages') ?? []
   const selectedSpecs = watch('specializations') ?? []
 
+  async function handleFormSubmit(data: GuideFormData) {
+    let profileImageUrl = guide?.profileImageUrl ?? undefined
+    if (imageFile) {
+      setUploading(true)
+      try {
+        profileImageUrl = await uploadImage(imageFile, 'tour-guides')
+      } finally {
+        setUploading(false)
+      }
+    }
+    onSubmit({ ...data, profileImageUrl })
+  }
+
   function toggleItem(field: 'languages' | 'specializations', item: string) {
     const current = field === 'languages' ? selectedLanguages : selectedSpecs
     const updated = current.includes(item)
@@ -60,7 +77,19 @@ export function GuideProfileForm({ guide, onSubmit, isPending }: GuideProfileFor
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      <div>
+        <label className="text-sm font-medium mb-1 block">Profile Photo</label>
+        {guide?.profileImageUrl && !imageFile && (
+          <img src={guide.profileImageUrl} alt="Current profile" className="h-24 w-24 object-cover rounded-full mb-2" />
+        )}
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => e.target.files?.[0] && setImageFile(e.target.files[0])}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium mb-1 block">First Name *</label>
@@ -143,8 +172,8 @@ export function GuideProfileForm({ guide, onSubmit, isPending }: GuideProfileFor
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Saving...' : guide ? 'Update Profile' : 'Register as Guide'}
+        <Button type="submit" disabled={isPending || uploading}>
+          {uploading ? 'Uploading photo...' : isPending ? 'Saving...' : guide ? 'Update Profile' : 'Register as Guide'}
         </Button>
       </div>
     </form>

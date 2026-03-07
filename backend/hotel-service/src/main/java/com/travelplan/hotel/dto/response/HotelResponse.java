@@ -28,6 +28,7 @@ public class HotelResponse {
     private BigDecimal averageRating;
     private Integer reviewCount;
     private List<String> amenities;
+    private String imageUrl;
     private LocalTime checkInTime;
     private LocalTime checkOutTime;
     private Boolean isActive;

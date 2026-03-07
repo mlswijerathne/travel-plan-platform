@@ -48,6 +48,24 @@ PID_FILE="$SCRIPT_DIR/.running-pids"
 LOG_DIR="$SCRIPT_DIR/logs"
 mkdir -p "$LOG_DIR"
 
+# Load KEY=VALUE pairs from .env without shell evaluation so semicolons and
+# special chars inside values (for example Azure connection strings) are preserved.
+load_dotenv() {
+    local dotenv_file="$1"
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "$line" ]] && continue
+
+        local key="${line%%=*}"
+        local value="${line#*=}"
+
+        # Trim an optional CR for Windows line endings
+        value="${value%$'\r'}"
+        export "$key=$value"
+    done < "$dotenv_file"
+}
+
 # ── Health tracking ──
 FAILED_SERVICES=()
 SERVICE_STATUS=()   # "name:port:UP|DOWN"
@@ -146,9 +164,7 @@ fi
 # .env file
 if [ -f .env ]; then
     echo -e "  ${GREEN}[OK]${NC} .env file found"
-    set -a
-    source .env
-    set +a
+    load_dotenv .env
 else
     echo -e "  ${RED}[FAIL]${NC} backend/.env file not found!"
     echo -e "        Run: ${CYAN}./setup-env.sh${NC} or ${CYAN}cp .env.example .env${NC}"
@@ -239,7 +255,7 @@ start_service() {
         export DATABASE_PASSWORD="${!db_pass_var}"
     fi
 
-    mvn -f "${name}/pom.xml" spring-boot:run -DskipTests \
+    mvn -f "${name}/pom.xml" spring-boot:run -DskipTests -Dmaven.test.skip=true \
         -Dspring-boot.run.jvmArguments="-Xmx256m" \
         > "$LOG_DIR/${name}.log" 2>&1 &
 

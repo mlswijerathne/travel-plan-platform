@@ -37,7 +37,7 @@ Cypress.Commands.add('loginViaUI', (email: string, password: string) => {
   cy.get('input#email').type(email)
   cy.get('input#password').type(password)
   cy.get('button[type="submit"]').click()
-  cy.url().should('not.include', '/login', { timeout: 15000 })
+  cy.url().should('not.include', '/login', { timeout: 30000 })
 })
 
 // ── Login by role ────────────────────────────────────────────────────

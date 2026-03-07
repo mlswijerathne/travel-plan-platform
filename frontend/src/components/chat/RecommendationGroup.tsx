@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 
 interface RecommendationGroupProps {
   providers: ProviderResult[]
+  onAddToBooking?: (provider: ProviderResult) => void
 }
 
 interface ProviderGroup {
@@ -24,11 +25,13 @@ function groupProviders(providers: ProviderResult[]): ProviderGroup[] {
   }
 
   const labelMap: Record<string, string> = {
-    HOTEL: 'Hotels',
-    TOUR_GUIDE: 'Tour Guides',
-    VEHICLE: 'Vehicles',
-    RESTAURANT: 'Restaurants',
-    ACTIVITY: 'Activities',
+    HOTEL: '🏨 Hotels',
+    TOUR_GUIDE: '🧭 Tour Guides',
+    VEHICLE: '🚗 Vehicles',
+    EVENT: '🎫 Events',
+    PRODUCT: '🛍️ Products',
+    RESTAURANT: '🍽️ Restaurants',
+    ACTIVITY: '🎯 Activities',
   }
 
   return Object.entries(groups).map(([key, items]) => ({
@@ -38,7 +41,7 @@ function groupProviders(providers: ProviderResult[]): ProviderGroup[] {
   }))
 }
 
-export function RecommendationGroup({ providers }: RecommendationGroupProps) {
+export function RecommendationGroup({ providers, onAddToBooking }: RecommendationGroupProps) {
   const groups = groupProviders(providers)
 
   if (groups.length === 0) return null
@@ -50,7 +53,7 @@ export function RecommendationGroup({ providers }: RecommendationGroupProps) {
         <p className="text-xs font-medium text-muted-foreground mb-2">{groups[0].label}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {groups[0].items.map((provider) => (
-            <ProviderCard key={provider.id} provider={provider} />
+            <ProviderCard key={provider.id} provider={provider} onAddToBooking={onAddToBooking} />
           ))}
         </div>
       </div>
@@ -73,7 +76,7 @@ export function RecommendationGroup({ providers }: RecommendationGroupProps) {
         <TabsContent key={group.key} value={group.key}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {group.items.map((provider) => (
-              <ProviderCard key={provider.id} provider={provider} />
+              <ProviderCard key={provider.id} provider={provider} onAddToBooking={onAddToBooking} />
             ))}
           </div>
         </TabsContent>

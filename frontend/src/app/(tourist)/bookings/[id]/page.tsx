@@ -6,7 +6,7 @@ import { BookingItemCard } from '@/components/bookings/BookingItemCard'
 import { CancelBookingDialog } from '@/components/bookings/CancelBookingDialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Calendar, FileText } from 'lucide-react'
+import { ArrowLeft, Calendar, FileText, MapPin } from 'lucide-react'
 import { formatCurrency, formatDateRange, formatDate, getBookingStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -94,14 +94,27 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
           </div>
         )}
 
-        {canCancel && (
-          <div className="mt-4 pt-4 border-t flex justify-end">
-            <CancelBookingDialog
-              onConfirm={(reason) => cancelMutation.mutate({ id: bookingId, data: { reason } })}
-              isPending={cancelMutation.isPending}
-            />
+        {/* Actions Row */}
+        <div className="mt-4 pt-4 border-t flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {(booking.status === 'CONFIRMED' || booking.status === 'COMPLETED') && (
+              <Link href={booking.itineraryId ? `/itineraries/${booking.itineraryId}` : '/itineraries'}>
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <MapPin className="h-4 w-4" />
+                  View Itinerary
+                </Button>
+              </Link>
+            )}
           </div>
-        )}
+          <div>
+            {canCancel && (
+              <CancelBookingDialog
+                onConfirm={(reason) => cancelMutation.mutate({ id: bookingId, data: { reason } })}
+                isPending={cancelMutation.isPending}
+              />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Items */}

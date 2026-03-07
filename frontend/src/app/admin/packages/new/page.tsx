@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
+import { uploadMultipleImages } from '@/lib/api/images'
 import Link from 'next/link'
 
 function TagInput({
@@ -82,6 +83,7 @@ export default function NewPackagePage() {
   const [inclusions, setInclusions] = useState<string[]>([])
   const [exclusions, setExclusions] = useState<string[]>([])
   const [images, setImages] = useState<string[]>([])
+  const [imageFiles, setImageFiles] = useState<File[]>([])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -91,9 +93,14 @@ export default function NewPackagePage() {
     }
     setSaving(true)
     try {
+      let finalImages = [...images]
+      if (imageFiles.length > 0) {
+        const uploadedUrls = await uploadMultipleImages(imageFiles, 'packages')
+        finalImages = [...finalImages, ...uploadedUrls]
+      }
       const body: PackageRequest = {
         name, description, durationDays, basePrice, discountPercentage,
-        maxParticipants, isFeatured, destinations, inclusions, exclusions, images,
+        maxParticipants, isFeatured, destinations, inclusions, exclusions, images: finalImages,
       }
       await createPackage(body)
       toast.success('Package created successfully')
@@ -170,7 +177,19 @@ export default function NewPackagePage() {
             <TagInput label="Destinations *" values={destinations} onChange={setDestinations} placeholder="e.g. Sigiriya" />
             <TagInput label="Inclusions" values={inclusions} onChange={setInclusions} placeholder="e.g. Accommodation" />
             <TagInput label="Exclusions" values={exclusions} onChange={setExclusions} placeholder="e.g. Flights" />
-            <TagInput label="Image URLs" values={images} onChange={setImages} placeholder="https://..." />
+            <div className="space-y-2">
+              <Label>Package Images</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={e => setImageFiles(Array.from(e.target.files || []))}
+                className="h-10"
+              />
+              {imageFiles.length > 0 && (
+                <p className="text-xs text-muted-foreground">{imageFiles.length} file(s) selected</p>
+              )}
+            </div>
           </CardContent>
         </Card>
 

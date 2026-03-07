@@ -56,6 +56,12 @@
             <version>${springdoc.version}</version>
             <optional>true</optional>
         </dependency>
+        <!-- Azure Blob Storage SDK for image uploads -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-storage-blob</artifactId>
+            <version>12.29.1</version>
+        </dependency>
     </dependencies>
 
 

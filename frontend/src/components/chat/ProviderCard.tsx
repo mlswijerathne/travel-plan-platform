@@ -3,24 +3,49 @@
 import type { ProviderResult } from '@/types/chat'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/lib/utils'
-import { Star, MapPin, ShieldCheck, Building2, User, Car } from 'lucide-react'
+import { Star, MapPin, ShieldCheck, Building2, User, Car, CalendarDays, ShoppingBag, ExternalLink, ShoppingCart } from 'lucide-react'
 
 const TYPE_ICONS: Record<string, typeof Building2> = {
   HOTEL: Building2,
   TOUR_GUIDE: User,
   VEHICLE: Car,
+  EVENT: CalendarDays,
+  PRODUCT: ShoppingBag,
+}
+
+const TYPE_ROUTES: Record<string, string> = {
+  HOTEL: '/hotels',
+  TOUR_GUIDE: '/guides',
+  VEHICLE: '/vehicles',
+  EVENT: '/events',
 }
 
 interface ProviderCardProps {
   provider: ProviderResult
+  onAddToBooking?: (provider: ProviderResult) => void
 }
 
-export function ProviderCard({ provider }: ProviderCardProps) {
+export function ProviderCard({ provider, onAddToBooking }: ProviderCardProps) {
   const TypeIcon = TYPE_ICONS[provider.type] ?? Building2
+  const isInternal = provider.source === 'INTERNAL'
+  const detailRoute = TYPE_ROUTES[provider.type]
+  const detailUrl = isInternal && detailRoute && provider.id ? `${detailRoute}/${provider.id}` : null
+
+  function handleCardClick(e: React.MouseEvent) {
+    // Don't navigate if clicking a button
+    if ((e.target as HTMLElement).closest('button')) return
+    if (detailUrl) {
+      window.open(detailUrl, '_blank', 'noopener,noreferrer')
+    }
+  }
 
   return (
-    <Card className="overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border-border/50">
+    <Card
+      className={`overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border-border/50 ${detailUrl ? 'cursor-pointer' : ''}`}
+      onClick={handleCardClick}
+    >
       {/* Image or gradient placeholder */}
       {provider.imageUrl ? (
         <div className="h-32 bg-muted overflow-hidden">
@@ -39,18 +64,23 @@ export function ProviderCard({ provider }: ProviderCardProps) {
       <CardContent className="p-3.5 space-y-2.5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h4 className="font-semibold text-sm truncate">{provider.name}</h4>
+            <h4 className="font-semibold text-sm truncate flex items-center gap-1">
+              {provider.name}
+              {detailUrl && <ExternalLink className="h-3 w-3 text-muted-foreground shrink-0" />}
+            </h4>
             <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
               <MapPin className="h-3 w-3 shrink-0" />
               <span className="truncate">{provider.location}</span>
             </div>
           </div>
-          <Badge
-            variant={provider.source === 'INTERNAL' ? 'default' : 'outline'}
-            className="text-[10px] shrink-0 gap-1 px-1.5 py-0.5"
+        <Badge
+            variant={isInternal ? 'default' : 'outline'}
+            className={isInternal
+              ? 'text-[10px] shrink-0 gap-1 px-1.5 py-0.5 bg-emerald-600 hover:bg-emerald-700 border-emerald-600'
+              : 'text-[10px] shrink-0 gap-1 px-1.5 py-0.5 text-muted-foreground'}
           >
-            {provider.source === 'INTERNAL' && <ShieldCheck className="h-3 w-3" />}
-            {provider.source === 'INTERNAL' ? 'Partner' : 'External'}
+            {isInternal && <ShieldCheck className="h-3 w-3" />}
+            {isInternal ? 'Platform Partner' : 'External'}
           </Badge>
         </div>
 
@@ -69,6 +99,22 @@ export function ProviderCard({ provider }: ProviderCardProps) {
             </span>
           )}
         </div>
+
+        {/* Book button for internal providers */}
+        {isInternal && onAddToBooking && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-full text-xs gap-1.5 h-8 border-primary/30 text-primary hover:bg-primary/5"
+            onClick={(e) => {
+              e.stopPropagation()
+              onAddToBooking(provider)
+            }}
+          >
+            <ShoppingCart className="h-3 w-3" />
+            Add to Booking
+          </Button>
+        )}
       </CardContent>
     </Card>
   )

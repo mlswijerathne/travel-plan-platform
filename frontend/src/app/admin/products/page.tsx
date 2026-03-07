@@ -5,7 +5,8 @@ import { getProducts, deleteProduct } from '@/lib/api/products'
 import type { ProductDTO } from '@/types/product'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ShoppingBag, Trash2, Loader2 } from 'lucide-react'
+import { ShoppingBag, Trash2, Loader2, Plus } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<ProductDTO[]>([])
@@ -37,9 +38,16 @@ export default function AdminProductsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Products</h1>
-        <p className="text-muted-foreground">Manage shop products</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Products</h1>
+          <p className="text-muted-foreground">Manage shop products</p>
+        </div>
+        <Link href="/admin/products/new">
+          <Button className="bg-emerald-600 hover:bg-emerald-700">
+            <Plus className="mr-2 h-4 w-4" /> Add Product
+          </Button>
+        </Link>
       </div>
 
       {loading ? (

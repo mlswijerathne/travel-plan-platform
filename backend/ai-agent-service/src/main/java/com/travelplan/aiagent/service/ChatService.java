@@ -10,6 +10,10 @@ public interface ChatService {
 
     ConversationHistory getHistory(String sessionId);
 
+    java.util.List<ConversationHistory> getUserSessions(String userId);
+
+    void deleteSession(String sessionId);
+
     RecommendationResponse recommend(String userId, RecommendationRequest request);
 
     RecommendationResponse recommendPackages(String userId, PackageRecommendationRequest request);

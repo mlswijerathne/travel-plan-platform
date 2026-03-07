@@ -363,6 +363,16 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    @Override
+    @Transactional
+    public void linkItinerary(Long bookingId, Long itineraryId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking", "id", bookingId));
+        booking.setItineraryId(itineraryId);
+        bookingRepository.save(booking);
+        log.info("Linked booking {} to itinerary {}", bookingId, itineraryId);
+    }
+
     private String generateBookingReference() {
         String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String uniquePart = UUID.randomUUID().toString().substring(0, 6).toUpperCase();

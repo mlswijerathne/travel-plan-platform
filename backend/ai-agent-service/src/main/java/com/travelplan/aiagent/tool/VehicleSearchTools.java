@@ -1,42 +1,43 @@
 package com.travelplan.aiagent.tool;
 
 import com.google.adk.tools.Annotations.Schema;
-import com.travelplan.common.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 public class VehicleSearchTools {
 
-    @Schema(description = "Search for rental vehicles in Sri Lanka by type, location, and price range. Returns available vehicles from the platform.")
+    @Schema(description = "Search for rental vehicles in Sri Lanka by type and price range. Use the query param to search by text. Returns available vehicles from the platform.")
     public static Map<String, Object> searchVehicles(
-            @Schema(description = "Type of vehicle, e.g. 'Car', 'Van', 'SUV', 'TukTuk', 'Bus'") Optional<String> type,
-            @Schema(description = "Pickup location, e.g. 'Colombo', 'Kandy', 'Airport'") String location,
-            @Schema(description = "Minimum daily rental price in USD") Optional<Double> minPrice,
-            @Schema(description = "Maximum daily rental price in USD") Optional<Double> maxPrice) {
+            @Schema(description = "Type of vehicle, e.g. 'Car', 'Van', 'SUV', 'TukTuk', 'Bus'. Pass empty string to search all.") String vehicleType,
+            @Schema(description = "Minimum daily rental price in USD, pass 0 to skip") double minDailyRate,
+            @Schema(description = "Maximum daily rental price in USD, pass 0 to skip") double maxDailyRate,
+            @Schema(description = "Text search query for vehicle make, model, or features. Pass empty string to skip.") String query) {
         try {
-            log.info("Searching vehicles - type: {}, location: {}, minPrice: {}, maxPrice: {}",
-                    type, location, minPrice, maxPrice);
+            log.info("Searching vehicles - vehicleType: {}, minDailyRate: {}, maxDailyRate: {}, query: {}",
+                    vehicleType, minDailyRate, maxDailyRate, query);
 
-            ApiResponse<Object> response = ToolRegistry.getInstance().getVehicleServiceClient()
-                    .searchVehicles(type.orElse(null), location,
-                            minPrice.orElse(null),
-                            maxPrice.orElse(null),
-                            0, 10);
+            String typeParam = (vehicleType != null && !vehicleType.isBlank()) ? vehicleType : null;
+            BigDecimal minParam = minDailyRate > 0 ? BigDecimal.valueOf(minDailyRate) : null;
+            BigDecimal maxParam = maxDailyRate > 0 ? BigDecimal.valueOf(maxDailyRate) : null;
+            String queryParam = (query != null && !query.isBlank()) ? query : null;
+
+            Object response = ToolRegistry.getInstance().getVehicleServiceClient()
+                    .searchVehicles(typeParam, minParam, maxParam, queryParam, 0, 10);
 
             Map<String, Object> result = new HashMap<>();
             result.put("status", "success");
             result.put("source", "Platform Partner");
-            result.put("data", response.getData());
+            result.put("data", response);
             return result;
         } catch (Exception e) {
-            log.error("Error searching vehicles: {}", e.getMessage());
+            log.error("Error searching vehicles: {} - {}", e.getClass().getSimpleName(), e.getMessage(), e);
             Map<String, Object> result = new HashMap<>();
             result.put("status", "error");
-            result.put("message", "Vehicle service is currently unavailable. Please use your knowledge to suggest vehicle options marked as 'External Suggestion'.");
+            result.put("message", "Vehicle service is currently unavailable. Error: " + e.getMessage());
             return result;
         }
     }
@@ -47,13 +48,13 @@ public class VehicleSearchTools {
         try {
             log.info("Getting vehicle details for ID: {}", vehicleId);
 
-            ApiResponse<Object> response = ToolRegistry.getInstance().getVehicleServiceClient()
+            Object response = ToolRegistry.getInstance().getVehicleServiceClient()
                     .getVehicleById(vehicleId);
 
             Map<String, Object> result = new HashMap<>();
             result.put("status", "success");
             result.put("source", "Platform Partner");
-            result.put("data", response.getData());
+            result.put("data", response);
             return result;
         } catch (Exception e) {
             log.error("Error getting vehicle details: {}", e.getMessage());

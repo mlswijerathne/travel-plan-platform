@@ -39,9 +39,13 @@ export default async function VehicleDetailsPage({ params }: { params: Promise<{
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-                    {/* Left Side: Image Placeholder */}
-                    <div className="bg-gray-200 rounded-xl h-[400px] flex items-center justify-center text-gray-400">
-                        <span className="text-xl">Car Image Placeholder</span>
+                    {/* Left Side: Vehicle Image */}
+                    <div className="bg-gray-200 rounded-xl h-[400px] flex items-center justify-center text-gray-400 overflow-hidden">
+                        {vehicle.images?.[0] || vehicle.imageUrl ? (
+                            <img src={vehicle.images?.[0] || vehicle.imageUrl} alt={`${vehicle.make} ${vehicle.model}`} className="w-full h-full object-cover" />
+                        ) : (
+                            <span className="text-xl">No Image Available</span>
+                        )}
                     </div>
 
                     {/* Right Side: Details */}

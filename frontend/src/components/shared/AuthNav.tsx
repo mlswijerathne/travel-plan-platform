@@ -35,7 +35,7 @@ import {
   Car,
   ShoppingBag,
 } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { useUserRole } from '@/hooks/use-user-role'
 
 const TOURIST_NAV = [
@@ -78,11 +78,11 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
   const { role } = useUserRole()
   const initials = userEmail.slice(0, 2).toUpperCase()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  const isMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  )
 
   let navItems = TOURIST_NAV
   if (role === 'HOTEL_OWNER') navItems = HOTEL_OWNER_NAV

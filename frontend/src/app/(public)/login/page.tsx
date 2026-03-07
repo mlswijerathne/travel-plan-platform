@@ -34,7 +34,7 @@ export default function LoginPage() {
 
       // Role-based redirect
       const { data: { session } } = await supabase.auth.getSession()
-      let redirectTo = '/profile'
+      let redirectTo = '/chat'
       if (session?.access_token) {
         const payload = JSON.parse(atob(session.access_token.split('.')[1]))
         const role = payload.user_metadata?.role || payload.app_metadata?.role || 'TOURIST'

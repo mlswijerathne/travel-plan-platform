@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -77,14 +78,20 @@ public class TripCompletionJob {
         return trip.getDays().stream()
                 .flatMap(day -> day.getActivities().stream())
                 .filter(activity -> activity.getBookingId() != null)
-                .distinct()
+                .filter(activity -> activity.getProviderId() != null)
+                .filter(activity -> mapActivityTypeToEntityType(activity.getActivityType()) != null)
                 .map(activity -> TripCompletedEvent.BookingItem.builder()
                         .entityType(mapActivityTypeToEntityType(activity.getActivityType()))
-                        .entityId(activity.getProviderId() != null ? activity.getProviderId() : 0L)
+                        .entityId(activity.getProviderId())
                         .entityName(activity.getTitle())
                         .bookingId(activity.getBookingId())
                         .build())
-                .distinct()
+                .collect(Collectors.toMap(
+                        item -> item.getBookingId() + ":" + item.getEntityType() + ":" + item.getEntityId(),
+                        item -> item,
+                        (a, b) -> a
+                ))
+                .values().stream()
                 .collect(Collectors.toList());
     }
 
@@ -92,9 +99,8 @@ public class TripCompletionJob {
         return switch (activityType) {
             case ACCOMMODATION -> "HOTEL";
             case TRANSPORT -> "VEHICLE";
-            case ACTIVITY -> "ACTIVITY";
             case GUIDE -> "TOUR_GUIDE";
-            default -> "OTHER";
+            default -> null; // ACTIVITY and CUSTOM have no reviewable provider
         };
     }
 

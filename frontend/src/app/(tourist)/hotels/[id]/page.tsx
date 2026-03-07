@@ -62,8 +62,12 @@ export default function HotelDetailPage({ params }: { params: Promise<{ id: stri
 
       {/* Hero */}
       <div className="rounded-xl border bg-card overflow-hidden">
-        <div className="h-56 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-          <span className="text-6xl">🏨</span>
+        <div className="h-56 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center overflow-hidden">
+          {hotel.imageUrl ? (
+            <img src={hotel.imageUrl} alt={hotel.name} className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-6xl">🏨</span>
+          )}
         </div>
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">

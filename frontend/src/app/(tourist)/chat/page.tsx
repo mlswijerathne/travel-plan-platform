@@ -1,17 +1,20 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { streamChat, streamGeneratePlan } from '@/lib/api/chat'
-import type { ChatMessage as ChatMessageType, ChatStreamEvent } from '@/types/chat'
+import { streamChat, streamGeneratePlan, getChatHistory } from '@/lib/api/chat'
+import type { ChatMessage as ChatMessageType, ChatStreamEvent, ProviderResult } from '@/types/chat'
 import type { TripPlanFormData } from '@/types/trip-plan'
 import { ChatMessage } from '@/components/chat/ChatMessage'
 import { AgentStatusBar } from '@/components/chat/AgentStatusBar'
 import { TripPlanDialog } from '@/components/chat/TripPlanDialog'
+import { BookingCart } from '@/components/chat/BookingCart'
+import { ChatHistorySidebar } from '@/components/chat/ChatHistorySidebar'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { Send, Plus, RotateCcw, Compass, Palmtree, Mountain, UtensilsCrossed, Camera } from 'lucide-react'
+import { Send, Plus, RotateCcw, Compass, Palmtree, Mountain, UtensilsCrossed, Camera, ShoppingCart, History } from 'lucide-react'
 
 const WELCOME_MESSAGE: ChatMessageType = {
   id: 'welcome',
@@ -41,8 +44,58 @@ export default function ChatPage() {
   const [activeAgent, setActiveAgent] = useState<string | null>(null)
   const [activeTool, setActiveTool] = useState<string | null>(null)
   const [planDialogOpen, setPlanDialogOpen] = useState(false)
+  const [bookingItems, setBookingItems] = useState<ProviderResult[]>([])
+  const [cartOpen, setCartOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  function handleAddToBooking(provider: ProviderResult) {
+    setBookingItems(prev => {
+      if (prev.some(item => item.id === provider.id && item.type === provider.type)) {
+        toast.info(`${provider.name} is already in your booking`)
+        return prev
+      }
+      toast.success(`${provider.name} added to booking`)
+      return [...prev, provider]
+    })
+  }
+
+  function handleRemoveFromBooking(providerId: string) {
+    setBookingItems(prev => prev.filter(item => item.id !== providerId))
+  }
+
+  function handleClearBooking() {
+    setBookingItems([])
+  }
+
+  async function handleSelectSession(selectedSessionId: string) {
+    if (selectedSessionId === sessionId) {
+      setSidebarOpen(false)
+      return
+    }
+    try {
+      const response = await getChatHistory(selectedSessionId)
+      const history = response.data
+      if (history?.messages?.length > 0) {
+        const loadedMessages: ChatMessageType[] = history.messages.map(
+          (msg: { role: string; content: string; timestamp: string; quickReplies?: unknown[]; providers?: ProviderResult[] }, i: number) => ({
+            id: `loaded-${i}`,
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content,
+            timestamp: new Date(msg.timestamp),
+            quickReplies: msg.quickReplies,
+            providers: msg.providers,
+          })
+        )
+        setMessages(loadedMessages)
+        setSessionId(selectedSessionId)
+      }
+    } catch {
+      toast.error('Failed to load chat session')
+    }
+    setSidebarOpen(false)
+  }
 
   const scrollToBottom = useCallback(() => {
     if (scrollRef.current) {
@@ -230,7 +283,16 @@ export default function ChatPage() {
   const isWelcomeOnly = messages.length === 1 && messages[0].id === 'welcome'
 
   return (
-    <div className="flex flex-col h-[calc(100vh-3.5rem)]">
+    <div className="flex h-[calc(100vh-3.5rem)]">
+      {/* Chat History Sidebar */}
+      <ChatHistorySidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        currentSessionId={sessionId}
+        onSelectSession={handleSelectSession}
+      />
+
+    <div className="flex flex-col flex-1 min-w-0">
       {/* Chat Header */}
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-border/50 bg-white/60 backdrop-blur-sm">
         <div className="flex items-center gap-3">
@@ -250,12 +312,30 @@ export default function ChatPage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setCartOpen(true)}
+            className="rounded-full gap-1.5 relative"
+          >
+            <ShoppingCart className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Booking</span>
+            {bookingItems.length > 0 && (
+              <Badge className="absolute -top-1.5 -right-1.5 h-4 min-w-4 px-1 text-[10px] bg-primary">
+                {bookingItems.length}
+              </Badge>
+            )}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setPlanDialogOpen(true)}
             disabled={isStreaming}
             className="rounded-full gap-1.5"
           >
             <Plus className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Plan a Trip</span>
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(!sidebarOpen)} className="rounded-full gap-1.5">
+            <History className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">History</span>
           </Button>
           <Button variant="ghost" size="sm" onClick={handleNewChat} className="rounded-full gap-1.5">
             <RotateCcw className="h-3.5 w-3.5" />
@@ -274,6 +354,7 @@ export default function ChatPage() {
                 message={messages[0]}
                 isLast={true}
                 onQuickReply={!isStreaming ? sendMessage : undefined}
+                onAddToBooking={handleAddToBooking}
               />
               <div className="mt-8 text-center">
                 <p className="text-sm text-muted-foreground mb-4">Or start with a theme</p>
@@ -301,6 +382,7 @@ export default function ChatPage() {
               message={message}
               isLast={i === messages.length - 1}
               onQuickReply={!isStreaming ? sendMessage : undefined}
+              onAddToBooking={handleAddToBooking}
             />
           ))}
         </div>
@@ -343,6 +425,16 @@ export default function ChatPage() {
         sessionId={sessionId}
         disabled={isStreaming}
       />
+
+      {/* Booking Cart */}
+      <BookingCart
+        items={bookingItems}
+        open={cartOpen}
+        onOpenChange={setCartOpen}
+        onRemoveItem={handleRemoveFromBooking}
+        onClearAll={handleClearBooking}
+      />
+    </div>
     </div>
   )
 }

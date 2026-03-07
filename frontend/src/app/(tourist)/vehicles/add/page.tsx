@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createClient } from "@/lib/supabase/client";
+import { uploadImage } from "@/lib/api/images";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060';
 
@@ -54,22 +55,9 @@ export default function AddVehiclePage() {
 
             let uploadedImageUrl = "";
 
-            // STEP 1: Upload the image if the user selected one
+            // STEP 1: Upload the image to Azure Blob Storage
             if (imageFile) {
-                const imageFormData = new FormData();
-                imageFormData.append("file", imageFile);
-
-                const uploadRes = await fetch(`${API_BASE}/api/upload`, {
-                    method: "POST",
-                    headers: authHeaders,
-                    body: imageFormData,
-                });
-
-                if (!uploadRes.ok) {
-                    throw new Error("Failed to upload image");
-                }
-
-                uploadedImageUrl = await uploadRes.text();
+                uploadedImageUrl = await uploadImage(imageFile, "vehicles");
             }
 
             // STEP 2: Save the vehicle with the new image URL

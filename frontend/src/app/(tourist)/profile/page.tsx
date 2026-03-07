@@ -11,8 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { toast } from 'sonner'
+import { uploadImage } from '@/lib/api/images'
 import {
   User,
   Mail,
@@ -55,6 +56,23 @@ export default function ProfilePage() {
   const [interests, setInterests] = useState<string[]>([])
   const [preferredLanguages, setPreferredLanguages] = useState<string[]>([])
   const [accessibilityNeeds, setAccessibilityNeeds] = useState('')
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+
+  async function handleProfileImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingPhoto(true)
+    try {
+      const imageUrl = await uploadImage(file, 'tourists')
+      await updateTouristProfile({ profileImageUrl: imageUrl })
+      await loadProfile()
+      toast.success('Profile photo updated')
+    } catch {
+      toast.error('Failed to upload photo')
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }
 
   useEffect(() => { loadProfile() }, [])
 
@@ -148,11 +166,18 @@ export default function ProfilePage() {
       {/* Profile Header */}
       <Card className="border-0 bg-gradient-to-r from-primary/5 via-teal-50/50 to-emerald-50/30 shadow-sm">
         <CardContent className="flex items-center gap-5 py-6">
-          <Avatar className="h-16 w-16 ring-4 ring-white shadow-md">
-            <AvatarFallback className="bg-gradient-to-br from-primary to-teal-500 text-white text-xl font-bold">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative group">
+            <Avatar className="h-16 w-16 ring-4 ring-white shadow-md">
+              {tourist.profileImageUrl && <AvatarImage src={tourist.profileImageUrl} alt={tourist.firstName} />}
+              <AvatarFallback className="bg-gradient-to-br from-primary to-teal-500 text-white text-xl font-bold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <span className="text-white text-xs font-medium">{uploadingPhoto ? '...' : 'Edit'}</span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleProfileImageChange} disabled={uploadingPhoto} />
+            </label>
+          </div>
           <div>
             <h1 className="font-display text-2xl font-bold text-foreground">
               {tourist.firstName} {tourist.lastName}

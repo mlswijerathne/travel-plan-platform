@@ -1,28 +1,23 @@
 package com.travelplan.aiagent.client;
 
-import com.travelplan.common.dto.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
-
-@FeignClient(name = "trip-plan-service")
+@FeignClient(name = "trip-plan-service", url = "${feign.trip-plan-service.url:}")
 public interface TripPlanServiceClient {
 
-    @GetMapping("/api/trip-plans/packages")
-    ApiResponse<Object> searchPackages(
+    @GetMapping("/api/packages")
+    Object searchPackages(
             @RequestParam(required = false) String destination,
-            @RequestParam(required = false) Integer duration,
+            @RequestParam(required = false) Integer durationDays,
             @RequestParam(required = false) Double minBudget,
             @RequestParam(required = false) Double maxBudget,
+            @RequestParam(required = false) String query,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size);
 
-    @GetMapping("/api/trip-plans/packages/{id}")
-    ApiResponse<Object> getPackageById(@PathVariable String id);
-
-    @GetMapping("/api/trip-plans/packages/search")
-    ApiResponse<Object> searchPackagesByQuery(@RequestParam Map<String, String> params);
+    @GetMapping("/api/packages/{id}")
+    Object getPackageById(@PathVariable String id);
 }

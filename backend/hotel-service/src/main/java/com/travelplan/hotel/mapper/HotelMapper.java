@@ -28,6 +28,7 @@ public class HotelMapper {
                 .starRating(request.getStarRating())
                 .amenities(request.getAmenities() != null ?
                         request.getAmenities().toArray(new String[0]) : new String[0])
+                .imageUrl(request.getImageUrl())
                 .checkInTime(request.getCheckInTime())
                 .checkOutTime(request.getCheckOutTime())
                 .build();
@@ -48,6 +49,7 @@ public class HotelMapper {
                 .reviewCount(hotel.getReviewCount())
                 .amenities(hotel.getAmenities() != null ?
                         Arrays.asList(hotel.getAmenities()) : Collections.emptyList())
+                .imageUrl(hotel.getImageUrl())
                 .checkInTime(hotel.getCheckInTime())
                 .checkOutTime(hotel.getCheckOutTime())
                 .isActive(hotel.getIsActive())
@@ -86,6 +88,9 @@ public class HotelMapper {
         }
         if (request.getAmenities() != null) {
             hotel.setAmenities(request.getAmenities().toArray(new String[0]));
+        }
+        if (request.getImageUrl() != null) {
+            hotel.setImageUrl(request.getImageUrl());
         }
         if (request.getCheckInTime() != null) {
             hotel.setCheckInTime(request.getCheckInTime());

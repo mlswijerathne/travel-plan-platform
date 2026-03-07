@@ -88,4 +88,13 @@ public class BookingController {
             @PathVariable String bookingReference) {
         return ApiResponse.success(bookingService.getBookingByReference(bookingReference));
     }
+
+    @PutMapping("/{bookingId}/itinerary/{itineraryId}")
+    public ResponseEntity<Void> linkItinerary(
+            @PathVariable Long bookingId,
+            @PathVariable Long itineraryId) {
+        log.info("Linking booking {} to itinerary {}", bookingId, itineraryId);
+        bookingService.linkItinerary(bookingId, itineraryId);
+        return ResponseEntity.ok().build();
+    }
 }

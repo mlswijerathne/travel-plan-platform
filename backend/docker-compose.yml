@@ -129,6 +129,7 @@ services:
       - DATABASE_URL=${TOURIST_DB_URL}
       - DATABASE_USERNAME=${TOURIST_DB_USERNAME}
       - DATABASE_PASSWORD=${TOURIST_DB_PASSWORD}
+      - AZURE_STORAGE_CONNECTION_STRING=${AZURE_STORAGE_CONNECTION_STRING}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -424,6 +425,11 @@ services:
       - EUREKA_URL=http://discovery-server:8761/eureka/
       - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
       - SUPABASE_URL=${SUPABASE_URL}
+      - DATABASE_URL=${AI_AGENT_DB_URL}
+      - DATABASE_USERNAME=${AI_AGENT_DB_USERNAME}
+      - DATABASE_PASSWORD=${AI_AGENT_DB_PASSWORD}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4.1-mini}
     depends_on:
       discovery-server:
         condition: service_healthy

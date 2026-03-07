@@ -11,6 +11,7 @@ export interface Hotel {
   averageRating: number
   reviewCount: number
   amenities: string[]
+  imageUrl: string | null
   checkInTime: string
   checkOutTime: string
   isActive: boolean
@@ -51,6 +52,7 @@ export interface CreateHotelRequest {
   longitude?: number
   starRating?: number
   amenities?: string[]
+  imageUrl?: string
   checkInTime?: string
   checkOutTime?: string
 }
@@ -64,6 +66,7 @@ export interface UpdateHotelRequest {
   longitude?: number
   starRating?: number
   amenities?: string[]
+  imageUrl?: string
   checkInTime?: string
   checkOutTime?: string
   isActive?: boolean

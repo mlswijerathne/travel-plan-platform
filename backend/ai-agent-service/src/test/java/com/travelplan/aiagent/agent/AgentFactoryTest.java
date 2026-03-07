@@ -67,9 +67,10 @@ class AgentFactoryTest {
         LlmAgent vehicleAgent = agentFactory.vehicleSearchAgent(model);
         LlmAgent itineraryAgent = agentFactory.itineraryGeneratorAgent(model);
         LlmAgent budgetAgent = agentFactory.budgetAnalyzerAgent(model);
+        LlmAgent eventProductAgent = agentFactory.eventProductSearchAgent(model);
 
         BaseAgent rootAgent = agentFactory.tripPlannerAgent(
-                model, hotelAgent, tourGuideAgent, vehicleAgent, itineraryAgent, budgetAgent);
+                model, hotelAgent, tourGuideAgent, vehicleAgent, itineraryAgent, budgetAgent, eventProductAgent);
 
         assertNotNull(rootAgent);
         assertEquals("TripPlannerAgent", rootAgent.name());

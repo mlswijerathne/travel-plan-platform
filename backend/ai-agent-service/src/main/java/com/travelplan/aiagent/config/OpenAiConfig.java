@@ -38,6 +38,7 @@ public class OpenAiConfig {
                 .logRequests(true)
                 .logResponses(true)
                 .strictTools(true)
+                .parallelToolCalls(false)
                 .build();
         log.info("Created OpenAI chat model: {}", modelName);
         return new LangChain4j(chatModel);

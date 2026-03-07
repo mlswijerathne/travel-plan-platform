@@ -13,10 +13,11 @@ import { Compass, Loader2 } from 'lucide-react'
 interface ChatMessageProps {
   message: ChatMessageType
   onQuickReply?: (value: string) => void
+  onAddToBooking?: (provider: import('@/types/chat').ProviderResult) => void
   isLast?: boolean
 }
 
-export function ChatMessage({ message, onQuickReply, isLast }: ChatMessageProps) {
+export function ChatMessage({ message, onQuickReply, onAddToBooking, isLast }: ChatMessageProps) {
   const isUser = message.role === 'user'
   const hasMultipleProviderTypes = message.providers
     ? new Set(message.providers.map(p => p.type)).size > 1
@@ -67,11 +68,11 @@ export function ChatMessage({ message, onQuickReply, isLast }: ChatMessageProps)
         {/* Provider results */}
         {message.providers && message.providers.length > 0 && (
           hasMultipleProviderTypes ? (
-            <RecommendationGroup providers={message.providers} />
+            <RecommendationGroup providers={message.providers} onAddToBooking={onAddToBooking} />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl">
               {message.providers.map((provider) => (
-                <ProviderCard key={provider.id} provider={provider} />
+                <ProviderCard key={provider.id} provider={provider} onAddToBooking={onAddToBooking} />
               ))}
             </div>
           )

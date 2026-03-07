@@ -10,8 +10,12 @@ export function GuideCard({ guide }: { guide: Guide }) {
   return (
     <Link href={`/guides/${guide.id}`} className="group block">
       <div className="rounded-xl border bg-card overflow-hidden transition-all hover:shadow-md hover:border-primary/20">
-        <div className="h-36 bg-gradient-to-br from-teal-50 to-teal-100/50 flex items-center justify-center relative">
-          <span className="text-4xl">🧭</span>
+        <div className="h-36 bg-gradient-to-br from-teal-50 to-teal-100/50 flex items-center justify-center relative overflow-hidden">
+          {guide.profileImageUrl ? (
+            <img src={guide.profileImageUrl} alt={`${guide.firstName} ${guide.lastName}`} className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-4xl">🧭</span>
+          )}
           {guide.isVerified && (
             <div className="absolute top-2 right-2 bg-green-100 text-green-700 rounded-full p-1">
               <ShieldCheck className="h-4 w-4" />

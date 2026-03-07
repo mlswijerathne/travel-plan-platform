@@ -18,6 +18,7 @@ public class AgentFactory {
     private static final String VEHICLE_SEARCH_AGENT = "VehicleSearchAgent";
     private static final String ITINERARY_GENERATOR_AGENT = "ItineraryGeneratorAgent";
     private static final String BUDGET_ANALYZER_AGENT = "BudgetAnalyzerAgent";
+    private static final String EVENT_PRODUCT_SEARCH_AGENT = "EventProductSearchAgent";
     private static final String TRIP_PLANNER_AGENT = "TripPlannerAgent";
 
     @Bean
@@ -40,6 +41,10 @@ public class AgentFactory {
                     PROACTIVE EXECUTION:
                     When you receive a query about hotels in multiple locations, call searchHotels for EACH location.
 
+                    TOOL PARAMETERS:
+                    - searchHotels(city, starRating) — city is the main filter, starRating is optional minimum stars
+                    - getHotelDetails(hotelId) — get full details for a specific hotel by ID
+
                     EXAMPLE:
                     If asked: "Find hotels in Kandy and Ella"
                     → Call: searchHotels(city="Kandy")
@@ -61,8 +66,8 @@ public class AgentFactory {
                 .tools(
                     FunctionTool.create(HotelSearchTools.class, "searchHotels"),
                     FunctionTool.create(HotelSearchTools.class, "getHotelDetails"),
-                    FunctionTool.create(GoogleMapsTools.class, "geocodeLocation"),
-                    FunctionTool.create(GoogleMapsTools.class, "searchNearbyPlaces")
+                    FunctionTool.create(MapTools.class, "geocodeLocation"),
+                    FunctionTool.create(MapTools.class, "searchNearbyPlaces")
                 )
                 .build();
     }
@@ -83,13 +88,17 @@ public class AgentFactory {
                     - If the user mentioned a location, use it. If interests were mentioned, map them to specializations.
                     - Return ACTUAL data from tools, NEVER make up guide names or ratings.
 
+                    TOOL PARAMETERS:
+                    - searchTourGuides(language, specialization, query) — use 'query' to search by location/name/bio text
+                    - getGuideDetails(guideId) — get full details for a specific guide by ID
+
                     PROACTIVE EXECUTION:
                     When asked about guides for multiple locations or activities, call searchTourGuides for EACH combination.
 
                     EXAMPLE:
                     If asked: "Find guides for wildlife and cultural tours in Yala and Kandy"
-                    → Call: searchTourGuides(location="Yala", specialization="wildlife")
-                    → Call: searchTourGuides(location="Kandy", specialization="cultural")
+                    → Call: searchTourGuides(query="Yala", specialization="wildlife")
+                    → Call: searchTourGuides(query="Kandy", specialization="cultural")
                     → Present ALL results together
 
                     PLATFORM PRIORITY — INTERNAL-FIRST PATTERN (MANDATORY):
@@ -128,9 +137,13 @@ public class AgentFactory {
                     PROACTIVE EXECUTION:
                     When asked about transport between multiple locations, call getDirections for EACH leg.
 
+                    TOOL PARAMETERS:
+                    - searchVehicles(vehicleType, minDailyRate, maxDailyRate, query) — vehicleType is 'Car','Van','SUV','TukTuk','Bus'; use query for text search
+                    - getVehicleDetails(vehicleId) — get full details for a specific vehicle by ID
+
                     EXAMPLE:
                     If asked: "Transport from Colombo to Kandy to Ella for 4 people"
-                    → Call: searchVehicles(type="van", location="Colombo")
+                    → Call: searchVehicles(vehicleType="Van")
                     → Call: getDirections(origin="Colombo", destination="Kandy", mode="driving")
                     → Call: getDirections(origin="Kandy", destination="Ella", mode="driving")
                     → Present vehicles AND real route data together
@@ -151,9 +164,9 @@ public class AgentFactory {
                 .tools(
                     FunctionTool.create(VehicleSearchTools.class, "searchVehicles"),
                     FunctionTool.create(VehicleSearchTools.class, "getVehicleDetails"),
-                    FunctionTool.create(GoogleMapsTools.class, "getDirections"),
-                    FunctionTool.create(GoogleMapsTools.class, "searchNearbyPlaces"),
-                    FunctionTool.create(GoogleMapsTools.class, "geocodeLocation")
+                    FunctionTool.create(MapTools.class, "getDirections"),
+                    FunctionTool.create(MapTools.class, "searchNearbyPlaces"),
+                    FunctionTool.create(MapTools.class, "geocodeLocation")
                 )
                 .build();
     }
@@ -163,7 +176,7 @@ public class AgentFactory {
         return LlmAgent.builder()
                 .name(ITINERARY_GENERATOR_AGENT)
                 .model(agentModel)
-                .description("Specialist for generating day-by-day travel itineraries for Sri Lanka trips. Uses real Google Maps data for accurate travel times, reviews and package data to create detailed plans with cost estimates.")
+                .description("Specialist for generating day-by-day travel itineraries for Sri Lanka trips. Uses real map data for accurate travel times, reviews and package data to create detailed plans with cost estimates.")
                 .instruction("""
                     You are the Itinerary Generator specialist for a Sri Lanka travel platform.
                     You work SILENTLY — never say "I'm ready" or ask what the user needs. IMMEDIATELY call tools and generate the itinerary.
@@ -178,16 +191,18 @@ public class AgentFactory {
                     PROACTIVE EXECUTION — CALL TOOLS IN THIS ORDER:
                     1. Call getDistanceMatrix with ALL destinations to get a distance/time matrix
                     2. Call searchPackages to check for pre-built packages matching the trip
-                    3. For EACH destination, call geocodeLocation to get coordinates
-                    4. For EACH destination, call searchNearbyPlaces(type="tourist_attraction") for activities
-                    5. For EACH destination, call searchNearbyPlaces(type="restaurant") for dining options
-                    6. Call getDirections for each leg of the optimized route
-                    7. Call getProviderReviews for any platform providers you'll recommend
+                    3. Call searchEvents for EACH destination to find platform-registered events/activities
+                    4. For EACH destination, call geocodeLocation to get coordinates
+                    5. For EACH destination, call searchNearbyPlaces(type="tourist_attraction") for activities
+                    6. For EACH destination, call searchNearbyPlaces(type="restaurant") for dining options
+                    7. Call getDirections for each leg of the optimized route
+                    8. Call getProviderReviews for any platform providers you'll recommend
 
                     EXAMPLE:
                     If asked: "5-day trip covering Colombo, Kandy, Ella, and Galle"
                     → Call: getDistanceMatrix(origins="Colombo|Kandy|Ella|Galle", destinations="Colombo|Kandy|Ella|Galle")
-                    → Call: searchPackages(destination="Sri Lanka", duration=5)
+                    → Call: searchPackages(destination="Sri Lanka", durationDays=5)
+                    → Call: searchEvents(location="Colombo") then searchEvents(location="Kandy")
                     → Call: geocodeLocation(address="Kandy, Sri Lanka") → then searchNearbyPlaces for attractions
                     → Call: geocodeLocation(address="Ella, Sri Lanka") → then searchNearbyPlaces for attractions
                     → Call: getDirections(origin="Colombo", destination="Kandy")
@@ -195,20 +210,45 @@ public class AgentFactory {
                     → Call: getDirections(origin="Ella", destination="Galle")
                     → Then GENERATE the complete itinerary using ALL collected data
 
-                    ITINERARY OUTPUT FORMAT:
-                    📅 **Day-by-Day Itinerary**
+                    ITINERARY OUTPUT FORMAT — use EXACTLY this structure for readability:
 
-                    **Day 1: [City Name]**
-                    🌅 Morning: [Activity with REAL place name from API]
-                    🌞 Afternoon: [Activity with REAL place name from API]
-                    🌙 Evening: [Dining at REAL restaurant from API]
-                    🏨 Stay: [Hotel recommendation]
-                    🚗 Travel: [REAL distance and time from getDirections]
-                    💰 Day Cost: $XX (breakdown: accommodation $XX, food $XX, activities $XX, transport $XX)
+                    ## Day 1 — [City Name] · [Date]
 
-                    [Repeat for each day...]
+                    🌅 **Morning**
+                    [Activity with REAL place name from API]
 
-                    💰 **Total Trip Cost Estimate**: $XXX per person
+                    🌞 **Afternoon**
+                    [Activity with REAL place name from API]
+
+                    🌙 **Evening**
+                    [Dining at REAL restaurant from API]
+
+                    🎫 **Platform Events Nearby** *(if searchEvents returned results)*
+                    - ✅ [Event Name] — [Date/Time] · [Price] · Platform Partner
+
+                    🏨 **Accommodation:** [Hotel recommendation]
+                    🚗 **Travel to next stop:** [REAL distance and time from getDirections]
+                    💰 **Day Estimate:** $XX *(accommodation $XX · food $XX · activities $XX · transport $XX)*
+
+                    ---
+
+                    [Repeat ## Day N section for each day]
+
+                    ## Cost Summary
+
+                    | Category | Per Person | Total (X people) |
+                    |----------|-----------|-----------------|
+                    | 🏨 Accommodation | $XX/night | $XX |
+                    | 🚗 Transport | $XX | $XX |
+                    | 🍽️ Food & Dining | $XX/day | $XX |
+                    | 🎯 Activities & Events | $XX | $XX |
+                    | **TOTAL** | **$XX** | **$XX** |
+
+                    IMPORTANT RULES FOR THE FORMAT:
+                    - Use `## Day N — City Name · Date` for EVERY day heading (this renders as a colored header)
+                    - Use `---` divider between each day
+                    - Mark platform partners with ✅, external suggestions with 📍
+                    - NEVER use plain bold for day headers, ALWAYS use ## heading syntax
 
                     ROUTE PLANNING:
                     - Order stops logically to minimize backtracking (use distance matrix)
@@ -224,10 +264,62 @@ public class AgentFactory {
                     FunctionTool.create(ReviewTools.class, "getProviderReviews"),
                     FunctionTool.create(TripPlanTools.class, "searchPackages"),
                     FunctionTool.create(TripPlanTools.class, "getPackageDetails"),
-                    FunctionTool.create(GoogleMapsTools.class, "getDirections"),
-                    FunctionTool.create(GoogleMapsTools.class, "getDistanceMatrix"),
-                    FunctionTool.create(GoogleMapsTools.class, "geocodeLocation"),
-                    FunctionTool.create(GoogleMapsTools.class, "searchNearbyPlaces")
+                    FunctionTool.create(EventSearchTools.class, "searchEvents"),
+                    FunctionTool.create(MapTools.class, "getDirections"),
+                    FunctionTool.create(MapTools.class, "getDistanceMatrix"),
+                    FunctionTool.create(MapTools.class, "geocodeLocation"),
+                    FunctionTool.create(MapTools.class, "searchNearbyPlaces")
+                )
+                .build();
+    }
+
+    @Bean
+    public LlmAgent eventProductSearchAgent(BaseLlm agentModel) {
+        return LlmAgent.builder()
+                .name(EVENT_PRODUCT_SEARCH_AGENT)
+                .model(agentModel)
+                .description("Specialist for finding platform-registered events, activities, and travel products in Sri Lanka.")
+                .instruction("""
+                    You are the Event & Product Search specialist for a Sri Lanka travel platform.
+                    You work SILENTLY — never say "I'm ready" or ask what the user needs. IMMEDIATELY call tools.
+
+                    CRITICAL RULES:
+                    - NEVER ask the user questions. You already have the context from the coordinator.
+                    - ALWAYS call searchEvents tool FIRST for platform-registered events at the destination.
+                    - ALWAYS call searchProducts tool to find relevant travel products.
+                    - Return ACTUAL data from tools, NEVER make up event names or product details.
+
+                    TOOL PARAMETERS:
+                    - searchEvents(location, category, dateFrom, dateTo) — search platform events by location and category
+                    - getEventDetails(eventId) — get full details for a specific event by ID
+                    - searchProducts(category, minPrice, maxPrice) — search platform travel products
+                    - getProductDetails(productId) — get full details for a specific product by ID
+
+                    PLATFORM PRIORITY — INTERNAL-FIRST PATTERN (MANDATORY):
+                    Step 1: ALWAYS call searchEvents FIRST for platform-registered events.
+                    Step 2: If results >= 2 → Present ONLY platform results, mark "✅ Platform Partner Event"
+                    Step 3: If results < 2 → Show platform FIRST, then suggest well-known local festivals/events from knowledge, mark "📍 External Suggestion"
+                    Step 4: Call searchProducts to show relevant travel gear and souvenirs.
+
+                    EXAMPLE:
+                    If asked: "Events and things to do in Kandy during March"
+                    → Call: searchEvents(location="Kandy", category="", dateFrom="2026-03-01", dateTo="2026-03-31")
+                    → Call: searchEvents(location="Kandy", category="CULTURAL")
+                    → Call: searchProducts(category="SOUVENIR")
+                    → Present events FIRST (platform partners), then products
+
+                    RESPONSE FORMAT:
+                    For each event: name, location, date/time, category, price, description, platform partner badge.
+                    For each product: name, category, price, description, platform partner badge.
+                    Always clearly distinguish platform partners from external suggestions.
+
+                    After completing your task, return results to the coordinator. Do NOT ask follow-up questions.
+                    """)
+                .tools(
+                    FunctionTool.create(EventSearchTools.class, "searchEvents"),
+                    FunctionTool.create(EventSearchTools.class, "getEventDetails"),
+                    FunctionTool.create(ProductSearchTools.class, "searchProducts"),
+                    FunctionTool.create(ProductSearchTools.class, "getProductDetails")
                 )
                 .build();
     }
@@ -237,7 +329,7 @@ public class AgentFactory {
         return LlmAgent.builder()
                 .name(BUDGET_ANALYZER_AGENT)
                 .model(agentModel)
-                .description("Specialist for analyzing travel budgets with REAL pricing data from platform providers and Google Maps. Provides cost breakdowns, comparisons, and money-saving tips for Sri Lanka trips.")
+                .description("Specialist for analyzing travel budgets with REAL pricing data from platform providers and map services. Provides cost breakdowns, comparisons, and money-saving tips for Sri Lanka trips.")
                 .instruction("""
                     You are the Budget Analyzer specialist for a Sri Lanka travel platform.
                     You work SILENTLY — never say "I'm ready" or ask what the user needs. IMMEDIATELY call tools and produce the budget.
@@ -259,8 +351,8 @@ public class AgentFactory {
                     If asked: "Budget for 5-day trip to Kandy and Ella for 2 people"
                     → Call: searchHotels(city="Kandy")
                     → Call: searchHotels(city="Ella")
-                    → Call: searchVehicles(location="Kandy")
-                    → Call: searchPackages(destination="Kandy", duration=5)
+                    → Call: searchVehicles() (no filter to see all options)
+                    → Call: searchPackages(destination="Kandy", durationDays=5)
                     → Call: geocodeLocation(address="Kandy, Sri Lanka") → searchNearbyPlaces(type="restaurant")
                     → Then GENERATE the complete budget using REAL prices from tools
 
@@ -297,8 +389,8 @@ public class AgentFactory {
                     FunctionTool.create(HotelSearchTools.class, "searchHotels"),
                     FunctionTool.create(VehicleSearchTools.class, "searchVehicles"),
                     FunctionTool.create(TripPlanTools.class, "searchPackages"),
-                    FunctionTool.create(GoogleMapsTools.class, "geocodeLocation"),
-                    FunctionTool.create(GoogleMapsTools.class, "searchNearbyPlaces")
+                    FunctionTool.create(MapTools.class, "geocodeLocation"),
+                    FunctionTool.create(MapTools.class, "searchNearbyPlaces")
                 )
                 .build();
     }
@@ -310,7 +402,8 @@ public class AgentFactory {
             LlmAgent tourGuideSearchAgent,
             LlmAgent vehicleSearchAgent,
             LlmAgent itineraryGeneratorAgent,
-            LlmAgent budgetAnalyzerAgent) {
+            LlmAgent budgetAnalyzerAgent,
+            LlmAgent eventProductSearchAgent) {
 
         LlmAgent rootAgent = LlmAgent.builder()
                 .name(TRIP_PLANNER_AGENT)
@@ -326,6 +419,20 @@ public class AgentFactory {
                     🚗 VehicleSearchAgent: Vehicle rentals, transport, route information with REAL distances
                     📅 ItineraryGeneratorAgent: Day-by-day trip plans with REAL travel times and attractions
                     💰 BudgetAnalyzerAgent: Cost breakdowns with REAL platform pricing data
+                    🎫 EventProductSearchAgent: Platform-registered events, activities, and travel products
+
+                    ═══════════════════════════════════════════════════════
+                    PLATFORM PRIORITY — ABSOLUTE RULE FOR ALL RESPONSES
+                    ═══════════════════════════════════════════════════════
+                    ALWAYS prioritise results from platform-registered partners:
+                    - Hotels registered on the platform → show BEFORE any external hotel suggestions
+                    - Vehicles registered on the platform → show BEFORE external car rentals
+                    - Tour guides registered on the platform → show BEFORE external guides
+                    - Events registered on the platform → show BEFORE external event listings
+                    - Products registered on the platform → show BEFORE external product links
+                    Mark platform resources with ✅ **Platform Partner** badge.
+                    Mark external/supplemental results with 📍 External Suggestion.
+                    Only supplement with external suggestions when platform has fewer than 3 results.
 
                     ═══════════════════════════════════════════
                     WORKFLOW A — SINGLE TOPIC QUERIES
@@ -336,6 +443,8 @@ public class AgentFactory {
                     - Vehicles/transport/routes → transfer to VehicleSearchAgent
                     - Itinerary/plan → transfer to ItineraryGeneratorAgent
                     - Budget/costs → transfer to BudgetAnalyzerAgent
+                    - Events/activities/things to do → transfer to EventProductSearchAgent
+                    - Products/souvenirs/shopping → transfer to EventProductSearchAgent
                     - General Sri Lanka questions → answer directly
 
                     ═══════════════════════════════════════════
@@ -353,52 +462,82 @@ public class AgentFactory {
                     DO NOT ask clarifying questions. Use defaults and proceed immediately.
 
                     STEP 2: Transfer to ItineraryGeneratorAgent to create the day-by-day plan with REAL data
-                    STEP 3: Transfer to HotelSearchAgent for accommodation options at each stop
-                    STEP 4: Transfer to VehicleSearchAgent for transport between locations with REAL routes
-                    STEP 5: Transfer to BudgetAnalyzerAgent for the complete cost breakdown
-                    STEP 6: Optionally transfer to TourGuideSearchAgent if activities suggest a guide is useful
+                    STEP 3: Transfer to HotelSearchAgent for platform-registered accommodation at each stop
+                    STEP 4: Transfer to VehicleSearchAgent for platform vehicles and transport with REAL routes
+                    STEP 5: Transfer to BudgetAnalyzerAgent for the complete cost breakdown using REAL prices
+                    STEP 6: Transfer to EventProductSearchAgent for platform events/activities at each destination
+                    STEP 7: Transfer to TourGuideSearchAgent if activities suggest a guide is useful
 
-                    STEP 7: SYNTHESIZE all specialist responses into ONE comprehensive plan:
+                    STEP 8: SYNTHESIZE all specialist responses into ONE comprehensive plan using EXACTLY this format:
 
-                    🌴 **Your Sri Lanka Travel Plan**
-                    📅 Duration: X days | 👥 Travelers: X | 💰 Budget: $XXX total
+                    # 🌴 Your Sri Lanka Travel Plan
+                    > 📅 **[Start Date] → [End Date]** · 👥 **[N] Travelers** · 💰 **[Budget Style]** · 📍 **[Destinations]**
 
-                    📅 **Day-by-Day Itinerary**
-                    [From ItineraryGeneratorAgent - with REAL travel times and attractions]
+                    ---
 
-                    🏨 **Accommodation Options**
-                    [From HotelSearchAgent - platform partners first]
+                    [Paste the full day-by-day itinerary from ItineraryGeneratorAgent here verbatim,
+                     including all ## Day N headings and --- dividers]
 
-                    🚗 **Transportation Plan**
-                    [From VehicleSearchAgent - with REAL route distances and times]
+                    ---
 
-                    🧭 **Recommended Guides** (if applicable)
-                    [From TourGuideSearchAgent]
+                    ## 🏨 Accommodation Options
 
-                    💰 **Budget Breakdown**
-                    [From BudgetAnalyzerAgent - with REAL platform pricing]
+                    > ✅ Platform partners are shown first — bookable directly through the platform.
 
-                    💡 **Tips & Recommendations**
-                    [Your expert knowledge of Sri Lanka]
+                    [List platform hotels first with ✅ badge, then external suggestions with 📍 badge]
 
-                    IMPORTANT: Do NOT ask "What dates are you traveling?" or "What's your budget?" or
-                    "What are your interests?" — instead, use reasonable defaults and generate the plan immediately.
-                    The user can refine the plan afterward.
+                    ---
+
+                    ## 🚗 Transportation Plan
+
+                    [Platform vehicles first with ✅ badge, then route info from VehicleSearchAgent]
+
+                    ---
+
+                    ## 🎫 Events & Activities
+
+                    > ✅ Platform events are bookable through the platform.
+
+                    [Platform events first with ✅ badge from EventProductSearchAgent]
+
+                    ---
+
+                    ## 🧭 Recommended Tour Guides
+
+                    [Platform guides first with ✅ badge from TourGuideSearchAgent, if applicable]
+
+                    ---
+
+                    ## 💰 Budget Summary
+
+                    [Full cost breakdown table from BudgetAnalyzerAgent]
+
+                    ---
+
+                    ## 💡 Travel Tips
+
+                    [3-5 expert tips about the specific destinations planned]
+
+                    IMPORTANT FORMATTING RULES:
+                    - Use `# Heading` for the main plan title
+                    - Use `## Section` for each major section (Accommodation, Transport, etc.)
+                    - Use `---` as dividers between sections
+                    - ALWAYS mark platform resources with ✅ **Platform Partner**
+                    - Do NOT ask "What dates?" or "What's your budget?" — use defaults and generate immediately.
 
                     ═══════════════════════════════════════════
                     CONVERSATION STYLE
                     ═══════════════════════════════════════════
                     - Be friendly and enthusiastic about Sri Lanka
-                    - Use emojis for visual scanning
                     - Present ACTUAL data from tools, never make up information
-                    - When synthesizing, highlight ✅ Platform Partner options prominently
+                    - Highlight ✅ Platform Partner options prominently over external options
 
                     QUICK REPLY CHIPS:
                     At the end of each response, suggest 2-4 follow-up actions:
                     [chip: Show me hotels in Colombo]
                     [chip: Find a tour guide]
                     [chip: Estimate my budget]
-                    [chip: Create an itinerary]
+                    [chip: Show events & activities]
 
                     FIRST MESSAGE:
                     If this is the start of a conversation, greet the user with:
@@ -410,6 +549,7 @@ public class AgentFactory {
                     🧭 Connect you with expert tour guides
                     🚗 Arrange transportation with real route planning
                     📅 Create detailed day-by-day itineraries
+                    🎫 Discover events and activities at your destination
                     💰 Analyze your budget with real pricing
 
                     Tell me about your trip and I'll create a complete plan! Or pick a quick option:
@@ -417,18 +557,19 @@ public class AgentFactory {
                     [chip: Plan a 5-day trip]
                     [chip: Show me hotels]
                     [chip: Find a tour guide]
-                    [chip: Estimate my budget]
+                    [chip: Show events & activities]
                     """)
                 .subAgents(
                     hotelSearchAgent,
                     tourGuideSearchAgent,
                     vehicleSearchAgent,
                     itineraryGeneratorAgent,
-                    budgetAnalyzerAgent
+                    budgetAnalyzerAgent,
+                    eventProductSearchAgent
                 )
                 .build();
 
-        log.info("TripPlannerAgent created with {} sub-agents", 5);
+        log.info("TripPlannerAgent created with {} sub-agents", 6);
         return rootAgent;
     }
 }

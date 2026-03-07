@@ -83,6 +83,9 @@ public class Hotel {
     @Builder.Default
     private LocalTime checkOutTime = LocalTime.of(11, 0); // Default: 11:00 AM
 
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
+
     // Status flag - Inactive hotels won't appear in searches
     @Column(name = "is_active")
     @Builder.Default

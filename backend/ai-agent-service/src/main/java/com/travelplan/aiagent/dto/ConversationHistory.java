@@ -15,6 +15,7 @@ import java.util.List;
 public class ConversationHistory {
 
     private String sessionId;
+    private String title;
     private List<ChatMessage> messages;
     private Instant createdAt;
     private Instant lastActivityAt;
@@ -28,5 +29,6 @@ public class ConversationHistory {
         private String content;
         private Instant timestamp;
         private List<QuickReplyChip> quickReplies;
+        private List<ProviderResult> providers;
     }
 }
