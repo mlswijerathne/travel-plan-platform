@@ -39,7 +39,22 @@ public class SecurityConfig {
                         .pathMatchers(
                                 "/actuator/**",
                                 "/eureka/**",
-                                "/api/chat/**"
+                                "/api/chat/**",
+                                // Swagger UI & OpenAPI docs
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/webjars/**",
+                                "/tourist-service/v3/api-docs",
+                                "/hotel-service/v3/api-docs",
+                                "/tour-guide-service/v3/api-docs",
+                                "/vehicle-service/v3/api-docs",
+                                "/booking-service/v3/api-docs",
+                                "/itinerary-service/v3/api-docs",
+                                "/review-service/v3/api-docs",
+                                "/trip-plan-service/v3/api-docs",
+                                "/event-service/v3/api-docs",
+                                "/ecommerce-service/v3/api-docs"
                         ).permitAll()
                         // Public auth endpoints
                         .pathMatchers("/api/tourists/register").permitAll()
