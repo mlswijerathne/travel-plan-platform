@@ -212,7 +212,10 @@ public class ChatServiceImpl implements ChatService {
                 })
                 .onErrorResume(error -> {
                     log.error("Terminating generate-plan stream due to error: {}", error.getMessage());
-                    return Flux.empty();
+                    return Flux.just(ServerSentEvent.<ChatStreamEvent>builder()
+                            .event("error")
+                            .data(ChatStreamEvent.error("Failed to generate plan. Please try again."))
+                            .build());
                 });
     }
 

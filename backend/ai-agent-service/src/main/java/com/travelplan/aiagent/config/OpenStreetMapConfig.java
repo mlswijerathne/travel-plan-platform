@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
+
+import java.time.Duration;
 
 @Slf4j
 @Configuration
@@ -30,7 +34,9 @@ public class OpenStreetMapConfig {
     @Bean
     public WebClient nominatimWebClient() {
         log.info("Initializing Nominatim WebClient with base URL: {}", nominatimBaseUrl);
+        HttpClient httpClient = HttpClient.create().responseTimeout(Duration.ofSeconds(10));
         return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .baseUrl(nominatimBaseUrl)
                 .defaultHeader("User-Agent", userAgent)
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(512 * 1024))
@@ -40,7 +46,9 @@ public class OpenStreetMapConfig {
     @Bean
     public WebClient osrmWebClient() {
         log.info("Initializing OSRM WebClient with base URL: {}", osrmBaseUrl);
+        HttpClient httpClient = HttpClient.create().responseTimeout(Duration.ofSeconds(15));
         return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .baseUrl(osrmBaseUrl)
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(512 * 1024))
                 .build();
@@ -49,7 +57,9 @@ public class OpenStreetMapConfig {
     @Bean
     public WebClient overpassWebClient() {
         log.info("Initializing Overpass WebClient with base URL: {}", overpassBaseUrl);
+        HttpClient httpClient = HttpClient.create().responseTimeout(Duration.ofSeconds(35));
         return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .baseUrl(overpassBaseUrl)
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024))
                 .build();

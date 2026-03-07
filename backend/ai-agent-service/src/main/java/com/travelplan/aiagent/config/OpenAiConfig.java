@@ -30,14 +30,14 @@ public class OpenAiConfig {
 
     @Bean
     public BaseLlm agentModel() {
-        log.info("OpenAI key starts with: {}, length: {}", openAiApiKey.substring(0, 10), openAiApiKey.length());
+        log.info("OpenAI key configured, length: {}", openAiApiKey != null ? openAiApiKey.length() : 0);
         OpenAiChatModel chatModel = OpenAiChatModel.builder()
                 .baseUrl("https://api.openai.com/v1")
                 .apiKey(openAiApiKey)
                 .modelName(modelName)
                 .logRequests(true)
                 .logResponses(true)
-                .strictTools(true)
+                .strictTools(false)
                 .parallelToolCalls(false)
                 .build();
         log.info("Created OpenAI chat model: {}", modelName);
