@@ -437,6 +437,7 @@ services:
       - FEIGN_TRIP_PLAN_SERVICE_URL=http://trip-plan-service:8089
       - FEIGN_EVENT_SERVICE_URL=http://event-service:8090
       - FEIGN_ECOMMERCE_SERVICE_URL=http://ecommerce-service:8091
+      - OSM_USE_DUMMY=true
     depends_on:
       discovery-server:
         condition: service_healthy

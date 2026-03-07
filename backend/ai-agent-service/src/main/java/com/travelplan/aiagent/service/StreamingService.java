@@ -24,6 +24,13 @@ public class StreamingService {
         return Flux.from(events)
                 .map(event -> processEvent(event, sessionId))
                 .filter(java.util.Objects::nonNull)
+                .onErrorResume(error -> {
+                    log.error("Error in SSE stream for session {}: {}", sessionId, error.getMessage());
+                    return Flux.just(ServerSentEvent.<ChatStreamEvent>builder()
+                            .event("error")
+                            .data(ChatStreamEvent.error("An error occurred. Please try again."))
+                            .build());
+                })
                 .concatWith(Flux.just(ServerSentEvent.<ChatStreamEvent>builder()
                         .event("done")
                         .data(ChatStreamEvent.done(sessionId))

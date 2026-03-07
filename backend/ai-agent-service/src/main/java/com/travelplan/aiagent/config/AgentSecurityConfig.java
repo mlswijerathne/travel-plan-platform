@@ -1,6 +1,7 @@
 package com.travelplan.aiagent.config;
 
 import com.travelplan.common.config.JwtValidationFilter;
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 /**
  * AI Agent security config — higher priority than CommonSecurityConfig.
- * Permits /error (needed for SSE streams: Tomcat dispatches to /error after
- * the response is committed, and blocking it corrupts chunked encoding).
+ * Permits /error and ERROR dispatches (needed for SSE streams: Tomcat
+ * dispatches to /error after the response is committed, and blocking it
+ * corrupts chunked encoding / HTTP2 frames).
  */
 @Configuration
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class AgentSecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/chat/**").authenticated())
                 .addFilterBefore(jwtValidationFilter, UsernamePasswordAuthenticationFilter.class);

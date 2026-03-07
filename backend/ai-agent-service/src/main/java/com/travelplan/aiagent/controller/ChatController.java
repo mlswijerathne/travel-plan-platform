@@ -26,7 +26,14 @@ public class ChatController {
             Authentication authentication) {
         String userId = authentication != null ? authentication.getName() : "anonymous";
         log.info("Chat request from user: {}, session: {}", userId, request.getSessionId());
-        return chatService.chat(userId, request);
+        return Flux.defer(() -> chatService.chat(userId, request))
+                .onErrorResume(error -> {
+                    log.error("Chat endpoint error: {}", error.getMessage());
+                    return Flux.just(ServerSentEvent.<ChatStreamEvent>builder()
+                            .event("error")
+                            .data(ChatStreamEvent.error("Service temporarily unavailable. Please try again."))
+                            .build());
+                });
     }
 
     @GetMapping("/history")
@@ -76,6 +83,13 @@ public class ChatController {
             Authentication authentication) {
         String userId = authentication != null ? authentication.getName() : "anonymous";
         log.info("Generate plan request from user: {} for {}", userId, request.getDestination());
-        return chatService.generatePlan(userId, request);
+        return Flux.defer(() -> chatService.generatePlan(userId, request))
+                .onErrorResume(error -> {
+                    log.error("Generate plan endpoint error: {}", error.getMessage());
+                    return Flux.just(ServerSentEvent.<ChatStreamEvent>builder()
+                            .event("error")
+                            .data(ChatStreamEvent.error("Service temporarily unavailable. Please try again."))
+                            .build());
+                });
     }
 }

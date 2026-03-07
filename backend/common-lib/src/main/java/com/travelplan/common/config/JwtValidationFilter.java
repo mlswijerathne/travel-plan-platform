@@ -236,6 +236,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         return path.startsWith("/actuator") ||
                 path.equals("/health") ||
+                path.equals("/error") ||
                 path.startsWith("/v3/api-docs") ||
                 path.startsWith("/swagger-ui") ||
                 path.startsWith("/api/public/");
