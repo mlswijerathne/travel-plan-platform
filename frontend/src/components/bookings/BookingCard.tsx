@@ -6,9 +6,9 @@ import type { Booking } from '@/types/booking'
 import { formatCurrency, formatDateRange, getBookingStatusColor, getProviderTypeLabel } from '@/lib/utils'
 import { Calendar, Package } from 'lucide-react'
 
-export function BookingCard({ booking }: { booking: Booking }) {
+export function BookingCard({ booking, basePath = '/bookings' }: { booking: Booking; basePath?: string }) {
   return (
-    <Link href={`/bookings/${booking.id}`} className="group block">
+    <Link href={`${basePath}/${booking.id}`} className="group block">
       <div className="rounded-xl border bg-card p-4 transition-all hover:shadow-md hover:border-primary/20">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">

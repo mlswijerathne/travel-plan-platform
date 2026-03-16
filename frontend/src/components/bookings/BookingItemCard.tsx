@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { BookingItem } from '@/types/booking'
-import type { EntityType } from '@/types/review'
+import type { EntityType, Review } from '@/types/review'
 import { formatCurrency, formatDateRange, getBookingStatusColor, getProviderTypeLabel } from '@/lib/utils'
-import { Hotel, MapPin, Car, Star } from 'lucide-react'
+import { Hotel, MapPin, Car, Star, CheckCircle2, Pencil } from 'lucide-react'
 import { ReviewFormDialog } from '@/components/reviews/ReviewFormDialog'
 
 const PROVIDER_ICONS = {
@@ -25,12 +25,21 @@ interface BookingItemCardProps {
   item: BookingItem
   bookingId?: number
   bookingStatus?: string
+  existingReviews?: Review[]
 }
 
-export function BookingItemCard({ item, bookingId, bookingStatus }: BookingItemCardProps) {
+export function BookingItemCard({ item, bookingId, bookingStatus, existingReviews }: BookingItemCardProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
   const Icon = PROVIDER_ICONS[item.providerType] ?? Hotel
-  const canReview = !!bookingId && (bookingStatus === 'CONFIRMED' || bookingStatus === 'COMPLETED')
+  const canReview = !!bookingId && bookingStatus === 'COMPLETED'
+
+  const myReview = canReview
+    ? existingReviews?.find(
+        (r) => r.entityType === ENTITY_TYPE_MAP[item.providerType] && r.entityId === item.providerId
+      )
+    : undefined
+  const alreadyReviewed = !!myReview
 
   return (
     <div className="rounded-lg border bg-card p-4 flex gap-4">
@@ -50,15 +59,22 @@ export function BookingItemCard({ item, bookingId, bookingStatus }: BookingItemC
             <Badge className={`text-[10px] ${getBookingStatusColor(item.status)}`}>{item.status}</Badge>
             {canReview && (
               <div>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-7 text-xs"
-                  onClick={() => setDialogOpen(true)}
-                >
-                  <Star className="h-3 w-3 mr-1" />
-                  Review
-                </Button>
+                {alreadyReviewed ? (
+                  <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    Reviewed
+                  </div>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs"
+                    onClick={() => setDialogOpen(true)}
+                  >
+                    <Star className="h-3 w-3 mr-1" />
+                    Review
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -70,9 +86,38 @@ export function BookingItemCard({ item, bookingId, bookingStatus }: BookingItemC
             <span>{formatDateRange(item.startDate, item.endDate)}</span>
           )}
         </div>
+
+        {myReview && (
+          <div className="mt-3 pt-3 border-t">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-3 w-3 ${i < myReview.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`}
+                  />
+                ))}
+              </div>
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => setEditOpen(true)}>
+                <Pencil className="h-3 w-3" />
+              </Button>
+            </div>
+            {myReview.content && (
+              <p className="text-xs text-muted-foreground">{myReview.content}</p>
+            )}
+          </div>
+        )}
       </div>
 
-      {canReview && (
+      {myReview && editOpen && (
+        <ReviewFormDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          editReview={myReview}
+        />
+      )}
+
+      {canReview && !alreadyReviewed && (
         <ReviewFormDialog
           open={dialogOpen}
           onOpenChange={setDialogOpen}

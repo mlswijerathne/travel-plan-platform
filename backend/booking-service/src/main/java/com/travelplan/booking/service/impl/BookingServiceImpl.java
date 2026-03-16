@@ -92,28 +92,9 @@ public class BookingServiceImpl implements BookingService {
         Booking savedBooking = bookingRepository.save(booking);
         log.info("Booking created: id={}, reference={}", savedBooking.getId(), savedBooking.getBookingReference());
 
-        // Execute saga: pre-check availability + step-by-step provider confirmation
-        SagaOrchestrator.SagaResult sagaResult = sagaOrchestrator.execute(savedBooking);
-
-        if (!sagaResult.successful()) {
-            // Saga failed or rolled back - update booking status
-            savedBooking.setStatus("CANCELLED");
-            savedBooking.setCancellationReason(sagaResult.message());
-            savedBooking = bookingRepository.save(savedBooking);
-            log.warn("Booking saga failed: id={}, reason={}", savedBooking.getId(), sagaResult.message());
-
-            BookingResponse response = bookingMapper.toResponse(savedBooking);
-            eventPublisher.publishBookingCancelled(response);
-            throw new ValidationException("Booking failed: " + sagaResult.message());
-        }
-
-        // Saga succeeded - all providers confirmed
-        savedBooking.setStatus("CONFIRMED");
-        savedBooking = bookingRepository.save(savedBooking);
-
+        // Booking stays PENDING until provider(s) accept each item
         BookingResponse response = bookingMapper.toResponse(savedBooking);
         eventPublisher.publishBookingCreated(response);
-        eventPublisher.publishBookingConfirmed(response);
 
         return response;
     }
@@ -291,6 +272,49 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findByBookingReference(bookingReference)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking", "bookingReference", bookingReference));
         return bookingMapper.toResponse(booking);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BookingResponse getBookingDetails(Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking", "id", id));
+        return bookingMapper.toResponse(booking);
+    }
+
+    @Override
+    @Transactional
+    public BookingResponse completeBooking(Long id, String touristId) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking", "id", id));
+
+        if (!booking.getTouristId().equals(touristId)) {
+            throw new ForbiddenException("You can only complete your own bookings");
+        }
+        if (!"CONFIRMED".equals(booking.getStatus())) {
+            throw new ValidationException("Only CONFIRMED bookings can be marked as completed");
+        }
+
+        // Use repository directly to avoid lazy-loading issues
+        List<BookingItem> items = bookingItemRepository.findByBookingId(id);
+        for (BookingItem item : items) {
+            if (!"CANCELLED".equals(item.getStatus())) {
+                item.setStatus("COMPLETED");
+            }
+        }
+        bookingItemRepository.saveAll(items);
+
+        booking.setStatus("COMPLETED");
+        bookingRepository.save(booking);
+        log.info("Booking completed by tourist: id={}", id);
+
+        // Re-fetch fully populated booking for response
+        Booking completed = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking", "id", id));
+        BookingResponse response = bookingMapper.toResponse(completed);
+        eventPublisher.publishTripCompleted(response);
+
+        return response;
     }
 
     // --- Private helper methods ---

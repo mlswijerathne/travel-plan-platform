@@ -21,5 +21,9 @@ public interface BookingService {
 
     BookingResponse getBookingByReference(String bookingReference);
 
+    BookingResponse getBookingDetails(Long id);
+
+    BookingResponse completeBooking(Long id, String touristId);
+
     void linkItinerary(Long bookingId, Long itineraryId);
 }

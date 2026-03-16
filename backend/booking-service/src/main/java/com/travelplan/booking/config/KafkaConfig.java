@@ -10,6 +10,7 @@ public class KafkaConfig {
 
     public static final String TOPIC_BOOKING_EVENTS = "booking-events";
     public static final String TOPIC_BOOKING_NOTIFICATIONS = "booking-notifications";
+    public static final String TOPIC_TRIP_COMPLETION = "trip-completion-events";
 
     @Bean
     public NewTopic bookingEventsTopic() {
@@ -22,6 +23,14 @@ public class KafkaConfig {
     @Bean
     public NewTopic bookingNotificationsTopic() {
         return TopicBuilder.name(TOPIC_BOOKING_NOTIFICATIONS)
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic tripCompletionTopic() {
+        return TopicBuilder.name(TOPIC_TRIP_COMPLETION)
                 .partitions(3)
                 .replicas(1)
                 .build();

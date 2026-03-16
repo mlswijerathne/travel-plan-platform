@@ -87,7 +87,7 @@ export default function ProviderBookingsPage() {
         <>
           <div className="space-y-3">
             {bookings.map((booking) => (
-              <BookingCard key={booking.id} booking={booking} />
+              <BookingCard key={booking.id} booking={booking} basePath="/provider/bookings" />
             ))}
           </div>
           {pagination && (

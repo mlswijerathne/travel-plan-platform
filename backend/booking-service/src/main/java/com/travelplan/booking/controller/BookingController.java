@@ -89,6 +89,20 @@ public class BookingController {
         return ApiResponse.success(bookingService.getBookingByReference(bookingReference));
     }
 
+    @GetMapping("/{id}/details")
+    public ApiResponse<BookingResponse> getBookingDetails(@PathVariable Long id) {
+        return ApiResponse.success(bookingService.getBookingDetails(id));
+    }
+
+    @PostMapping("/{id}/complete")
+    public ApiResponse<BookingResponse> completeBooking(
+            @PathVariable Long id,
+            Authentication authentication) {
+        String touristId = authentication.getName();
+        log.info("Complete booking request: bookingId={}, touristId={}", id, touristId);
+        return ApiResponse.success(bookingService.completeBooking(id, touristId));
+    }
+
     @PutMapping("/{bookingId}/itinerary/{itineraryId}")
     public ResponseEntity<Void> linkItinerary(
             @PathVariable Long bookingId,
