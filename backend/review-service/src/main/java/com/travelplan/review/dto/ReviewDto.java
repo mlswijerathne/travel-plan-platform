@@ -24,6 +24,9 @@ public class ReviewDto {
     /** Supabase Auth user-ID of the tourist who wrote the review */
     private String touristId;
 
+    /** Display name of the tourist (stored at review creation time) */
+    private String touristName;
+
     /** Provider type: HOTEL, TOUR_GUIDE, or VEHICLE */
     private EntityType entityType;
 

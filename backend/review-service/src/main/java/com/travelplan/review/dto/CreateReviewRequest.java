@@ -44,6 +44,10 @@ public class CreateReviewRequest {
     @Max(value = 5, message = "Rating must be at most 5")
     private Integer rating;
 
+    /** Display name of the tourist (extracted from JWT on the client side) */
+    @Size(max = 255)
+    private String touristName;
+
     /** Optional headline that summarises the experience */
     @Size(max = 255, message = "Title must not exceed 255 characters")
     private String title;

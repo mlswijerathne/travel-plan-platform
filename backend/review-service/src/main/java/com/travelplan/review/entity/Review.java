@@ -44,6 +44,9 @@ public class Review {
     @Column(name = "tourist_id", nullable = false, length = 255)
     private String touristId;
 
+    @Column(name = "tourist_name", length = 255)
+    private String touristName;
+
     /**
      * Discriminator identifying which provider type is being reviewed.
      * Stored as a VARCHAR(50) string in the database.

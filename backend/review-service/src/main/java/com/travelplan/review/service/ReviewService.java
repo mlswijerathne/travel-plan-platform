@@ -99,6 +99,7 @@ public class ReviewService {
 
         Review review = Review.builder()
                 .touristId(touristId)
+                .touristName(request.getTouristName())
                 .entityType(request.getEntityType())
                 .entityId(request.getEntityId())
                 .bookingId(request.getBookingId())
@@ -202,6 +203,12 @@ public class ReviewService {
         Page<PendingReview> result =
                 pendingReviewRepository.findByTouristIdAndIsCompletedFalseOrderByCreatedAtDesc(touristId, pageable);
         return PaginatedResponse.of(result.map(reviewMapper::toPendingDto).getContent(), page, size, result.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDto> getMyReviewsForBooking(String touristId, Long bookingId) {
+        return reviewRepository.findByTouristIdAndBookingId(touristId, bookingId)
+                .stream().map(reviewMapper::toDto).toList();
     }
 
     // ── Public / provider ────────────────────────────────────────────────

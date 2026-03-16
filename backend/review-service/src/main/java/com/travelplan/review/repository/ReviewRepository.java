@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -59,6 +60,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * (regardless of booking ID).  Used to prevent duplicate reviews when
      * no bookingId is provided.
      */
+    List<Review> findByTouristIdAndBookingId(String touristId, Long bookingId);
+
     boolean existsByTouristIdAndEntityTypeAndEntityId(
             String touristId, EntityType entityType, Long entityId);
 

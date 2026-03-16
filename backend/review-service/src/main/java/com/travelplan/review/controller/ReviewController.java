@@ -171,6 +171,24 @@ public class ReviewController {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
+    /**
+     * Returns all reviews written by the authenticated tourist for a specific booking.
+     * Used by the tourist booking detail page to determine which items have been reviewed.
+     *
+     * <p><b>GET /api/reviews/my/booking/{bookingId}</b>
+     */
+    @GetMapping("/my/booking/{bookingId}")
+    @PreAuthorize("hasRole('TOURIST')")
+    @Operation(summary = "Get my reviews for a booking")
+    public ResponseEntity<ApiResponse<java.util.List<ReviewDto>>> getMyReviewsForBooking(
+            @PathVariable Long bookingId,
+            Authentication auth) {
+
+        String touristId = extractUserId(auth);
+        return ResponseEntity.ok(ApiResponse.success(
+                reviewService.getMyReviewsForBooking(touristId, bookingId)));
+    }
+
     // ── Public: browse reviews and rating summary ─────────────────────────
 
     /**

@@ -35,6 +35,7 @@ public class ReviewMapper {
         return ReviewDto.builder()
                 .id(review.getId())
                 .touristId(review.getTouristId())
+                .touristName(review.getTouristName())
                 .entityType(review.getEntityType())
                 .entityId(review.getEntityId())
                 .bookingId(review.getBookingId())
