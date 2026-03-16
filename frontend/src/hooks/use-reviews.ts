@@ -1,14 +1,14 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getReviewsByEntity, getReviewSummary, getMyReviews, getPendingReviews, createReview, updateReview, deleteReview, addProviderResponse, deleteProviderResponse } from '@/lib/api/review'
+import { getReviewsByEntity, getReviewSummary, getMyReviews, getPendingReviews, getMyBookingReviews, createReview, updateReview, deleteReview, addProviderResponse, deleteProviderResponse } from '@/lib/api/review'
 import type { CreateReviewRequest, UpdateReviewRequest, ProviderResponseRequest } from '@/types/review'
 
-export function useReviewsByEntity(entityType: string, entityId: number, params: { page?: number; size?: number } = {}) {
+export function useReviewsByEntity(entityType: string, entityId: number, params: { page?: number; size?: number } = {}, enabled = true) {
   return useQuery({
     queryKey: ['reviews', entityType, entityId, params],
     queryFn: () => getReviewsByEntity(entityType, entityId, params),
-    enabled: !!entityType && !!entityId,
+    enabled: enabled && !!entityType && !!entityId,
   })
 }
 
@@ -34,6 +34,14 @@ export function usePendingReviews(params: { page?: number; size?: number } = {})
   })
 }
 
+export function useMyBookingReviews(bookingId: number, enabled = true) {
+  return useQuery({
+    queryKey: ['myBookingReviews', bookingId],
+    queryFn: () => getMyBookingReviews(bookingId),
+    enabled: enabled && !!bookingId,
+  })
+}
+
 export function useCreateReview() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -43,6 +51,9 @@ export function useCreateReview() {
       queryClient.invalidateQueries({ queryKey: ['reviewSummary', data.entityType, data.entityId] })
       queryClient.invalidateQueries({ queryKey: ['myReviews'] })
       queryClient.invalidateQueries({ queryKey: ['pendingReviews'] })
+      if (data.bookingId) {
+        queryClient.invalidateQueries({ queryKey: ['myBookingReviews', data.bookingId] })
+      }
     },
   })
 }

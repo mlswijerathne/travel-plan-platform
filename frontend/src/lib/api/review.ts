@@ -37,6 +37,10 @@ export function getReviewSummary(entityType: string, entityId: number) {
   return apiGet<ApiResponse<ReviewSummary>>(`/api/reviews/summary/${entityType}/${entityId}`)
 }
 
+export function getMyBookingReviews(bookingId: number) {
+  return apiGet<ApiResponse<Review[]>>(`/api/reviews/my/booking/${bookingId}`)
+}
+
 export function addProviderResponse(reviewId: number, data: ProviderResponseRequest) {
   return apiPost<ApiResponse<ProviderResponse>>(`/api/reviews/${reviewId}/responses`, data)
 }

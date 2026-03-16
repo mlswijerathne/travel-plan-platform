@@ -3,6 +3,7 @@ export type EntityType = 'HOTEL' | 'TOUR_GUIDE' | 'VEHICLE'
 export interface Review {
   id: number
   touristId: string
+  touristName: string | null
   entityType: EntityType
   entityId: number
   bookingId: number | null
@@ -54,6 +55,7 @@ export interface CreateReviewRequest {
   entityId: number
   bookingId?: number
   rating: number
+  touristName?: string
   title?: string
   content?: string
   images?: string[]
