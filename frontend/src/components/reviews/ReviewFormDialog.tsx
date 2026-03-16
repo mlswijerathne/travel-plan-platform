@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { StarRating } from '@/components/shared/StarRating'
 import {
@@ -14,6 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useCreateReview, useUpdateReview } from '@/hooks/use-reviews'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import type { Review, EntityType } from '@/types/review'
 
 interface ReviewFormDialogProps {
@@ -36,17 +36,17 @@ export function ReviewFormDialog({
   entityName,
 }: ReviewFormDialogProps) {
   const [rating, setRating] = useState(editReview?.rating ?? 0)
-  const [title, setTitle] = useState(editReview?.title ?? '')
-  const [content, setContent] = useState(editReview?.content ?? '')
+  const [comment, setComment] = useState(editReview?.content ?? '')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  // Reset form state whenever the dialog opens (state-during-render pattern)
+  const { displayName } = useCurrentUser()
+
+  // Reset form state whenever the dialog opens
   const [prevOpen, setPrevOpen] = useState(false)
   if (open && !prevOpen) {
     setPrevOpen(true)
     setRating(editReview?.rating ?? 0)
-    setTitle(editReview?.title ?? '')
-    setContent(editReview?.content ?? '')
+    setComment(editReview?.content ?? '')
     setErrorMsg(null)
   }
   if (!open && prevOpen) {
@@ -56,7 +56,6 @@ export function ReviewFormDialog({
   const createMutation = useCreateReview()
   const updateMutation = useUpdateReview()
   const isPending = createMutation.isPending || updateMutation.isPending
-
   const isEditing = !!editReview
 
   function handleSuccess() {
@@ -76,7 +75,7 @@ export function ReviewFormDialog({
 
     if (isEditing) {
       updateMutation.mutate(
-        { id: editReview.id, data: { rating, title: title || undefined, content: content || undefined } },
+        { id: editReview.id, data: { rating, content: comment || undefined } },
         { onSuccess: handleSuccess, onError: handleError }
       )
     } else if (entityType && entityId) {
@@ -86,8 +85,8 @@ export function ReviewFormDialog({
           entityId,
           bookingId,
           rating,
-          title: title || undefined,
-          content: content || undefined,
+          touristName: displayName || undefined,
+          content: comment || undefined,
         },
         { onSuccess: handleSuccess, onError: handleError }
       )
@@ -110,14 +109,10 @@ export function ReviewFormDialog({
             {rating === 0 && <p className="text-xs text-muted-foreground mt-1">Please select a star rating</p>}
           </div>
           <div>
-            <label className="text-sm text-muted-foreground mb-1 block">Title (optional)</label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Brief summary" />
-          </div>
-          <div>
-            <label className="text-sm text-muted-foreground mb-1 block">Review (optional)</label>
+            <label className="text-sm text-muted-foreground mb-1 block">Comment (optional)</label>
             <Textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
               placeholder="Share your experience..."
               rows={4}
             />
@@ -137,4 +132,3 @@ export function ReviewFormDialog({
     </Dialog>
   )
 }
-

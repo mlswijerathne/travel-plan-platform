@@ -1,12 +1,13 @@
 'use client'
 
 import { use } from 'react'
-import { useBooking, useCancelBooking } from '@/hooks/use-bookings'
+import { useBooking, useCancelBooking, useCompleteBooking } from '@/hooks/use-bookings'
+import { useMyBookingReviews } from '@/hooks/use-reviews'
 import { BookingItemCard } from '@/components/bookings/BookingItemCard'
 import { CancelBookingDialog } from '@/components/bookings/CancelBookingDialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Calendar, FileText, MapPin } from 'lucide-react'
+import { ArrowLeft, Calendar, CheckCircle, FileText, MapPin } from 'lucide-react'
 import { formatCurrency, formatDateRange, formatDate, getBookingStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -15,7 +16,10 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
   const bookingId = Number(id)
   const { data, isLoading } = useBooking(bookingId)
   const cancelMutation = useCancelBooking()
+  const completeMutation = useCompleteBooking()
   const booking = data?.data
+  const { data: reviewsData } = useMyBookingReviews(bookingId, booking?.status === 'COMPLETED')
+  const myBookingReviews = reviewsData?.data ?? []
 
   if (isLoading) {
     return (
@@ -106,7 +110,17 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
               </Link>
             )}
           </div>
-          <div>
+          <div className="flex items-center gap-2">
+            {booking.status === 'CONFIRMED' && (
+              <Button
+                size="sm"
+                onClick={() => completeMutation.mutate(bookingId)}
+                disabled={completeMutation.isPending}
+              >
+                <CheckCircle className="h-4 w-4 mr-1.5" />
+                {completeMutation.isPending ? 'Completing...' : 'Mark as Completed'}
+              </Button>
+            )}
             {canCancel && (
               <CancelBookingDialog
                 onConfirm={(reason) => cancelMutation.mutate({ id: bookingId, data: { reason } })}
@@ -122,20 +136,11 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         <h2 className="text-lg font-semibold mb-4">Booking Items ({booking.items.length})</h2>
         <div className="space-y-3">
           {booking.items.map((item) => (
-            <BookingItemCard key={item.id} item={item} bookingId={booking.id} bookingStatus={booking.status} />
+            <BookingItemCard key={item.id} item={item} bookingId={booking.id} bookingStatus={booking.status} existingReviews={myBookingReviews} />
           ))}
         </div>
       </div>
 
-      {/* Leave Review Link */}
-      {booking.status === 'COMPLETED' && (
-        <div className="rounded-xl border bg-primary/5 p-4 text-center">
-          <p className="text-sm text-muted-foreground mb-2">How was your experience?</p>
-          <Link href="/reviews">
-            <Button size="sm">Leave a Review</Button>
-          </Link>
-        </div>
-      )}
     </div>
   )
 }
