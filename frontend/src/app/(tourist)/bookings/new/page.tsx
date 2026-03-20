@@ -7,6 +7,7 @@ import { useCreateBooking } from '@/hooks/use-bookings'
 import { searchHotels } from '@/lib/api/hotel'
 import { searchGuides } from '@/lib/api/guide'
 import { searchVehicles } from '@/lib/api/vehicles'
+import { checkAvailability } from '@/lib/api/booking'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,6 +24,7 @@ import {
   X,
   Loader2,
   Star,
+  AlertTriangle,
 } from 'lucide-react'
 import type { BookingItemRequest, ProviderType } from '@/types/booking'
 
@@ -44,6 +46,8 @@ interface SelectedItem {
   quantity: number
 }
 
+const availKey = (type: ProviderType, id: number) => `${type}-${id}`
+
 export default function NewBookingPage() {
   const router = useRouter()
   const createBooking = useCreateBooking()
@@ -59,6 +63,10 @@ export default function NewBookingPage() {
   const [guides, setGuides] = useState<any[]>([])
   const [vehicles, setVehicles] = useState<any[]>([])
   const [searching, setSearching] = useState(false)
+
+  // Availability
+  const [availabilityMap, setAvailabilityMap] = useState<Record<string, boolean>>({})
+  const [checkingAvailability, setCheckingAvailability] = useState(false)
 
   const stepIndex = STEPS.findIndex((s) => s.key === step)
 
@@ -87,18 +95,50 @@ export default function NewBookingPage() {
     ? Math.max(1, Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)))
     : 1
 
+  const runAvailabilityCheck = async (type: ProviderType, providers: any[]) => {
+    if (!startDate || !endDate || providers.length === 0) return
+    setCheckingAvailability(true)
+    try {
+      const items = providers.map((p: any) => ({
+        providerType: type,
+        providerId: p.id,
+        startDate,
+        endDate,
+      }))
+      const res = await checkAvailability(items)
+      const results = res?.data?.items ?? []
+      setAvailabilityMap((prev) => {
+        const next = { ...prev }
+        results.forEach((r) => {
+          next[availKey(type, r.providerId)] = r.available
+        })
+        return next
+      })
+    } catch {
+      // silently ignore — availability badges just won't show
+    } finally {
+      setCheckingAvailability(false)
+    }
+  }
+
   const searchProviders = async (type: 'hotel' | 'guide' | 'vehicle') => {
     setSearching(true)
     try {
       if (type === 'hotel') {
         const res = await searchHotels({ size: 20 })
-        setHotels(res.data ?? [])
+        const list = res.data ?? []
+        setHotels(list)
+        runAvailabilityCheck('HOTEL', list)
       } else if (type === 'guide') {
         const res = await searchGuides({ size: 20 })
-        setGuides(res.data ?? [])
+        const list = res.data ?? []
+        setGuides(list)
+        runAvailabilityCheck('TOUR_GUIDE', list)
       } else {
         const res = await searchVehicles({ size: 20 })
-        setVehicles((res as any).content ?? [])
+        const list = (res as any).content ?? []
+        setVehicles(list)
+        runAvailabilityCheck('VEHICLE', list)
       }
     } catch (err) {
       console.error(`Failed to search ${type}s:`, err)
@@ -148,6 +188,20 @@ export default function NewBookingPage() {
     }
   }
 
+  const AvailabilityBadge = ({ type, id }: { type: ProviderType; id: number }) => {
+    const avail = availabilityMap[availKey(type, id)]
+    if (avail === undefined) return null
+    return avail ? (
+      <Badge className="text-xs bg-green-100 text-green-700 border-green-300 hover:bg-green-100">Available</Badge>
+    ) : (
+      <Badge variant="destructive" className="text-xs">Unavailable</Badge>
+    )
+  }
+
+  const hasUnavailableSelected = selectedItems.some(
+    (i) => availabilityMap[availKey(i.providerType, i.providerId)] === false
+  )
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <Link href="/bookings" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
@@ -194,7 +248,7 @@ export default function NewBookingPage() {
                   type="date"
                   value={startDate}
                   min={new Date().toISOString().split('T')[0]}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={(e) => { setStartDate(e.target.value); setAvailabilityMap({}) }}
                   required
                 />
               </div>
@@ -204,7 +258,7 @@ export default function NewBookingPage() {
                   type="date"
                   value={endDate}
                   min={startDate || new Date().toISOString().split('T')[0]}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={(e) => { setEndDate(e.target.value); setAvailabilityMap({}) }}
                   required
                 />
               </div>
@@ -230,6 +284,12 @@ export default function NewBookingPage() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">Choose a Hotel (optional)</h2>
             <p className="text-sm text-muted-foreground">Select a hotel for your stay, or skip this step.</p>
+            {checkingAvailability && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-sm w-fit">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="font-medium">Checking availability for your dates...</span>
+              </div>
+            )}
             {searching ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -240,21 +300,27 @@ export default function NewBookingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
                 {hotels.map((hotel: any) => {
                   const selected = isSelected('HOTEL', hotel.id)
+                  const unavailable = availabilityMap[availKey('HOTEL', hotel.id)] === false
                   return (
                     <Card
                       key={hotel.id}
-                      className={`cursor-pointer transition-all ${selected ? 'ring-2 ring-primary' : 'hover:bg-accent/50'}`}
-                      onClick={() =>
-                        selected
-                          ? removeItem('HOTEL', hotel.id)
-                          : addItem({
-                              providerType: 'HOTEL',
-                              providerId: hotel.id,
-                              itemName: hotel.name,
-                              unitPrice: hotel.minPrice ?? hotel.basePrice ?? 5000,
-                              quantity: numDays,
-                            })
-                      }
+                      className={`transition-all ${
+                        unavailable
+                          ? 'opacity-50 cursor-not-allowed'
+                          : selected
+                          ? 'ring-2 ring-primary cursor-pointer'
+                          : 'hover:bg-accent/50 cursor-pointer'
+                      }`}
+                      onClick={() => {
+                        if (unavailable) return
+                        selected ? removeItem('HOTEL', hotel.id) : addItem({
+                          providerType: 'HOTEL',
+                          providerId: hotel.id,
+                          itemName: hotel.name,
+                          unitPrice: hotel.minPrice ?? hotel.basePrice ?? 5000,
+                          quantity: numDays,
+                        })
+                      }}
                     >
                       <CardContent className="p-4 flex items-center gap-3">
                         <Hotel className="h-8 w-8 text-primary shrink-0" />
@@ -262,6 +328,7 @@ export default function NewBookingPage() {
                           <p className="font-medium text-sm truncate">{hotel.name}</p>
                           <p className="text-xs text-muted-foreground">{hotel.city} · {hotel.starRating}★</p>
                         </div>
+                        <AvailabilityBadge type="HOTEL" id={hotel.id} />
                         {hotel.averageRating > 0 && (
                           <div className="flex items-center gap-1 text-xs">
                             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -283,6 +350,12 @@ export default function NewBookingPage() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">Choose a Tour Guide (optional)</h2>
             <p className="text-sm text-muted-foreground">Select a guide for your trip, or skip this step.</p>
+            {checkingAvailability && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-sm w-fit">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="font-medium">Checking availability for your dates...</span>
+              </div>
+            )}
             {searching ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -293,21 +366,27 @@ export default function NewBookingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
                 {guides.map((guide: any) => {
                   const selected = isSelected('TOUR_GUIDE', guide.id)
+                  const unavailable = availabilityMap[availKey('TOUR_GUIDE', guide.id)] === false
                   return (
                     <Card
                       key={guide.id}
-                      className={`cursor-pointer transition-all ${selected ? 'ring-2 ring-primary' : 'hover:bg-accent/50'}`}
-                      onClick={() =>
-                        selected
-                          ? removeItem('TOUR_GUIDE', guide.id)
-                          : addItem({
-                              providerType: 'TOUR_GUIDE',
-                              providerId: guide.id,
-                              itemName: `${guide.firstName} ${guide.lastName}`,
-                              unitPrice: (guide.dailyRate ?? (guide.hourlyRate * 8)) || 3000,
-                              quantity: numDays,
-                            })
-                      }
+                      className={`transition-all ${
+                        unavailable
+                          ? 'opacity-50 cursor-not-allowed'
+                          : selected
+                          ? 'ring-2 ring-primary cursor-pointer'
+                          : 'hover:bg-accent/50 cursor-pointer'
+                      }`}
+                      onClick={() => {
+                        if (unavailable) return
+                        selected ? removeItem('TOUR_GUIDE', guide.id) : addItem({
+                          providerType: 'TOUR_GUIDE',
+                          providerId: guide.id,
+                          itemName: `${guide.firstName} ${guide.lastName}`,
+                          unitPrice: (guide.dailyRate ?? (guide.hourlyRate * 8)) || 3000,
+                          quantity: numDays,
+                        })
+                      }}
                     >
                       <CardContent className="p-4 flex items-center gap-3">
                         <MapPin className="h-8 w-8 text-primary shrink-0" />
@@ -317,6 +396,7 @@ export default function NewBookingPage() {
                             {guide.languages?.join(', ')} · {guide.experienceYears}yr exp
                           </p>
                         </div>
+                        <AvailabilityBadge type="TOUR_GUIDE" id={guide.id} />
                         {guide.averageRating > 0 && (
                           <div className="flex items-center gap-1 text-xs">
                             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -338,6 +418,12 @@ export default function NewBookingPage() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">Choose a Vehicle (optional)</h2>
             <p className="text-sm text-muted-foreground">Select a vehicle for transport, or skip this step.</p>
+            {checkingAvailability && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-sm w-fit">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="font-medium">Checking availability for your dates...</span>
+              </div>
+            )}
             {searching ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -348,22 +434,28 @@ export default function NewBookingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
                 {vehicles.map((vehicle: any) => {
                   const selected = isSelected('VEHICLE', vehicle.id)
+                  const unavailable = availabilityMap[availKey('VEHICLE', vehicle.id)] === false
                   const price = vehicle.dailyRate ?? 0
                   return (
                     <Card
                       key={vehicle.id}
-                      className={`cursor-pointer transition-all ${selected ? 'ring-2 ring-primary' : 'hover:bg-accent/50'}`}
-                      onClick={() =>
-                        selected
-                          ? removeItem('VEHICLE', vehicle.id)
-                          : addItem({
-                              providerType: 'VEHICLE',
-                              providerId: vehicle.id,
-                              itemName: `${vehicle.make} ${vehicle.model}`,
-                              unitPrice: price,
-                              quantity: numDays,
-                            })
-                      }
+                      className={`transition-all ${
+                        unavailable
+                          ? 'opacity-50 cursor-not-allowed'
+                          : selected
+                          ? 'ring-2 ring-primary cursor-pointer'
+                          : 'hover:bg-accent/50 cursor-pointer'
+                      }`}
+                      onClick={() => {
+                        if (unavailable) return
+                        selected ? removeItem('VEHICLE', vehicle.id) : addItem({
+                          providerType: 'VEHICLE',
+                          providerId: vehicle.id,
+                          itemName: `${vehicle.make} ${vehicle.model}`,
+                          unitPrice: price,
+                          quantity: numDays,
+                        })
+                      }}
                     >
                       <CardContent className="p-4 flex items-center gap-3">
                         <Car className="h-8 w-8 text-primary shrink-0" />
@@ -373,6 +465,7 @@ export default function NewBookingPage() {
                             {vehicle.vehicleType} · {vehicle.seatingCapacity} seats · Rs. {price}/day
                           </p>
                         </div>
+                        <AvailabilityBadge type="VEHICLE" id={vehicle.id} />
                         {selected && <Check className="h-5 w-5 text-primary shrink-0" />}
                       </CardContent>
                     </Card>
@@ -387,6 +480,13 @@ export default function NewBookingPage() {
         {step === 'review' && (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">Review Your Booking</h2>
+
+            {hasUnavailableSelected && (
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm">
+                <AlertTriangle className="h-4 w-4 shrink-0" />
+                One or more selected services may be unavailable for your dates. Go back and choose alternatives.
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
@@ -455,7 +555,7 @@ export default function NewBookingPage() {
         {step === 'review' ? (
           <Button
             onClick={handleSubmit}
-            disabled={selectedItems.length === 0 || createBooking.isPending}
+            disabled={selectedItems.length === 0 || hasUnavailableSelected || createBooking.isPending}
           >
             {createBooking.isPending ? (
               <>

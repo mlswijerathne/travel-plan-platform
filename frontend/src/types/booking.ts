@@ -58,6 +58,25 @@ export interface CancelBookingRequest {
   reason?: string
 }
 
+export interface AvailabilityItemRequest {
+  providerType: ProviderType
+  providerId: number
+  startDate: string
+  endDate: string
+}
+
+export interface AvailabilityItemResult {
+  providerType: string
+  providerId: number
+  available: boolean
+  message: string
+}
+
+export interface AvailabilityCheckResult {
+  available: boolean
+  items: AvailabilityItemResult[]
+}
+
 export const BOOKING_STATUSES: { value: BookingStatus | 'ALL'; label: string }[] = [
   { value: 'ALL', label: 'All' },
   { value: 'PENDING', label: 'Pending' },

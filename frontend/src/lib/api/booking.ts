@@ -1,5 +1,5 @@
 import type { ApiResponse, PaginatedResponse } from '@/types/api'
-import type { Booking, CreateBookingRequest, CancelBookingRequest, BookingStatus } from '@/types/booking'
+import type { Booking, CreateBookingRequest, CancelBookingRequest, BookingStatus, AvailabilityItemRequest, AvailabilityCheckResult } from '@/types/booking'
 import { apiGet, apiPost, apiPut, buildQueryString } from './client'
 
 export function createBooking(data: CreateBookingRequest) {
@@ -47,4 +47,8 @@ export function updateBookingItemStatus(
 
 export function completeBooking(id: number) {
   return apiPost<ApiResponse<Booking>>(`/api/bookings/${id}/complete`, {})
+}
+
+export function checkAvailability(items: AvailabilityItemRequest[]) {
+  return apiPost<ApiResponse<AvailabilityCheckResult>>('/api/bookings/availability-check', { items })
 }

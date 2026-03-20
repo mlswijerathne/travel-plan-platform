@@ -362,29 +362,28 @@ public class BookingServiceImpl implements BookingService {
 
     private AvailabilityItemResponse checkProviderAvailability(AvailabilityItemRequest item) {
         String providerType = item.getProviderType().toUpperCase();
-        String startDate = item.getStartDate().toString();
-        String endDate = item.getEndDate().toString();
+        LocalDate startDate = item.getStartDate();
+        LocalDate endDate = item.getEndDate();
 
-        try {
-            switch (providerType) {
-                case "HOTEL" -> hotelServiceClient.checkAvailability(item.getProviderId(), startDate, endDate);
-                case "TOUR_GUIDE" -> tourGuideServiceClient.checkAvailability(item.getProviderId(), startDate, endDate);
-                case "VEHICLE" -> vehicleServiceClient.checkAvailability(item.getProviderId(), startDate, endDate);
-                default -> {
-                    return AvailabilityItemResponse.builder()
-                            .providerType(providerType).providerId(item.getProviderId())
-                            .available(false).message("Unknown provider type: " + providerType).build();
-                }
-            }
+        if (!java.util.Set.of("HOTEL", "TOUR_GUIDE", "VEHICLE").contains(providerType)) {
             return AvailabilityItemResponse.builder()
                     .providerType(providerType).providerId(item.getProviderId())
-                    .available(true).message("Available").build();
-        } catch (Exception e) {
-            log.warn("Availability check failed for {} id={}: {}", providerType, item.getProviderId(), e.getMessage());
-            return AvailabilityItemResponse.builder()
-                    .providerType(providerType).providerId(item.getProviderId())
-                    .available(false).message("Provider service unavailable or provider not found").build();
+                    .available(false).message("Unknown provider type: " + providerType).build();
         }
+
+        // Check booking-service's own DB — single source of truth for all bookings
+        long conflicts = bookingItemRepository.countConfirmedOverlappingBookings(
+                providerType, item.getProviderId(), startDate, endDate);
+
+        boolean available = conflicts == 0;
+        String message = available ? "Available" : "Already booked for selected dates";
+
+        log.debug("Availability check: type={}, id={}, start={}, end={}, conflicts={}, available={}",
+                providerType, item.getProviderId(), startDate, endDate, conflicts, available);
+
+        return AvailabilityItemResponse.builder()
+                .providerType(providerType).providerId(item.getProviderId())
+                .available(available).message(message).build();
     }
 
     @Override
