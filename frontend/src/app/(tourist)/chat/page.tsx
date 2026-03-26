@@ -294,13 +294,13 @@ export default function ChatPage() {
 
     <div className="flex flex-col flex-1 min-w-0">
       {/* Chat Header */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-border/50 bg-white/60 backdrop-blur-sm">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-border/50 bg-card/80 backdrop-blur-xl shadow-editorial">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-teal-500 flex items-center justify-center shadow-sm">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-tertiary flex items-center justify-center shadow-sm">
             <Compass className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold font-display">Trip Planner</h2>
+            <h2 className="text-sm font-bold font-display">Trip Planner</h2>
             <AgentStatusBar
               isStreaming={isStreaming}
               activeAgent={activeAgent}
@@ -364,9 +364,9 @@ export default function ChatPage() {
                       key={label}
                       onClick={() => sendMessage(value)}
                       disabled={isStreaming}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-white hover:border-primary/30 hover:bg-primary/5 text-sm font-medium text-foreground transition-all duration-200 hover:shadow-sm disabled:opacity-50"
+                      className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-border/30 bg-surface-low hover:bg-primary hover:text-white text-sm font-medium text-foreground transition-all duration-200 hover:shadow-sm disabled:opacity-50"
                     >
-                      <Icon className="h-4 w-4 text-primary" />
+                      <Icon className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
                       {label}
                     </button>
                   ))}
@@ -389,9 +389,9 @@ export default function ChatPage() {
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="border-t border-border/50 bg-white/60 backdrop-blur-sm p-3 sm:p-4">
+      <div className="border-t border-border/20 bg-card/80 backdrop-blur-xl p-3 sm:p-4">
         <div className="max-w-3xl mx-auto">
-          <div className="relative flex items-end gap-2 rounded-2xl border border-border bg-white p-2 shadow-sm focus-within:border-primary/30 focus-within:shadow-md transition-all">
+          <div className="relative flex items-end gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm focus-within:border-primary/30 focus-within:shadow-md transition-all">
             <Textarea
               ref={textareaRef}
               value={input}
@@ -406,7 +406,7 @@ export default function ChatPage() {
               onClick={() => sendMessage(input)}
               disabled={!input.trim() || isStreaming}
               size="sm"
-              className="shrink-0 h-9 w-9 p-0 rounded-xl shadow-sm"
+              className="shrink-0 h-9 w-9 p-0 rounded-xl shadow-sm bg-secondary text-white hover:bg-secondary/90"
             >
               <Send className="h-4 w-4" />
             </Button>

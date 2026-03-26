@@ -91,7 +91,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
             <p className="text-sm font-medium text-red-600">Cancellation Reason:</p>
             <p className="text-sm text-muted-foreground">{booking.cancellationReason}</p>
             {booking.refundAmount != null && booking.refundAmount > 0 && (
-              <p className="text-sm text-green-600 mt-1">
+              <p className="text-sm text-tertiary mt-1">
                 Refund: {formatCurrency(booking.refundAmount)}
               </p>
             )}

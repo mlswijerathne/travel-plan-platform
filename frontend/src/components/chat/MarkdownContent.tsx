@@ -23,13 +23,13 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         h2: ({ children }) => (
           /* Day headers rendered as visual timeline cards */
           <div className="mt-4 mb-2 first:mt-0">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-tertiary text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-sm">
               {children}
             </div>
           </div>
         ),
         h3: ({ children }) => (
-          <h3 className="text-[13px] font-semibold mt-3 mb-1 first:mt-0 text-teal-700 border-l-2 border-teal-400 pl-2">
+          <h3 className="text-[13px] font-semibold mt-3 mb-1 first:mt-0 text-primary border-l-2 border-primary/50 pl-2">
             {children}
           </h3>
         ),
@@ -44,7 +44,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         ),
         li: ({ children }) => (
           <li className="text-sm flex gap-1.5 items-start">
-            <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-teal-400 inline-block" />
+            <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-primary/60 inline-block" />
             <span>{children}</span>
           </li>
         ),
@@ -65,10 +65,10 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
           </div>
         ),
         thead: ({ children }) => (
-          <thead className="bg-teal-50 border-b border-border/60">{children}</thead>
+          <thead className="bg-primary/5 border-b border-border/60">{children}</thead>
         ),
         th: ({ children }) => (
-          <th className="px-3 py-2 text-left font-semibold text-teal-800">{children}</th>
+          <th className="px-3 py-2 text-left font-semibold text-primary">{children}</th>
         ),
         td: ({ children }) => (
           <td className="border-t border-border/40 px-3 py-1.5 text-muted-foreground">{children}</td>
@@ -84,7 +84,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
           )
         },
         blockquote: ({ children }) => (
-          <blockquote className="bg-teal-50/60 border-l-3 border-teal-400 pl-3 pr-2 py-1.5 rounded-r-lg text-sm text-teal-900 mb-2">
+          <blockquote className="bg-primary/5 border-l-3 border-primary/50 pl-3 pr-2 py-1.5 rounded-r-lg text-sm text-foreground mb-2">
             {children}
           </blockquote>
         ),

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Curated Wanderer | Intentional Sri Lankan Travel</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0D9488", // Ocean Teal accent
+              "secondary": "#9d4300",
+              "background": "#ffffff",
+              "surface": "#fcfcfc",
+              "on-surface": "#1a1c1b",
+              "on-surface-variant": "#404947",
+              "outline": "#707977",
+              "surface-container-low": "#f7f9f8",
+              "surface-container-lowest": "#ffffff",
+              "on-primary": "#ffffff",
+              "primary-container": "#ccfbf1",
+              "on-primary-container": "#00201d",
+              "secondary-container": "#ffebd9",
+              "on-secondary-container": "#331200",
+              "tertiary-container": "#d1fae5",
+              "on-tertiary-container": "#002114",
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .editorial-shadow {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+        }
+        .letter-spacing-tight { letter-spacing: -0.025em; }
+        .letter-spacing-tighter { letter-spacing: -0.05em; }
+        .letter-spacing-wide { letter-spacing: 0.02em; }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-slate-100">
+<div class="flex justify-between items-center w-full px-8 py-5 max-w-7xl mx-auto">
+<div class="text-xl font-extrabold text-primary tracking-tighter font-headline letter-spacing-tighter">
+            The Curated Wanderer
+        </div>
+<div class="hidden md:flex items-center space-x-10 font-headline text-[13px] font-bold tracking-wide uppercase">
+<a class="text-primary border-b-2 border-primary pb-1" href="#">Explore</a>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">AI Planner</a>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">Local Guides</a>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">Our Story</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hidden lg:block text-slate-600 font-headline text-sm font-semibold hover:text-primary transition-colors">Join as Provider</button>
+<button class="bg-on-surface text-white font-headline text-sm font-bold px-7 py-2.5 rounded-full active:scale-95 transition-all">Sign In</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-[95vh] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover scale-105" data-alt="Stunning high-resolution realistic aerial view of Sri Lankan tea plantations shrouded in morning mist at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD18toubO5ESMjXL8Rw_8CDF43TZklFcuJDo912tzv-5cRyphcoE1lM_QOg0a6tbS2Aa4hf8BxlR_npx_eKLaUQHcDis3Rconqj_PjBrfWJ6qdfgvyqN5RX7zBdGtm-5PSIJUq8yQEZ-Uau7zGd69Hp6kviqoHLv7Jl2icQa6QdheDhRG3pnZXsWUY9YqTRcmgLvSyfNnPUOw92mRXK6ENnDLRY1y8BeyEvhGv2IkVCHJmra3V3tXdPeFstk5iQaIQoS4BLNNS_eIM"/>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/10"></div>
+</div>
+<div class="relative z-10 w-full max-w-5xl px-6 text-center">
+<h1 class="font-headline text-6xl md:text-[5.5rem] font-extrabold text-white tracking-tighter leading-[1.05] mb-10 drop-shadow-sm">
+            Sri Lanka, <br/>
+<span class="text-primary-container">Curated for You.</span>
+</h1>
+<div class="max-w-3xl mx-auto glass-card p-2 md:p-3 rounded-2xl editorial-shadow flex items-center gap-2">
+<div class="flex-1 flex items-center px-5 gap-4">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="auto_awesome">auto_awesome</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-lg placeholder:text-slate-400 font-body font-normal" placeholder="I want to see elephants and tea plantations in March..." type="text"/>
+</div>
+<button class="bg-primary text-white px-10 py-4 rounded-xl font-headline font-bold flex items-center gap-2 active:scale-95 transition-all shadow-lg shadow-primary/20">
+                Plan <span class="material-symbols-outlined font-bold" data-icon="east">east</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Section 1: The Power of AI Planning -->
+<section class="py-32 px-6 max-w-7xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="font-headline text-sm font-extrabold text-primary tracking-[0.2em] uppercase mb-4">Sophisticated Technology</h2>
+<h3 class="font-headline text-4xl md:text-5xl font-extrabold text-on-surface tracking-tighter mb-6">The Power of AI Planning</h3>
+<p class="text-on-surface-variant max-w-2xl mx-auto text-lg font-light leading-relaxed">A seamless fusion of cutting-edge intelligence and deep local soul, designed for the modern explorer.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Card 1 -->
+<div class="group">
+<div class="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-8 editorial-shadow">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Close up of a premium smartphone interface showing travel chat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtcDWV2s6dOsU8cszjkIXPFHnUpIBUoqISE8Cz3rjjx8J-bbAYHZatWenm8J_bS-jLDdiV6GyEVzhlSyiVBl8EndqqpA9tsFhuGJNpniEz9UW0b0IfP9ny63ksOx5mGH27aezphBzEohneS6AjtCVvXXQbHZkIyYWNcwiHWpOfyLYyNp42ymrF3UdPYQugyHGSVc_-k4Jshy4dd9WpbPWaL3Drm9AWllEkU9GuM-vlaKr8VevbMckYRhs7flAU_QsLeoG7-wNT_qI"/>
+</div>
+<h3 class="font-headline text-2xl font-extrabold mb-4 tracking-tight">Natural Conversation</h3>
+<p class="text-on-surface-variant leading-relaxed font-light">Forget rigid filters. Speak naturally about how you want to feel and what you wish to see.</p>
+</div>
+<!-- Card 2 -->
+<div class="group">
+<div class="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-8 editorial-shadow">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A beautiful landscape at dusk representing instant planning" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR-Ol1rRSwm1PfDtaLtWtFEFJY2Ot4Nw4r-YpIJNAxpiRD3xqqG5wGxf8S5l8ZiryvHT-MzjiAzG2WRDan9AJy5t8CHbNrhRfskyW9f8xmXs3NGKnU63siQKLb2Z_M5CskzGj-QEjwzkyLLDRcx1XnpSdoD3feC-uTN-fnzdwQe-wTSyqy1BUMkltTbY4nkPKRKrFaRzkNdwZOXbJlzRhNwV518z94Y6mkTGTW_IlUMelpcvuARsC_UY_cWfmxZJFTpJbrVTNZwBU"/>
+</div>
+<h3 class="font-headline text-2xl font-extrabold mb-4 tracking-tight">Instant Itineraries</h3>
+<p class="text-on-surface-variant leading-relaxed font-light">Real-time mapping that respects seasonal nuances and elusive local secrets only experts know.</p>
+</div>
+<!-- Card 3 -->
+<div class="group">
+<div class="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-8 editorial-shadow">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A premium hotel key card and concierge desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOHkiHUHYhD5cVGGI0MBSYGTV3axLAbHChhbKc5Us-HozIcH2Wjh6bTPwqtqt_k0LkqbKYsdLSpP7FKx8lhXV4T-CL_ANwBh6tEnn1EYwqSm11wv3gTATegFUv3XUUQmlfDDxE27ADHe6OaNHOaD01R_mmTHQ2cKRwl0-xHleXWj1ONADITf1esI-PigO0bxpM_7p7QNa5fVE1-a7luem4tWlZhmNOKwyd2pYxh4SPhLjWZLHq3BGtVnbmYFKGCaZcF5WBalmFa6o"/>
+</div>
+<h3 class="font-headline text-2xl font-extrabold mb-4 tracking-tight">One-Tap Booking</h3>
+<p class="text-on-surface-variant leading-relaxed font-light">Secure vetted stays, private transport, and master guides in a single, elegant checkout flow.</p>
+</div>
+</div>
+</section>
+<!-- Section 2: Trending Destinations -->
+<section class="py-32 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-8">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div class="max-w-xl">
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold text-on-surface tracking-tighter mb-4">Trending Destinations</h2>
+<p class="text-on-surface-variant text-lg font-light">Verified by local specialists and curated by our AI for the optimal seasonal experience.</p>
+</div>
+<a class="text-primary font-bold text-sm tracking-widest uppercase flex items-center gap-3 group" href="#">
+                View all destinations 
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="trending_flat">trending_flat</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<!-- Ella -->
+<div class="relative group h-[600px] rounded-3xl overflow-hidden editorial-shadow">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Realistic photo of the Nine Arch Bridge in Ella surrounded by lush jungle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCYzz_BNEj079XBI2d_J07LDQ88GzTbnW6v33aTabD7YexY0Gnsy-58NJjbL-3br_jMcipgY24GoTEQMMCYW7sSsl2lwwuGfSu00bSND_fuQG2ZQZPpBxRNK96vg-L3paIShC6I9vshwASSD_Gx3Wu_AMG1Iw3RGtrp1Zu11moygl3wniV9flNkl1ChE-k0xlUVzQPixASAg96PIPWVYDQrEWqWqT7mIQpKGFKm7PlyMyE_Cc1KuI7HKDkSuFhbvggie24K36wOwI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10 w-full">
+<span class="bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full mb-5 inline-block border border-white/20">Highlands</span>
+<h3 class="font-headline text-4xl font-extrabold text-white mb-3 tracking-tighter">Ella</h3>
+<p class="text-white/70 mb-8 text-sm font-light leading-relaxed">Mist-covered peaks and century-old tea rituals in the heart of the mountains.</p>
+<button class="w-full bg-white text-on-surface py-4 rounded-xl font-headline font-extrabold text-sm active:scale-95 transition-all shadow-xl">Start Planning</button>
+</div>
+</div>
+<!-- Galle -->
+<div class="relative group h-[600px] rounded-3xl overflow-hidden editorial-shadow mt-0 md:mt-16">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Historic Galle Fort lighthouse at golden hour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkLFadMUnD9bj4A-2B91VglCqYn8rGFFiIG3-h9NlUDQRCuLm4gqCSddXYf-kivCFw1BKvxBVm14F7Mpkj94X26spb2ozkOHV8kVopjdCPuSpCgr2El_zIwnvRZ8DVlaiUXnatUWyDhlDKDLIz9nO8wGeQrjRAP-TQA1-ixZRWmvA-CF4VFJ0bzNQ-9c_isz23kFeW7U6OIHWBtcRtAd8rzLhZpANRcFSgNcg8Q7eb5KJe3zQ1sG8pv4Fo-DQj7FHbPZqlHbsdjmI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10 w-full">
+<span class="bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full mb-5 inline-block border border-white/20">Coastal</span>
+<h3 class="font-headline text-4xl font-extrabold text-white mb-3 tracking-tighter">Galle</h3>
+<p class="text-white/70 mb-8 text-sm font-light leading-relaxed">Colonial history meets modern boutique luxury along the turquoise Indian Ocean.</p>
+<button class="w-full bg-white text-on-surface py-4 rounded-xl font-headline font-extrabold text-sm active:scale-95 transition-all shadow-xl">Start Planning</button>
+</div>
+</div>
+<!-- Sigiriya -->
+<div class="relative group h-[600px] rounded-3xl overflow-hidden editorial-shadow">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Sigiriya Lion Rock fortress rising from the jungle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxlUODaq5mrqpX3XDDZTEuwi7miK3u9rAi_bkXOVUamSoQ6gsOY9-jQXbyXp8JZPWDUMkbTXgtu3fPPwotnuMK62eugehQUzYH1guiBc2v3wV0smSDdFFsVz9hXpXudjIhKBlIW2XOVp18p_A-6sfYeo8jwHHQERYRgctHjq5QHmXkJ20R6PCvdUqh6tryUbgaLrsj4X5Mj5UFkTuXhk2rSARzxJp8L7tMM0TzsuRWfI4upbq6Elf7Gyn_7VU9TDgSbmW_WDWC87I"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10 w-full">
+<span class="bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full mb-5 inline-block border border-white/20">Heritage</span>
+<h3 class="font-headline text-4xl font-extrabold text-white mb-3 tracking-tighter">Sigiriya</h3>
+<p class="text-white/70 mb-8 text-sm font-light leading-relaxed">The 8th wonder of the ancient world. A royal citadel atop a monolithic rock.</p>
+<button class="w-full bg-white text-on-surface py-4 rounded-xl font-headline font-extrabold text-sm active:scale-95 transition-all shadow-xl">Start Planning</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: For Local Providers -->
+<section class="py-32 px-6 max-w-7xl mx-auto">
+<div class="bg-slate-50 rounded-[3rem] overflow-hidden flex flex-col lg:flex-row items-center border border-slate-100">
+<!-- Content -->
+<div class="flex-1 p-12 lg:p-24">
+<h2 class="font-headline text-sm font-extrabold text-primary tracking-[0.2em] uppercase mb-6">Partner with Us</h2>
+<h3 class="font-headline text-4xl md:text-5xl font-extrabold mb-8 tracking-tighter text-on-surface">Empowering Sri Lanka’s Finest Hosts</h3>
+<p class="text-xl mb-12 text-on-surface-variant font-light leading-relaxed">We bridge the gap between world-class local hospitality and global travelers. Showcase your boutique villa or expert guide service to the right audience.</p>
+<div class="space-y-8 mb-12">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</div>
+<span class="text-lg font-bold tracking-tight">Zero-friction bookings</span>
+</div>
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="public">public</span>
+</div>
+<span class="text-lg font-bold tracking-tight">Global visibility &amp; marketing</span>
+</div>
+</div>
+<button class="bg-on-surface text-white px-12 py-5 rounded-2xl font-headline font-extrabold text-lg hover:shadow-2xl transition-all active:scale-95">
+                Join as a Local Partner
+            </button>
+</div>
+<!-- Realistic Image -->
+<div class="flex-1 w-full h-[600px] relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High-end minimalist Sri Lankan villa interior with open architecture and tropical views" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_BT4ijHCpyY8r6OFvQlDmA2jWws8DKAc4Q32xm9s0irSxP37nS-kBSuFYjrHdzMWQzyxOaq9u3jOwge2O57jndQNiloI9OLIlyO7pGcG5tw4wHr9Wb_eusM-w6p7GI4iHucCxmL4EZK2FHaoqIdNRk7Q7eHX-IH3TUrSPA24HIjrkR-8gFb7kWgGnzurYSfpkneAAO4oUnEiNLVPPYpSz7CT-7KfrTzlfesEEyURrxsBfC37i9jGoHehgTjQmpmlk8tWITdL9vJI"/>
+<div class="absolute inset-0 bg-primary/5"></div>
+</div>
+</div>
+</section>
+<!-- Section 4: Testimonials -->
+<section class="py-32 bg-white">
+<div class="max-w-7xl mx-auto px-8">
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold text-on-surface tracking-tighter text-center mb-24">Shared Stories</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+<!-- Traveler -->
+<div class="relative pt-12">
+<span class="material-symbols-outlined text-primary/10 text-9xl absolute -top-8 -left-4" data-icon="format_quote">format_quote</span>
+<p class="text-2xl font-body font-light italic leading-relaxed text-on-surface mb-10 relative z-10">
+                    "The AI Concierge felt like talking to a friend who knew every corner of the island. We found a small pottery village in the hills that wasn't in a single guidebook."
+                </p>
+<div class="flex items-center gap-5">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-slate-50 shadow-sm" data-alt="Realistic portrait of a female traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZXPkj-ltoZHvocSidpA3Xdugfhc_y3ilwENe5N_Iqng2N1HRnsh45_kVMW2VsGK-OhTaS17BlKL-EnRf3_fhDVjrIKzoT2wiTplpq-6JsrQvjeK6xeOff11BXVedN_2wm8-euZJpJdWcSdUD_n8FRCwEHtdDFFX8aZirtcu3WhQCVFeOuSsX5clIpddSo3tEFWgWH6yB8nn_ZrKNqyzJAdUBP-_8OXV7qs298xs6KRjaBYTIxqFMGYpLq5NTFfXACeHCUSwpErpY"/>
+<div>
+<p class="font-extrabold text-on-surface text-lg">Elena Rodriguez</p>
+<p class="text-sm text-on-surface-variant uppercase tracking-widest font-bold">Solo Traveler, Madrid</p>
+</div>
+</div>
+</div>
+<!-- Provider -->
+<div class="relative pt-12">
+<span class="material-symbols-outlined text-primary/10 text-9xl absolute -top-8 -left-4" data-icon="format_quote">format_quote</span>
+<p class="text-2xl font-body font-light italic leading-relaxed text-on-surface mb-10 relative z-10">
+                    "Managing my boutique villa was once a chaos of messages. Now, the bookings are automated, and guests arrive with a deep appreciation for our heritage."
+                </p>
+<div class="flex items-center gap-5">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-slate-50 shadow-sm" data-alt="Realistic portrait of a Sri Lankan villa owner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN7xrHpf6h3O-9pP7Ewiqiy11YsbvqDrIkwejV0ynQqTHxJcrHuoLd0GSYKSNfsGyKfyhU_q5C81epfX0IZVrH91NkIBIHxn0mlCpTPPbeZ684UhiajVb0ltiSdMB4bjB5XIWTfsxIsBH9gyWDsUUTO5mXpAE3k0ieXuYmtWCpJOkhNKsBzSVAmczj3_qGxLam0WMorkZDDuhFfOmtVncZ6fJTYlLOIC8WBaMzIzf1SPnd-LFltg7rnkLWUt4b6Ccr4nly6JLEpWg"/>
+<div>
+<p class="font-extrabold text-on-surface text-lg">Asanka Perera</p>
+<p class="text-sm text-on-surface-variant uppercase tracking-widest font-bold">Villa Owner, Mirissa</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Shell -->
+<footer class="bg-slate-50 w-full border-t border-slate-100">
+<div class="py-24">
+<div class="max-w-7xl mx-auto px-10 grid grid-cols-2 md:grid-cols-5 gap-16">
+<div class="col-span-2">
+<div class="text-xl font-extrabold text-primary font-headline tracking-tighter mb-8">The Curated Wanderer</div>
+<p class="text-slate-500 font-body text-base leading-relaxed max-w-xs mb-10">Crafting intentional travel experiences through the synergy of sophisticated technology and local human soul.</p>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">public</span>
+</div>
+<div class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">mail</span>
+</div>
+</div>
+</div>
+<div>
+<h4 class="font-headline text-[11px] uppercase tracking-[0.2em] font-extrabold mb-8 text-slate-900">Company</h4>
+<ul class="space-y-5">
+<li><a class="text-slate-500 hover:text-primary transition-all text-xs font-bold uppercase tracking-wider" href="#">Our Story</a></li>
+<li><a class="text-slate-500 hover:text-primary transition-all text-xs font-bold uppercase tracking-wider" href="#">Partner Portal</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline text-[11px] uppercase tracking-[0.2em] font-extrabold mb-8 text-slate-900">Experience</h4>
+<ul class="space-y-5">
+<li><a class="text-slate-500 hover:text-primary transition-all text-xs font-bold uppercase tracking-wider" href="#">Destinations</a></li>
+<li><a class="text-slate-500 hover:text-primary transition-all text-xs font-bold uppercase tracking-wider" href="#">AI Concierge</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline text-[11px] uppercase tracking-[0.2em] font-extrabold mb-8 text-slate-900">Legal</h4>
+<ul class="space-y-5">
+<li><a class="text-slate-500 hover:text-primary transition-all text-xs font-bold uppercase tracking-wider" href="#">Privacy Policy</a></li>
+<li><a class="text-slate-500 hover:text-primary transition-all text-xs font-bold uppercase tracking-wider" href="#">Terms of Use</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-10 mt-24 pt-10 border-t border-slate-200/60">
+<p class="text-slate-400 text-[10px] uppercase tracking-[0.3em] font-bold">© 2024 The Curated Wanderer. Crafted for intentional travel.</p>
+</div>
+</div>
+</footer>
+</body></html>

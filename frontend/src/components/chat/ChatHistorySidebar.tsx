@@ -86,11 +86,14 @@ export function ChatHistorySidebar({ open, onClose, currentSessionId, onSelectSe
         ) : (
           <div className="p-2 space-y-1">
             {sessions.map(session => (
-              <button
+              <div
                 key={session.sessionId}
+                role="button"
+                tabIndex={0}
                 onClick={() => onSelectSession(session.sessionId)}
+                onKeyDown={(e) => e.key === 'Enter' || e.key === ' ' ? onSelectSession(session.sessionId) : undefined}
                 className={cn(
-                  'w-full text-left rounded-lg px-3 py-2.5 text-sm transition-colors group',
+                  'w-full text-left rounded-lg px-3 py-2.5 text-sm transition-colors group cursor-pointer',
                   'hover:bg-muted',
                   session.sessionId === currentSessionId && 'bg-primary/10 border border-primary/20'
                 )}
@@ -114,7 +117,7 @@ export function ChatHistorySidebar({ open, onClose, currentSessionId, onSelectSe
                     <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         )}

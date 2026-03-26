@@ -10,10 +10,10 @@ interface AgentStatusBarProps {
 
 const AGENT_CONFIG: Record<string, { label: string; color: string }> = {
   HotelSearchAgent: { label: 'Searching hotels', color: 'bg-blue-500' },
-  TourGuideSearchAgent: { label: 'Finding guides', color: 'bg-green-500' },
-  VehicleSearchAgent: { label: 'Checking transport', color: 'bg-orange-500' },
+  TourGuideSearchAgent: { label: 'Finding guides', color: 'bg-tertiary' },
+  VehicleSearchAgent: { label: 'Checking transport', color: 'bg-secondary' },
   ItineraryGeneratorAgent: { label: 'Building itinerary', color: 'bg-purple-500' },
-  BudgetAnalyzerAgent: { label: 'Analyzing budget', color: 'bg-emerald-500' },
+  BudgetAnalyzerAgent: { label: 'Analyzing budget', color: 'bg-tertiary' },
   TripPlannerAgent: { label: 'Planning trip', color: 'bg-primary' },
 }
 

@@ -33,21 +33,30 @@ export default function HotelsPage() {
   }, [])
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Hotels</h1>
-        <p className="text-muted-foreground">Find your perfect stay in Sri Lanka</p>
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex items-start gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+          <Hotel className="h-6 w-6 text-primary" />
+        </div>
+        <div>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">Hotels</h1>
+          <p className="mt-1 text-lg text-muted-foreground">Find your perfect stay in Sri Lanka</p>
+        </div>
       </div>
 
-      <HotelFilters
-        city={city}
-        minStarRating={minStarRating}
-        searchQuery={searchQuery}
-        onCityChange={(c) => { setCity(c); setPage(0) }}
-        onStarRatingChange={(r) => { setMinStarRating(r); setPage(0) }}
-        onSearchChange={setSearchQuery}
-        onClear={handleClear}
-      />
+      {/* Filter Bar */}
+      <div className="bg-card rounded-xl shadow-editorial border border-border/30 p-4">
+        <HotelFilters
+          city={city}
+          minStarRating={minStarRating}
+          searchQuery={searchQuery}
+          onCityChange={(c) => { setCity(c); setPage(0) }}
+          onStarRatingChange={(r) => { setMinStarRating(r); setPage(0) }}
+          onSearchChange={setSearchQuery}
+          onClear={handleClear}
+        />
+      </div>
 
       {isLoading ? (
         <LoadingGrid count={9} />
@@ -61,7 +70,9 @@ export default function HotelsPage() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {hotels.map((hotel) => (
-              <HotelCard key={hotel.id} hotel={hotel} />
+              <div key={hotel.id} className="hover:-translate-y-1 hover:shadow-editorial-lg transition-all duration-300">
+                <HotelCard hotel={hotel} />
+              </div>
             ))}
           </div>
           {pagination && (

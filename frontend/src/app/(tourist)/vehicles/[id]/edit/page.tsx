@@ -103,8 +103,8 @@ export default function EditVehiclePage({ params }: { params: Promise<{ id: stri
                                 <Label>Vehicle Image URL</Label>
                                 {formData.imageUrl && (
                                     <div className="mb-2">
-                                        <p className="text-xs text-gray-500 mb-1">Current Image:</p>
-                                        <img src={formData.imageUrl} alt="Current" className="h-32 w-full object-cover rounded bg-gray-100" />
+                                        <p className="text-xs text-muted-foreground mb-1">Current Image:</p>
+                                        <img src={formData.imageUrl} alt="Current" className="h-32 w-full object-cover rounded bg-surface-low" />
                                     </div>
                                 )}
                                 <Input
@@ -114,7 +114,7 @@ export default function EditVehiclePage({ params }: { params: Promise<{ id: stri
                                     value={formData.imageUrl}
                                     onChange={handleChange}
                                 />
-                                <p className="text-xs text-gray-500">Enter a URL for the vehicle image.</p>
+                                <p className="text-xs text-muted-foreground">Enter a URL for the vehicle image.</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">

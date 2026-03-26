@@ -37,23 +37,32 @@ export default function GuidesPage() {
   }, [])
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Tour Guides</h1>
-        <p className="text-muted-foreground">Find experienced local guides for your adventure</p>
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex items-start gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-tertiary/10">
+          <MapPin className="h-6 w-6 text-tertiary" />
+        </div>
+        <div>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">Tour Guides</h1>
+          <p className="mt-1 text-lg text-muted-foreground">Find experienced local guides for your adventure</p>
+        </div>
       </div>
 
-      <GuideFilters
-        searchQuery={searchQuery}
-        language={language}
-        specialization={specialization}
-        isVerified={isVerified}
-        onSearchChange={(q) => { setSearchQuery(q); setPage(0) }}
-        onLanguageChange={(l) => { setLanguage(l); setPage(0) }}
-        onSpecializationChange={(s) => { setSpecialization(s); setPage(0) }}
-        onVerifiedChange={(v) => { setIsVerified(v); setPage(0) }}
-        onClear={handleClear}
-      />
+      {/* Filter Bar */}
+      <div className="bg-card rounded-xl shadow-editorial border border-border/30 p-4">
+        <GuideFilters
+          searchQuery={searchQuery}
+          language={language}
+          specialization={specialization}
+          isVerified={isVerified}
+          onSearchChange={(q) => { setSearchQuery(q); setPage(0) }}
+          onLanguageChange={(l) => { setLanguage(l); setPage(0) }}
+          onSpecializationChange={(s) => { setSpecialization(s); setPage(0) }}
+          onVerifiedChange={(v) => { setIsVerified(v); setPage(0) }}
+          onClear={handleClear}
+        />
+      </div>
 
       {isLoading ? (
         <LoadingGrid count={9} />
@@ -67,7 +76,9 @@ export default function GuidesPage() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {guides.map((guide) => (
-              <GuideCard key={guide.id} guide={guide} />
+              <div key={guide.id} className="hover:-translate-y-1 hover:shadow-editorial-lg transition-all duration-300">
+                <GuideCard guide={guide} />
+              </div>
             ))}
           </div>
           {pagination && (

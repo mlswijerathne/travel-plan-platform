@@ -48,7 +48,7 @@ export default function WalletPage() {
 
       {/* Balance Card */}
       <Card className="overflow-hidden border-0 shadow-lg">
-        <div className="bg-gradient-to-br from-primary via-teal-500 to-emerald-500 p-8 text-white relative">
+        <div className="bg-gradient-to-br from-primary via-primary to-tertiary p-8 text-white relative">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
           <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4" />
 
@@ -76,12 +76,12 @@ export default function WalletPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <Card className="shadow-sm">
             <CardContent className="py-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-                <ArrowDownLeft className="h-5 w-5 text-emerald-600" />
+              <div className="h-10 w-10 rounded-xl bg-tertiary/10 flex items-center justify-center">
+                <ArrowDownLeft className="h-5 w-5 text-tertiary" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Total Refunds</p>
-                <p className="text-lg font-bold font-display text-emerald-600">
+                <p className="text-lg font-bold font-display text-tertiary">
                   {formatCurrency(
                     wallet.transactions
                       .filter(t => t.type === 'REFUND')
@@ -93,12 +93,12 @@ export default function WalletPage() {
           </Card>
           <Card className="shadow-sm">
             <CardContent className="py-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-orange-50 flex items-center justify-center">
-                <ArrowUpRight className="h-5 w-5 text-orange-600" />
+              <div className="h-10 w-10 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <ArrowUpRight className="h-5 w-5 text-secondary" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Total Used</p>
-                <p className="text-lg font-bold font-display text-orange-600">
+                <p className="text-lg font-bold font-display text-secondary">
                   {formatCurrency(
                     wallet.transactions
                       .filter(t => t.type === 'USED')
@@ -110,8 +110,8 @@ export default function WalletPage() {
           </Card>
           <Card className="shadow-sm hidden sm:block">
             <CardContent className="py-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                <Receipt className="h-5 w-5 text-blue-600" />
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Receipt className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Transactions</p>
@@ -146,22 +146,22 @@ export default function WalletPage() {
               {wallet.transactions.map((tx) => (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-surface-low transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
                       tx.type === 'REFUND'
-                        ? 'bg-emerald-50'
+                        ? 'bg-tertiary/10'
                         : tx.type === 'USED'
-                        ? 'bg-orange-50'
-                        : 'bg-blue-50'
+                        ? 'bg-secondary/10'
+                        : 'bg-primary/10'
                     }`}>
                       {tx.type === 'REFUND' ? (
-                        <ArrowDownLeft className="h-5 w-5 text-emerald-600" />
+                        <ArrowDownLeft className="h-5 w-5 text-tertiary" />
                       ) : tx.type === 'USED' ? (
-                        <ArrowUpRight className="h-5 w-5 text-orange-600" />
+                        <ArrowUpRight className="h-5 w-5 text-secondary" />
                       ) : (
-                        <RefreshCw className="h-5 w-5 text-blue-600" />
+                        <RefreshCw className="h-5 w-5 text-primary" />
                       )}
                     </div>
                     <div>
@@ -171,10 +171,10 @@ export default function WalletPage() {
                           variant="outline"
                           className={`text-[10px] px-1.5 py-0 ${
                             tx.type === 'REFUND'
-                              ? 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                              ? 'text-tertiary border-tertiary/30 bg-tertiary/10'
                               : tx.type === 'USED'
-                              ? 'text-orange-600 border-orange-200 bg-orange-50'
-                              : 'text-blue-600 border-blue-200 bg-blue-50'
+                              ? 'text-secondary border-secondary/30 bg-secondary/10'
+                              : 'text-primary border-primary/20 bg-primary/10'
                           }`}
                         >
                           {tx.type}
@@ -191,7 +191,7 @@ export default function WalletPage() {
                     </div>
                   </div>
                   <p className={`text-sm font-bold tabular-nums ${
-                    tx.type === 'USED' ? 'text-orange-600' : 'text-emerald-600'
+                    tx.type === 'USED' ? 'text-secondary' : 'text-tertiary'
                   }`}>
                     {tx.type === 'USED' ? '-' : '+'}{formatCurrency(tx.amount)}
                   </p>

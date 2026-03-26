@@ -44,7 +44,7 @@ export default function AdminProductsPage() {
           <p className="text-muted-foreground">Manage shop products</p>
         </div>
         <Link href="/admin/products/new">
-          <Button className="bg-emerald-600 hover:bg-emerald-700">
+          <Button className="bg-primary hover:bg-primary/90">
             <Plus className="mr-2 h-4 w-4" /> Add Product
           </Button>
         </Link>

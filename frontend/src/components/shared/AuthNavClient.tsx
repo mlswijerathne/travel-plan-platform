@@ -7,7 +7,7 @@ const AuthNav = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="sticky top-0 z-50 h-14 border-b border-border/50 bg-white/80" />
+      <div className="sticky top-0 z-50 h-16 bg-white/80 shadow-[0_12px_40px_rgba(23,29,28,0.06)]" />
     ),
   }
 )

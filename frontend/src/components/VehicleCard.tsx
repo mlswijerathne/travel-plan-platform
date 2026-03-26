@@ -29,10 +29,10 @@ export function VehicleCard({
     available
 }: VehicleProps) {
     return (
-        <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-none shadow-md bg-white flex flex-col h-full">
+        <Card className="overflow-hidden hover:shadow-editorial-lg hover:-translate-y-1 transition-all duration-300 shadow-editorial bg-card flex flex-col h-full border border-border/30">
 
             {/* IMAGE SECTION */}
-            <div className="relative h-48 w-full bg-gray-100">
+            <div className="relative h-48 w-full bg-surface-low">
                 {imageUrl ? (
                     <img
                         src={imageUrl}
@@ -40,14 +40,14 @@ export function VehicleCard({
                         className="w-full h-full object-cover"
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                         No Image Available
                     </div>
                 )}
 
                 {/* Availability Badge */}
                 <div className="absolute top-3 left-3">
-                    <Badge variant={available ? "default" : "destructive"} className={available ? "bg-white text-black hover:bg-white" : ""}>
+                    <Badge variant={available ? "tertiary" : "destructive"}>
                         {available ? "Available" : "Booked"}
                     </Badge>
                 </div>
@@ -57,15 +57,15 @@ export function VehicleCard({
             <CardContent className="p-5 grow">
                 <div className="flex justify-between items-start mb-2">
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900">
-                            <Link href={`/vehicles/${id}`} className="hover:underline">{make} {model}</Link>
+                        <h3 className="text-xl font-bold text-foreground">
+                            <Link href={`/vehicles/${id}`} className="hover:underline hover:text-primary transition-colors">{make} {model}</Link>
                         </h3>
-                        <p className="text-xs text-gray-500 uppercase tracking-wider">{type}</p>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider">{type}</p>
                     </div>
-                    <span className="text-sm font-medium text-gray-400">{year}</span>
+                    <span className="text-sm font-medium text-muted-foreground">{year}</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-y-2 mt-4 text-sm text-gray-600">
+                <div className="grid grid-cols-2 gap-y-2 mt-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                         <Users size={16} />
                         <span>{seats} Seats</span>
@@ -80,19 +80,18 @@ export function VehicleCard({
             {/* FOOTER / PRICE & ACTION */}
             <CardFooter className="p-5 pt-0 flex flex-col gap-4">
                 <div className="w-full flex items-end gap-1">
-                    <span className="text-2xl font-bold text-gray-900">Rs {price}</span>
-                    <span className="text-gray-500 mb-1">/ day</span>
+                    <span className="text-2xl font-extrabold font-display text-foreground">Rs {price}</span>
+                    <span className="text-muted-foreground mb-1">/ day</span>
                 </div>
 
-                {/* BOOK BUTTON LOGIC - UPDATED LINK BELOW */}
                 {available ? (
                     <Link href={`/bookings/${id}`} className="w-full">
-                        <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium h-10">
+                        <Button className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold h-10">
                             Book Now
                         </Button>
                     </Link>
                 ) : (
-                    <Button disabled className="w-full bg-gray-100 text-gray-400 hover:bg-gray-100 cursor-not-allowed">
+                    <Button disabled className="w-full bg-surface-low text-muted-foreground cursor-not-allowed">
                         Unavailable
                     </Button>
                 )}

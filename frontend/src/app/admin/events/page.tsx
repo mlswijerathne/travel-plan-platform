@@ -24,8 +24,8 @@ import { Plus, Ticket, Pencil, Trash2, MapPin, Calendar, Users } from 'lucide-re
 import { toast } from 'sonner'
 
 const STATUS_COLORS: Record<EventStatus, string> = {
-  PUBLISHED: 'border-emerald-300 bg-emerald-50 text-emerald-700',
-  DRAFT: 'border-gray-200 bg-gray-50 text-gray-500',
+  PUBLISHED: 'border-tertiary/30 bg-tertiary/10 text-tertiary',
+  DRAFT: 'border-border bg-surface-low text-muted-foreground',
   CANCELLED: 'border-red-200 bg-red-50 text-red-600',
   COMPLETED: 'border-blue-200 bg-blue-50 text-blue-600',
 }

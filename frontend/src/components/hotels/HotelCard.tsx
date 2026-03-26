@@ -15,8 +15,8 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
 
   return (
     <Link href={`/hotels/${hotel.id}`} className="group block">
-      <div className="rounded-xl border bg-card overflow-hidden transition-all hover:shadow-md hover:border-primary/20">
-        <div className="h-44 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center overflow-hidden">
+      <div className="rounded-xl bg-card overflow-hidden transition-all hover:shadow-editorial-lg hover:-translate-y-1 duration-300 shadow-editorial border border-border/30">
+        <div className="h-44 bg-surface-low flex items-center justify-center overflow-hidden">
           {hotel.imageUrl ? (
             <img src={hotel.imageUrl} alt={hotel.name} className="w-full h-full object-cover" />
           ) : (

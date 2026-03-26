@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Partner Portal | The Curated Wanderer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;0,800;1,800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "on-secondary": "#ffffff",
+              "background": "#f5faf8",
+              "inverse-on-surface": "#edf2f0",
+              "on-primary-container": "#f4fffc",
+              "surface-container": "#eaefed",
+              "outline-variant": "#bcc9c6",
+              "surface-tint": "#006a61",
+              "on-primary-fixed-variant": "#005049",
+              "on-error-container": "#93000a",
+              "on-primary-fixed": "#00201d",
+              "inverse-surface": "#2c3130",
+              "secondary": "#9d4300",
+              "outline": "#6d7a77",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3d4947",
+              "primary-fixed": "#89f5e7",
+              "on-tertiary-fixed": "#002114",
+              "surface-container-low": "#f0f5f2",
+              "secondary-fixed": "#ffdbca",
+              "surface-variant": "#dee4e1",
+              "on-background": "#171d1c",
+              "primary": "#00685f",
+              "surface-dim": "#d6dbd9",
+              "tertiary-container": "#00855d",
+              "inverse-primary": "#6bd8cb",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#dee4e1",
+              "secondary-fixed-dim": "#ffb690",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed-variant": "#783200",
+              "surface-container-high": "#e4e9e7",
+              "on-surface": "#171d1c",
+              "on-tertiary-container": "#f5fff7",
+              "tertiary-fixed-dim": "#68dba9",
+              "primary-container": "#008378",
+              "surface": "#f5faf8",
+              "surface-bright": "#f5faf8",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#341100",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed-variant": "#005137",
+              "secondary-container": "#fd761a",
+              "on-secondary-container": "#5c2400",
+              "primary-fixed-dim": "#6bd8cb",
+              "tertiary-fixed": "#85f8c4",
+              "tertiary": "#006948"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-950 flex flex-col py-6 font-['Inter'] text-sm font-medium z-40">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-6">
+<img alt="Provider Profile Picture" class="w-10 h-10 rounded-full bg-surface-variant" data-alt="professional portrait of a travel executive in a modern office with soft natural lighting and minimalist decor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC9kwiXITF83Vx-cCgivyS-6FFQhTXneHrUqFeIww2BL9N9Ah-D_QyEnrxH9EYgVgTYYLFuoUo8IaekLNRMkFLX0ElrhYLPaPyteDGBv5ZQn5arG_IJnsryfCaNXZ01AOTwZ9roXeBurdvRL-TZj-wox9As_ydPY2EqIRhG0x16A8eCCa-BQSCHgAF1V5DXmUj7fthWnB74ebOwyVsCAp4sZPbtJab7hJsP9LqI8SdqLI-7wzVlMQN6vLpoAB1cVzsXoDTLbWN5j0"/>
+<div>
+<h2 class="text-lg font-extrabold text-teal-800 dark:text-teal-300">Partner Portal</h2>
+<p class="text-[10px] uppercase tracking-wider text-slate-500">Manage your experience</p>
+</div>
+</div>
+<button class="w-full py-3 px-4 bg-secondary text-on-secondary rounded-lg font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">add</span>
+                Add New Event
+            </button>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 px-6 py-3 bg-teal-50 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200 border-r-4 border-teal-600 hover:pl-2 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:pl-2 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendar</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:pl-2 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span>Bookings</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:pl-2 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:pl-2 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-6 pt-6 border-t border-slate-200">
+<a class="flex items-center gap-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:pl-2 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Help Center</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8">
+<!-- Header -->
+<header class="flex justify-between items-end mb-12">
+<div>
+<span class="text-primary font-bold tracking-widest uppercase text-xs mb-2 block">System Administration</span>
+<h1 class="text-4xl font-extrabold text-on-surface -tracking-wider">Platform Health <span class="text-primary italic">Overview</span></h1>
+</div>
+<div class="flex gap-4">
+<div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3 border border-outline-variant/10 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="text-sm font-medium">Live Systems: Stable</span>
+</div>
+</div>
+</header>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="col-span-1 md:col-span-2 bg-primary text-on-primary p-8 rounded-2xl relative overflow-hidden flex flex-col justify-between min-h-[200px] shadow-lg">
+<div class="relative z-10">
+<p class="text-sm uppercase tracking-widest opacity-80 mb-1">Total Active Bookings</p>
+<h3 class="text-5xl font-extrabold italic">14,282</h3>
+</div>
+<div class="relative z-10 flex items-center gap-2 text-sm bg-white/10 w-fit px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>12% Increase from last month</span>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-2xl flex flex-col justify-between border border-outline-variant/5 shadow-[0_12px_40px_rgba(23,29,28,0.06)]">
+<div>
+<p class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-4">Provider Growth</p>
+<h3 class="text-3xl font-extrabold text-on-surface">+84</h3>
+<p class="text-sm text-on-surface-variant mt-2">New verifications this week</p>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="bg-primary w-3/4 h-full"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-2xl flex flex-col justify-between border border-outline-variant/5 shadow-[0_12px_40px_rgba(23,29,28,0.06)]">
+<div>
+<p class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-4">Avg Review Score</p>
+<div class="flex items-center gap-2">
+<h3 class="text-3xl font-extrabold text-on-surface">4.82</h3>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-2">Based on 2.4k guest reviews</p>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-slate-200" data-alt="avatar of a satisfied customer"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-slate-300" data-alt="avatar of a satisfied customer"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-slate-400" data-alt="avatar of a satisfied customer"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary flex items-center justify-center text-[10px] text-on-primary font-bold">+2k</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<!-- Pending Verification & Reviews Column -->
+<div class="lg:col-span-2 space-y-12">
+<!-- Pending Provider Verifications -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-xl font-extrabold">Pending Verifications</h2>
+<a class="text-sm text-primary font-bold hover:underline" href="#">View All Queue</a>
+</div>
+<div class="space-y-4">
+<!-- Provider Card -->
+<div class="bg-surface-container-low p-5 rounded-xl flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-slate-200">
+<img alt="Boutique Hotel" class="w-full h-full object-cover" data-alt="luxurious boutique eco-resort nestled in the hills of Ella, Sri Lanka, featuring wooden architecture and infinity pool" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClxQj0vxu5hh-GEWw-Vmeq7eOxJy8AvLQ1nfxOcOcAFbJiew9SNgohsyJ8Q0C5LLB7znto4QXDkCN0pSV5YGmKcr_hkJAM7FzRA2WmeR35Lj1oqfFx3aHezePwuxb9Xy7LVYr43Nd5ym4MspHUdtRX6QSu5fwIMJDIYAvQx4yfm3lvhFLDaVEQWW4PBg_A6BivOx4qFdNZ-PsmOEFIdRD4I1bTIIoOJmMAmhlL-hAE0-YxsXJhE1xZeV0wdJz8iOx-LuYhLYF_pp0"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Ceylon Tea Trails Villa</h4>
+<p class="text-xs text-on-surface-variant">Applied: 2 hours ago • Category: Luxury Stay</p>
+<div class="mt-2 flex gap-2">
+<span class="text-[10px] font-bold px-2 py-0.5 bg-tertiary/10 text-tertiary rounded-full uppercase tracking-tighter">Eco-Certified</span>
+<span class="text-[10px] font-bold px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full uppercase tracking-tighter">New Partner</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-error hover:bg-error/10 transition-all">
+<span class="material-symbols-outlined">close</span>
+</button>
+<button class="px-5 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold shadow-md hover:translate-y-[-2px] transition-all">
+                                    Verify
+                                </button>
+</div>
+</div>
+<!-- Provider Card 2 -->
+<div class="bg-surface-container-low p-5 rounded-xl flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-slate-200">
+<img alt="Tour Provider" class="w-full h-full object-cover" data-alt="traditional wooden catamaran sailboat on crystal clear turquoise waters of the indian ocean during sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuE9ZiqSk8xH9BuBa_fS4ioutqt4e_G8ePjfv_WbDI20bfFj5VlKdISeUXvynnFr3r1CJf-etoVxYyCLAwhk8qtreiEBf-NP6ZrfP6ss9ObD0i1r6TMC8ihnJgjGxKjJlDP6dINIOW7S64E3fgpbu6FGDRyKSsTpLzgmkaOK5_fMebyphQAN-R75gQVeWhzwouHu99mDqdytscJ52AubXb-55kEvv6Y9VtrDxnMjEHq0z-w0tkrlBgGP0DmIMoYYMN0erh0cyQp0s"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Mirissa Whale Watch Co.</h4>
+<p class="text-xs text-on-surface-variant">Applied: 5 hours ago • Category: Experiences</p>
+<div class="mt-2 flex gap-2">
+<span class="text-[10px] font-bold px-2 py-0.5 bg-primary/10 text-primary rounded-full uppercase tracking-tighter">Local Expert</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-error hover:bg-error/10 transition-all">
+<span class="material-symbols-outlined">close</span>
+</button>
+<button class="px-5 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold shadow-md hover:translate-y-[-2px] transition-all">
+                                    Verify
+                                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Flagged Reviews -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<h2 class="text-xl font-extrabold">Flagged Content</h2>
+<span class="bg-error text-on-error text-[10px] font-bold px-2 py-0.5 rounded-full">3 ACTION REQUIRED</span>
+</div>
+<div class="bg-surface-container-lowest border border-error/20 rounded-2xl overflow-hidden shadow-sm">
+<div class="p-6 border-b border-outline-variant/10 bg-error/5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden" data-alt="headshot of a user who left a review"></div>
+<div>
+<p class="font-bold text-sm">Review by Julian M.</p>
+<p class="text-[10px] uppercase text-on-surface-variant">Flagged for: Suspicious Activity</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="text-[10px] font-bold text-on-surface-variant hover:text-primary transition-colors">DISMISS</button>
+<button class="text-[10px] font-bold text-error hover:underline transition-colors">REMOVE REVIEW</button>
+</div>
+</div>
+<p class="text-sm italic text-on-surface-variant leading-relaxed">
+                                "The tour guide never showed up and they refused a refund until I threatened to call the police. Avoid this provider at all costs, absolute scam!"
+                            </p>
+<div class="mt-4 pt-4 border-t border-outline-variant/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">business</span>
+<span class="text-xs font-medium">Reported by: Galle Fort Tours (Provider)</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Curated Packages Sidebar -->
+<section class="lg:col-span-1">
+<div class="sticky top-24">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-xl font-extrabold">Curated Packages</h2>
+<button class="w-8 h-8 bg-primary rounded-full text-on-primary flex items-center justify-center hover:rotate-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="space-y-6">
+<!-- Package Card -->
+<div class="group relative rounded-2xl overflow-hidden shadow-lg h-80 flex flex-col justify-end p-6">
+<div class="absolute inset-0 z-0">
+<img alt="Coastal Escape" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="vibrant tropical landscape featuring palm trees overhanging a pristine white sand beach with a luxury villa in the distance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPWSagOPOeGC7d9qbhuZnnTMYymcbyKqHRAZf2G90pe7oQrHp_YyzG007_HZ5-Ls99PbNrNGV-qjjVynP_GXiVFmj07TvuwR2LeAkc8_TLyJfeRJC3wv4GCSTaVD1j8DRh7p__xbe5LkBVjRaXV-AUOQ1uZeFsqsRPpOKx7zPgSDhjLPInHTKB7eHdRSA0oFTSXvRfqzjPhXjF9UqyQ66CdfE5vX8ypYRBqMbHSrAW4LOEpy5QZkotSIpibftMYlD_T45T43zkkVU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+</div>
+<div class="relative z-10">
+<span class="text-[10px] font-extrabold text-on-primary bg-secondary px-2 py-1 rounded-full mb-3 inline-block tracking-widest uppercase">Bestseller</span>
+<h3 class="text-2xl font-extrabold text-on-primary mb-1">Southern Coast Luxury</h3>
+<p class="text-white/70 text-xs mb-4">Bundles: 3 Stays + 2 Private Tours</p>
+<div class="flex justify-between items-center">
+<span class="text-on-primary font-bold">$2,450 / pax</span>
+<button class="text-on-primary border border-white/30 px-4 py-2 rounded-lg text-xs font-bold backdrop-blur-md hover:bg-white hover:text-primary transition-all">Edit Bundle</button>
+</div>
+</div>
+</div>
+<!-- Package Card 2 -->
+<div class="group relative rounded-2xl overflow-hidden shadow-lg h-60 flex flex-col justify-end p-6">
+<div class="absolute inset-0 z-0">
+<img alt="Hill Country" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="foggy tea plantations in the Sri Lankan mountains with workers picking leaves in colorful traditional clothing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0RcqLbxxI5Rt8ujBVl22cb6KMsoouYZOaGFtveTfjROZJNFiKlbkxHw81JLimWeR_GK99bUNcuMnun2wA5M86F_99U2hWNROxvCA6o6Cl5-ZKclW5dNdJNQA6iliSogh15sX_yvJWKR6o4dV2SD3OM9DdgLv9gCAKyXYmGc1YkSRXY4QlAWCsbZY33wSmfJBXI7qtwrUL_Qfg3-i-rqZI6rDmZ6EZYOjZUTS0vAtxiz-tFvWt1Q3I-jp_FVSH78mc1HxL4Xgya5g"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+</div>
+<div class="relative z-10">
+<h3 class="text-xl font-extrabold text-on-primary mb-1">Mist &amp; Mountains</h3>
+<p class="text-white/70 text-xs mb-3">Bundles: 2 Eco-Lodges + Train Tour</p>
+<button class="text-on-primary border border-white/30 px-4 py-2 rounded-lg text-xs font-bold backdrop-blur-md hover:bg-white hover:text-primary transition-all">Edit Bundle</button>
+</div>
+</div>
+<!-- Add New Prompt -->
+<button class="w-full py-8 border-2 border-dashed border-outline-variant/30 rounded-2xl flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary transition-all group">
+<span class="material-symbols-outlined text-4xl mb-2 group-hover:scale-110 transition-transform">auto_awesome</span>
+<span class="font-bold text-sm">Create AI-Curated Bundle</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="ml-64 w-[calc(100%-16rem)] py-12 border-t-0 mt-20 flex flex-col items-center gap-4 px-8 bg-slate-50 dark:bg-slate-950 font-['Inter'] text-xs uppercase tracking-widest">
+<div class="flex gap-8">
+<a class="text-slate-400 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy Policy</a>
+<a class="text-slate-400 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Terms of Service</a>
+<a class="text-slate-400 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Eco-Certifications</a>
+<a class="text-slate-400 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Contact Us</a>
+</div>
+<p class="text-teal-800 dark:text-teal-300 opacity-60">© 2024 The Curated Wanderer. Sri Lanka Tourism Excellence.</p>
+</footer>
+</body></html>

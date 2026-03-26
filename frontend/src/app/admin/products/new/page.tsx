@@ -74,7 +74,7 @@ export default function AddProductPage() {
     return (
         <div className="flex justify-center">
                 <Card className="w-full max-w-lg shadow-xl border-none">
-                    <CardHeader className="bg-emerald-900 text-white rounded-t-xl">
+                    <CardHeader className="bg-primary text-white rounded-t-xl">
                         <CardTitle className="text-2xl">List New Product</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
@@ -82,7 +82,7 @@ export default function AddProductPage() {
 
                             {/* Image Upload */}
                             <div className="space-y-2">
-                                <Label className="font-bold text-gray-700">Product Image</Label>
+                                <Label className="font-bold text-muted-foreground">Product Image</Label>
                                 <Input
                                     type="file"
                                     accept="image/*"
@@ -95,11 +95,11 @@ export default function AddProductPage() {
                             {/* Name & Category */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-gray-700">Product Name</Label>
+                                    <Label className="font-bold text-muted-foreground">Product Name</Label>
                                     <Input name="name" placeholder="e.g. Ceylon Tea" onChange={handleChange} required />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-gray-700">Category</Label>
+                                    <Label className="font-bold text-muted-foreground">Category</Label>
                                     <Input name="category" placeholder="Souvenirs" defaultValue="Souvenirs" onChange={handleChange} required />
                                 </div>
                             </div>
@@ -107,22 +107,22 @@ export default function AddProductPage() {
                             {/* Price & Stock */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-gray-700">Price ($)</Label>
+                                    <Label className="font-bold text-muted-foreground">Price ($)</Label>
                                     <Input type="number" step="0.01" name="price" placeholder="15.00" onChange={handleChange} required />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-gray-700">Stock Quantity</Label>
+                                    <Label className="font-bold text-muted-foreground">Stock Quantity</Label>
                                     <Input type="number" name="stockQuantity" defaultValue={10} onChange={handleChange} required />
                                 </div>
                             </div>
 
                             {/* Description */}
                             <div className="space-y-2">
-                                <Label className="font-bold text-gray-700">Description</Label>
+                                <Label className="font-bold text-muted-foreground">Description</Label>
                                 <Textarea name="description" placeholder="Describe the item..." onChange={handleChange} required />
                             </div>
 
-                            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 h-12 text-lg mt-4" disabled={loading}>
+                            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 h-12 text-lg mt-4" disabled={loading}>
                                 {loading ? "Adding Product..." : "Add Product"}
                             </Button>
                         </form>

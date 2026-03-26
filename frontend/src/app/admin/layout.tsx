@@ -8,8 +8,8 @@ import {
   ShoppingBag,
   ClipboardList,
   LogOut,
-  Compass,
   ChevronRight,
+  HelpCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -39,41 +39,46 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (role !== 'ADMIN') redirect('/')
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-border flex flex-col shadow-sm">
-        <div className="p-5 border-b border-border">
-          <Link href="/admin" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <Compass className="h-4 w-4 text-white" />
-            </div>
-            <div>
-              <span className="font-display text-sm font-bold text-foreground">TravelPlan</span>
-              <p className="text-xs text-muted-foreground">Admin Panel</p>
-            </div>
+    <div className="min-h-screen flex bg-background">
+      {/* Sidebar - Dark Teal */}
+      <aside className="w-64 fixed left-0 top-0 h-screen bg-[hsl(175,100%,12%)] shadow-2xl shadow-primary/10 flex flex-col py-6 font-display z-40">
+        <div className="px-6 mb-8">
+          <Link href="/admin" className="block">
+            <h2 className="text-xl font-bold text-white tracking-tight">TravelPlan</h2>
+            <p className="text-[10px] uppercase tracking-widest text-white/50 mt-1">Admin Panel</p>
           </Link>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1">
-          {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => (
-            <AdminNavLink key={href} href={href} label={label} Icon={Icon} exact={exact} />
+        <nav className="flex-1 space-y-1">
+          {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
+            <AdminNavLink key={href} href={href} label={label} Icon={Icon} />
           ))}
         </nav>
 
-        <div className="p-3 border-t border-border">
-          <div className="px-3 py-2 text-xs text-muted-foreground truncate mb-2">{user.email}</div>
-          <form action="/auth/signout" method="post">
-            <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive">
-              <LogOut className="h-4 w-4" />
-              Sign Out
-            </Button>
-          </form>
+        <div className="px-4 space-y-2">
+          <Link
+            href="#"
+            className="flex items-center gap-3 px-4 py-3 text-white/50 hover:text-white transition-colors"
+          >
+            <HelpCircle className="h-4 w-4" />
+            <span className="text-sm font-medium">Help Center</span>
+          </Link>
+
+          <div className="border-t border-white/10 pt-3 px-2">
+            <p className="text-xs text-white/40 truncate mb-2">{user.email}</p>
+            <form action="/auth/signout" method="post">
+              <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-white/50 hover:text-white hover:bg-white/10">
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+            </form>
+          </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto">
-        <div className="max-w-6xl mx-auto px-6 py-8">
+      <main className="flex-1 ml-64 overflow-auto">
+        <div className="max-w-6xl mx-auto px-8 py-10">
           {children}
         </div>
       </main>
@@ -81,22 +86,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   )
 }
 
-// Client nav link component for active state — we use a simple approach via data-href
 function AdminNavLink({
   href,
   label,
   Icon,
-  exact,
 }: {
   href: string
   label: string
   Icon: React.ElementType
-  exact?: boolean
 }) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors group"
+      className="flex items-center gap-3 px-4 py-3 mx-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200 group"
     >
       <Icon className="h-4 w-4 shrink-0" />
       <span className="flex-1">{label}</span>

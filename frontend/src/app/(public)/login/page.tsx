@@ -55,16 +55,13 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex">
       {/* Brand Panel - hidden on mobile */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-primary via-teal-600 to-emerald-600">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-primary via-primary to-tertiary">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
 
         <div className="relative flex flex-col justify-between p-12 w-full">
           <Link href="/" className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm">
-              <Compass className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-display text-xl font-bold text-white">TravelPlan</span>
+            <span className="font-display text-xl font-extrabold text-white tracking-tight">TravelPlan</span>
           </Link>
 
           <div className="space-y-8">
@@ -99,15 +96,12 @@ export default function LoginPage() {
       </div>
 
       {/* Form Panel */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-8 bg-gradient-to-b from-teal-50/30 to-white lg:from-white lg:to-white">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-8 bg-background">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
-            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
-              <Compass className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-display text-xl font-bold">
-              Travel<span className="text-primary">Plan</span>
+            <span className="font-display text-xl font-extrabold text-primary tracking-tight">
+              TravelPlan
             </span>
           </div>
 

@@ -102,14 +102,11 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-white/80 backdrop-blur-xl">
-      <nav className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl shadow-editorial">
+      <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <Compass className="h-4.5 w-4.5 text-white" />
-            </div>
-            <span className="font-display text-lg font-bold text-foreground">
+            <span className="font-display text-lg font-extrabold text-primary tracking-tight">
               Travel<span className="text-primary">Plan</span>
             </span>
           </Link>
@@ -122,7 +119,7 @@ export function AuthNav({ userEmail }: { userEmail: string }) {
                 className={cn(
                   'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200',
                   pathname === href || pathname.startsWith(href + '/')
-                    ? 'bg-primary/10 text-primary'
+                    ? 'bg-primary/10 text-primary font-semibold'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                 )}
               >

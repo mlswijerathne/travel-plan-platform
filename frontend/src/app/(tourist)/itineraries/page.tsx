@@ -22,10 +22,10 @@ import { Map, Plus, Calendar, ChevronRight, Clock } from 'lucide-react'
 import { toast } from 'sonner'
 
 const STATUS_COLORS: Record<string, string> = {
-  PLANNING: 'bg-blue-50 text-blue-600 border-blue-200',
-  ACTIVE: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-  COMPLETED: 'bg-gray-50 text-gray-500 border-gray-200',
-  CANCELLED: 'bg-red-50 text-red-500 border-red-200',
+  PLANNING: 'bg-primary/10 text-primary border-primary/20',
+  ACTIVE: 'bg-tertiary/10 text-tertiary border-tertiary/30',
+  COMPLETED: 'bg-surface-low text-muted-foreground border-border/30',
+  CANCELLED: 'bg-destructive/10 text-destructive border-destructive/20',
 }
 
 export default function ItinerariesPage() {
@@ -94,10 +94,10 @@ export default function ItinerariesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold">My Itineraries</h1>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight">My Itineraries</h1>
           <p className="text-muted-foreground">Plan and manage your Sri Lanka trips</p>
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="gap-2">
+        <Button onClick={() => setCreateOpen(true)} className="gap-2 bg-secondary text-white hover:bg-secondary/90">
           <Plus className="h-4 w-4" />
           New Itinerary
         </Button>
@@ -123,9 +123,9 @@ export default function ItinerariesPage() {
         <div className="space-y-3">
           {itineraries.map(itin => (
             <Link key={itin.id} href={`/itineraries/${itin.id}`}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="bg-card rounded-xl shadow-editorial hover:shadow-editorial-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
                 <CardContent className="flex items-center gap-4 py-4">
-                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <div className="h-12 w-12 rounded-xl bg-surface-low flex items-center justify-center shrink-0">
                     <Map className="h-6 w-6 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -159,9 +159,9 @@ export default function ItinerariesPage() {
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) resetForm() }}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Create Itinerary</DialogTitle>
+        <DialogContent className="sm:max-w-md p-6">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="font-display font-bold text-lg">Create Itinerary</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreate}>
             <div className="space-y-4 py-2">

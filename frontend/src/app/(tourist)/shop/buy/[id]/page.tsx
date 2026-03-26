@@ -57,29 +57,29 @@ export default function BuyProductPage({ params }: { params: Promise<{ id: strin
         }
     };
 
-    if (!product) return <div className="text-center py-20 animate-pulse text-emerald-700">Loading checkout...</div>;
+    if (!product) return <div className="text-center py-20 animate-pulse text-primary">Loading checkout...</div>;
 
     return (
         <div className="flex justify-center">
                 <Card className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 shadow-xl overflow-hidden border-none">
 
                     {/* LEFT SIDE: Product Summary */}
-                    <div className="bg-emerald-900 text-white p-8 flex flex-col justify-between">
+                    <div className="bg-primary text-white p-8 flex flex-col justify-between">
                         <div>
                             <h2 className="text-3xl font-bold mb-2">{product.name}</h2>
-                            <p className="text-emerald-200 mb-6">{product.category}</p>
+                            <p className="text-white/70 mb-6">{product.category}</p>
 
                             <div className="h-64 bg-white/10 rounded-lg mb-6 overflow-hidden flex items-center justify-center">
                                 {product.imageUrl ? (
                                     <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
                                 ) : (
-                                    <span className="text-emerald-300">No Image Available</span>
+                                    <span className="text-white/50">No Image Available</span>
                                 )}
                             </div>
-                            <p className="text-emerald-100">{product.description}</p>
+                            <p className="text-white/80">{product.description}</p>
                         </div>
 
-                        <div className="border-t border-emerald-700 pt-4 mt-6">
+                        <div className="border-t border-white/20 pt-4 mt-6">
                             <div className="flex justify-between items-center text-lg mb-2">
                                 <span>Price per item:</span>
                                 <span>Rs. {product.price}</span>
@@ -94,12 +94,12 @@ export default function BuyProductPage({ params }: { params: Promise<{ id: strin
                     {/* RIGHT SIDE: Checkout Form */}
                     <div className="p-8 bg-white">
                         <CardHeader className="px-0 pt-0">
-                            <CardTitle className="text-2xl text-gray-800">Complete Purchase</CardTitle>
+                            <CardTitle className="text-2xl text-foreground">Complete Purchase</CardTitle>
                         </CardHeader>
                         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
 
                             <div className="space-y-2">
-                                <Label className="font-bold text-gray-700">Quantity</Label>
+                                <Label className="font-bold text-muted-foreground">Quantity</Label>
                                 <Input
                                     type="number"
                                     min="1"
@@ -108,11 +108,11 @@ export default function BuyProductPage({ params }: { params: Promise<{ id: strin
                                     onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
                                     required
                                 />
-                                <p className="text-sm text-gray-500">{product.stockQuantity} items currently in stock</p>
+                                <p className="text-sm text-muted-foreground">{product.stockQuantity} items currently in stock</p>
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="font-bold text-gray-700">Delivery Method</Label>
+                                <Label className="font-bold text-muted-foreground">Delivery Method</Label>
                                 <select
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                     value={formData.deliveryType}
@@ -127,18 +127,18 @@ export default function BuyProductPage({ params }: { params: Promise<{ id: strin
 
                             {formData.deliveryType === "HOTEL_DROP_OFF" && (
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-gray-700">Hotel ID</Label>
+                                    <Label className="font-bold text-muted-foreground">Hotel ID</Label>
                                     <Input
                                         placeholder="e.g. hotel-uuid-123"
                                         value={formData.hotelId}
                                         onChange={(e) => setFormData({ ...formData, hotelId: e.target.value })}
                                         required
                                     />
-                                    <p className="text-xs text-orange-600">Note: Hotel Service (8083) must be running to verify this ID.</p>
+                                    <p className="text-xs text-secondary">Note: Hotel Service (8083) must be running to verify this ID.</p>
                                 </div>
                             )}
 
-                            <Button className="w-full bg-emerald-600 hover:bg-emerald-700 h-14 text-lg font-bold shadow-md" disabled={loading}>
+                            <Button className="w-full bg-primary hover:bg-primary/90 h-14 text-lg font-bold shadow-md" disabled={loading}>
                                 <ShoppingBag className="mr-2 h-5 w-5" />
                                 {loading ? "Processing Securely..." : "Confirm Purchase"}
                             </Button>

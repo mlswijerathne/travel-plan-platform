@@ -117,19 +117,19 @@ export default function EventDetailPage() {
       </Link>
 
       {/* Hero Image */}
-      <div className="relative h-64 md:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-violet-100 to-teal-100">
+      <div className="relative h-64 md:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-tertiary/10">
         {event.coverImageUrl ? (
           <img src={event.coverImageUrl} alt={event.title} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Ticket className="h-20 w-20 text-violet-200" />
+            <Ticket className="h-20 w-20 text-primary/20" />
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         <div className="absolute bottom-4 left-5 flex gap-2">
           <Badge className="bg-white/20 backdrop-blur-sm text-white border-white/30">{event.category}</Badge>
           {event.authenticCultural && (
-            <Badge className="bg-amber-500/80 backdrop-blur-sm text-white border-amber-400/30">Authentic Cultural</Badge>
+            <Badge className="bg-secondary/80 backdrop-blur-sm text-white border-secondary/30">Authentic Cultural</Badge>
           )}
           {event.vibe && (
             <Badge className="bg-white/20 backdrop-blur-sm text-white border-white/30">{event.vibe}</Badge>
@@ -141,14 +141,14 @@ export default function EventDetailPage() {
         {/* Main Info */}
         <div className="md:col-span-2 space-y-6">
           <div>
-            <h1 className="font-display text-3xl font-bold text-foreground">{event.title}</h1>
+            <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">{event.title}</h1>
             {event.description && (
               <p className="text-muted-foreground mt-3 leading-relaxed">{event.description}</p>
             )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-start gap-3 p-3 bg-muted/40 rounded-xl">
+            <div className="flex items-start gap-3 p-3 bg-surface-low rounded-xl">
               <Calendar className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Date & Time</p>
@@ -159,7 +159,7 @@ export default function EventDetailPage() {
                 </p>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-muted/40 rounded-xl">
+            <div className="flex items-start gap-3 p-3 bg-surface-low rounded-xl">
               <MapPin className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Location</p>
@@ -167,7 +167,7 @@ export default function EventDetailPage() {
                 <p className="text-xs text-muted-foreground">{event.location}</p>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-muted/40 rounded-xl">
+            <div className="flex items-start gap-3 p-3 bg-surface-low rounded-xl">
               <Users className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Capacity</p>
@@ -175,7 +175,7 @@ export default function EventDetailPage() {
                 <p className="text-xs text-muted-foreground">of {availability?.totalCapacity ?? event.maxCapacity} total</p>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-muted/40 rounded-xl">
+            <div className="flex items-start gap-3 p-3 bg-surface-low rounded-xl">
               <Ticket className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Ticket Price</p>
@@ -188,11 +188,11 @@ export default function EventDetailPage() {
           </div>
 
           {event.requirements && (
-            <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <Info className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+            <div className="flex items-start gap-3 p-4 bg-secondary/10 border border-secondary/20 rounded-xl">
+              <Info className="h-5 w-5 text-secondary mt-0.5 shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-amber-800">What to bring / Requirements</p>
-                <p className="text-sm text-amber-700 mt-1">{event.requirements}</p>
+                <p className="text-sm font-semibold text-secondary">What to bring / Requirements</p>
+                <p className="text-sm text-secondary mt-1">{event.requirements}</p>
               </div>
             </div>
           )}
@@ -207,7 +207,7 @@ export default function EventDetailPage() {
 
         {/* Booking Card */}
         <div className="space-y-4">
-          <Card className="shadow-sm sticky top-20">
+          <Card className="bg-card rounded-xl shadow-editorial border border-border/30 sticky top-20">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Book Tickets</CardTitle>
             </CardHeader>
@@ -221,7 +221,7 @@ export default function EventDetailPage() {
               <Separator />
               <div className="flex items-center gap-3">
                 {isAvailable ? (
-                  <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-medium">
+                  <div className="flex items-center gap-1.5 text-tertiary text-xs font-medium">
                     <CheckCircle2 className="h-4 w-4" />
                     {availability?.availableSeats ?? event.availableSeats} seats available
                   </div>

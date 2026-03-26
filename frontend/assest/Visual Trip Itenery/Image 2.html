@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "on-secondary": "#ffffff",
+              "background": "#f5faf8",
+              "inverse-on-surface": "#edf2f0",
+              "on-primary-container": "#f4fffc",
+              "surface-container": "#eaefed",
+              "outline-variant": "#bcc9c6",
+              "surface-tint": "#006a61",
+              "on-primary-fixed-variant": "#005049",
+              "on-error-container": "#93000a",
+              "on-primary-fixed": "#00201d",
+              "inverse-surface": "#2c3130",
+              "secondary": "#9d4300",
+              "outline": "#6d7a77",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3d4947",
+              "primary-fixed": "#89f5e7",
+              "on-tertiary-fixed": "#002114",
+              "surface-container-low": "#f0f5f2",
+              "secondary-fixed": "#ffdbca",
+              "surface-variant": "#dee4e1",
+              "on-background": "#171d1c",
+              "primary": "#00685f",
+              "surface-dim": "#d6dbd9",
+              "tertiary-container": "#00855d",
+              "inverse-primary": "#6bd8cb",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#dee4e1",
+              "secondary-fixed-dim": "#ffb690",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed-variant": "#783200",
+              "surface-container-high": "#e4e9e7",
+              "on-surface": "#171d1c",
+              "on-tertiary-container": "#f5fff7",
+              "tertiary-fixed-dim": "#68dba9",
+              "primary-container": "#008378",
+              "surface": "#f5faf8",
+              "surface-bright": "#f5faf8",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#341100",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed-variant": "#005137",
+              "secondary-container": "#fd761a",
+              "on-secondary-container": "#5c2400",
+              "primary-fixed-dim": "#6bd8cb",
+              "tertiary-fixed": "#85f8c4",
+              "tertiary": "#006948"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-[0_12px_40px_rgba(23,29,28,0.06)] flex justify-between items-center px-8 h-20 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold text-teal-800 dark:text-teal-300 italic font-['Plus_Jakarta_Sans'] tracking-tight">The Curated Wanderer</span>
+<div class="hidden md:flex gap-6">
+<a class="text-teal-700 dark:text-teal-400 font-bold border-b-2 border-teal-600 pb-1 font-['Plus_Jakarta_Sans'] tracking-tight" href="#">Itinerary</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-teal-600 transition-colors font-['Plus_Jakarta_Sans'] tracking-tight" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-teal-600 transition-colors font-['Plus_Jakarta_Sans'] tracking-tight" href="#">Concierge</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-teal-600 transition-colors font-['Plus_Jakarta_Sans'] tracking-tight" href="#">Bookings</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center bg-surface-container px-4 py-2 rounded-full mr-4">
+<span class="material-symbols-outlined text-outline mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm" placeholder="Search destinations..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-teal-50/50 rounded-lg transition-all" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-teal-50/50 rounded-lg transition-all" data-icon="account_circle">account_circle</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-md font-medium hover:opacity-90 transition-all">Plan Trip</button>
+</div>
+</nav>
+<main class="pt-24 pb-12 px-4 md:px-8 max-w-[1600px] mx-auto">
+<div class="flex flex-col lg:flex-row gap-8 min-h-[calc(100vh-140px)]">
+<!-- Left Side: Journey Visualization (Map) -->
+<div class="lg:w-5/12 xl:w-1/2 relative">
+<div class="sticky top-28 h-[600px] lg:h-[calc(100vh-160px)] rounded-xl overflow-hidden shadow-sm">
+<!-- Map Placeholder -->
+<div class="absolute inset-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="stylized vector map of Sri Lanka showing lush green terrain, coastal lines, and highlighted travel route between Colombo and Ella" data-location="Sri Lanka" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDylR33Rnvy_VygmRh9wuoA3nbmUwW-n_GbbrXmzrl4Vb5XuPrfTQmPG31c-vWYfO4DxGkGyTO3k7gJtaGaSGxCQX40BQCJGKjTwkR75Puh0TJyfUG-2Io7rETNvS1cQOj3kxcrFURZC2ycrzFwx7PKL-lH8BasA-shBOH_aqZlnPzEaufbkmpFSC3WtNT7n1ffjmc6A44cdHjfDH7YxZkTKtgdotBQL19ZZiMbyNMOjn2_IviH38U_ih6glDdH0mlyRmyUGN-_agY"/>
+<!-- Route Overlay (Mockup SVG) -->
+<div class="absolute inset-0 pointer-events-none p-12">
+<svg class="w-full h-full text-primary opacity-60" fill="none" viewbox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+<path d="M150 100 Q 180 250 220 380 T 280 500" stroke="currentColor" stroke-dasharray="8 8" stroke-width="4"></path>
+<circle cx="150" cy="100" fill="white" r="8" stroke="currentColor" stroke-width="2"></circle>
+<circle cx="280" cy="500" fill="var(--secondary)" r="10" stroke="white" stroke-width="2"></circle>
+</svg>
+</div>
+<!-- Floating Map Legend -->
+<div class="absolute bottom-6 left-6 glass-panel p-4 rounded-xl shadow-lg flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs font-semibold uppercase tracking-wider">Completed</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="text-xs font-semibold uppercase tracking-wider">Current Highlight</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Day-by-Day Timeline -->
+<div class="lg:w-7/12 xl:w-1/2 flex flex-col gap-12">
+<!-- Trip Summary Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-surface-container-low p-8 rounded-xl">
+<div>
+<h1 class="text-4xl font-extrabold font-headline tracking-tight text-primary mb-2">Tropical High-Country Escape</h1>
+<p class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+                            7 Days • Oct 12 - Oct 18, 2024
+                        </p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-xs font-bold text-outline uppercase tracking-widest">Total Estimated Cost</span>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-secondary">$2,450</span>
+<span class="text-sm text-on-surface-variant">/ Budget: $2,800</span>
+</div>
+<div class="w-48 h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-tertiary w-[87%]"></div>
+</div>
+</div>
+</div>
+<!-- Timeline Feed -->
+<div class="relative space-y-12 pl-4">
+<!-- Vertical Path Line -->
+<div class="absolute left-0 top-0 bottom-0 w-[2px] bg-outline-variant opacity-20 border-dashed border-l-2 ml-[11px]"></div>
+<!-- Day 1 -->
+<section class="relative">
+<div class="absolute -left-4 top-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center border-4 border-background z-10"></div>
+<div class="mb-6 flex justify-between items-center">
+<div>
+<h2 class="text-2xl font-bold font-headline">Day 1: Arrival &amp; Colombo City Tour</h2>
+<p class="text-on-surface-variant mt-1">Acclimatize in the vibrant commercial capital with a curated heritage walk.</p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-secondary" data-icon="wb_sunny">wb_sunny</span>
+<span class="text-sm font-semibold">29°C</span>
+</div>
+</div>
+<!-- Provider Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Hotel Card -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden group hover:translate-y-[-4px] transition-all duration-300">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="luxurious boutique hotel room in Colombo with colonial architecture, high ceilings, and tropical plants visible through large windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1tk9g9IhGnMdMqoJAaJnOAbjGq1fEpQd7yMxK84aODJJr1TgeNJGaPumZKloYb9ShBLQRT7qbKbWmF92KR59t05o8mlxBjhEkToFCsIImjT6Gdo00jJvHDYTcCETU98DeHA5tv6ajBaEw5E3sVjC0j67GRXnuOl95Br7M5SVmSHDpXkvyqN5Zgw3hTWRjfMAxlO5WvKUG7zCS5PAXq_LLs3fuYfRae8lyNiYMQt_rWj8rat8ifMeKGlhcMRbP7zMv_2JyttnRfag"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">
+                                        Confirmed
+                                    </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-bold text-lg leading-tight">The Galle Face Hotel</h3>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">4.9</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm mb-6">Historic colonial landmark overlooking the Laccadive Sea.</p>
+<div class="flex justify-between items-center border-t border-outline-variant/10 pt-4">
+<span class="text-primary font-bold">$180/night</span>
+<button class="text-primary font-semibold text-sm hover:underline">View Details</button>
+</div>
+</div>
+</div>
+<!-- Driver/Vehicle Card -->
+<div class="bg-surface-container-lowest rounded-lg p-5 flex flex-col justify-between">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-4xl" data-icon="directions_car">directions_car</span>
+</div>
+<div>
+<h3 class="font-bold text-lg">Private Executive SUV</h3>
+<p class="text-on-surface-variant text-sm">Airport Pickup &amp; City Transfer</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="professional smiling chauffeur in a neat uniform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRmIsRsvQhqPxwWRUsNM67tkb3bO3zf2PIDCaRcbyEEIQJcvPXFqTuskldbnhd8TTpRmqFIejxauhhRBtF1tASQk8kVtQYjrevupgIkRZSn79-yQxW0o4DZ5mn7UN0V1myTJqLCR2m1uicd2DTC5pgkyvmbSVZcWiyaVamMImB1qePqol9Y_DxsB9VzJaKsRGqy2KNmRkjluUR5A7SUjT6yUycSE-pLnqT9CpFk_nBVFYKo2yXaRZNNF1w7VCHqMU8kP-p2PBy2Ac"/>
+<div>
+<p class="text-xs font-bold uppercase text-outline">Driver</p>
+<p class="text-sm font-semibold">Anura Perera</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Day 2 -->
+<section class="relative">
+<div class="absolute -left-4 top-2 w-6 h-6 rounded-full bg-secondary flex items-center justify-center border-4 border-background z-10"></div>
+<div class="mb-6 flex justify-between items-center">
+<div>
+<h2 class="text-2xl font-bold font-headline">Day 2: Scenic Train to Ella</h2>
+<p class="text-on-surface-variant mt-1">One of the world's most beautiful train journeys through tea plantations.</p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-outline" data-icon="cloud">cloud</span>
+<span class="text-sm font-semibold">22°C</span>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-6">
+<!-- High Intent CTA / Highlight Card -->
+<div class="relative rounded-xl overflow-hidden bg-primary p-8 text-on-primary flex flex-col md:flex-row gap-8 items-center shadow-lg">
+<div class="md:w-1/2">
+<div class="bg-secondary px-3 py-1 rounded-full inline-block text-[10px] font-bold uppercase tracking-widest mb-4">
+                                        Top Recommendation
+                                    </div>
+<h3 class="text-3xl font-extrabold font-headline mb-4 leading-tight italic">Observation Salon Class</h3>
+<p class="opacity-90 mb-6 leading-relaxed">We've secured first-class seats for the 08:30 departure. Experience panoramic views of the cascading waterfalls and misty valleys.</p>
+<div class="flex items-center gap-4">
+<div class="flex -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-primary object-cover" data-alt="profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwTtI3pP8Jd3iCZlGozb7we7ZyLsqDBoLlc74wU7J3NQgyyYAGdqHrdGbl-EwoQlzzx1HsoGHpS2-oGfg2vzeBEirblpmXAnvMw8SS1R1OQ2eBz30f00LqELWgU-BfHMRWG9XMWnYsalpxWvRDU0nSxATbhxb4ue4Sw0stUXzwW0ObxwopfqRcjFnls8oo1JfgOzJgBfReLQOcDvzLzK2hai3jli934FVRy0kB8FJTdY1nyKH-DuM6MsQsBM2sUaqBSw76BVsnG2c"/>
+<img class="w-8 h-8 rounded-full border-2 border-primary object-cover" data-alt="profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxnt9xuyVW7XCJ3uhhZDoIGxL60RIaIB0X3VtJJJoxmdeAMWAiAxY8Qmcj2lzmFM1Aw01er5xWKVzNhQEbIQTpzrw28el7QRtql-36nAEbjOe7KbRrOZ3U_BKaz2HlS6e4jJRAih7wrFyhQ1joK13uqxk8VweF-6pA48XE-MpNKoRwYFgJXHtrV6MIpuvapynaS0ALgMrSP4KOqEufYLx2OOLXEWJT17dlua_cYUiOYfXTjtw1ue3-Fx6pK0at-MicZwB8cpfCpRw"/>
+<div class="w-8 h-8 rounded-full border-2 border-primary bg-primary-fixed text-on-primary-fixed flex items-center justify-center text-[10px] font-bold">+12</div>
+</div>
+<span class="text-sm font-medium opacity-80">Highly rated by solo travelers</span>
+</div>
+</div>
+<div class="md:w-1/2 w-full h-64 rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="iconic blue train in Sri Lanka passing over the Nine Arch Bridge surrounded by dense jungle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAApHNcuz0d0DAXkH3KbeRrKNNJ_0RXaIdMOYAC7GdZBIqea3uOkZtEDD79a87Za8_ImR1qhVEgfyKob1Z7zyut1vLVr-NI71u_DsghiMy6sZ9Z3UOkgXHwNm976rnU8NDBv0CCPZ4xQvQiGGr6PBXbSw3qDd96y0dJ3MNGPcTNw0jiHcmjjFRajubD5WtDF5VrW9J1YxHmuxLvIush3xM_FW4N1w9ElwyGP8wzzoXdtwyJ2yPhJGzHnUfKgpPNwr-nihjxdH2U0m4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</div>
+</div>
+<!-- Guide Card -->
+<div class="bg-surface-container-lowest rounded-lg p-5 flex items-center gap-6 group">
+<img class="w-20 h-20 rounded-xl object-cover" data-alt="knowledgeable local guide with a warm smile wearing outdoor gear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRm3HLCuRU9q3KEx-3ohy4G6sG-UBPz8u_Xbgh0ZOxUZ56Dp8l_BN_EaA7maJPr9gGZ_6G6ZVqAzolW1o7OJN2znFqdqvxE389Hin6JLPtbQ0UL3QrdberfQzxTsM6uf0e2T7DRk11iBG1a8SyiBNiDNhYCioSe2fjnUrnlMuuYkHFhupf-PbYuNVE_3nQr4_qOA_OKkrn836FXOo9r-hKQPTagTUWkq2s_lXlCaQYajr1IUxra2pTAJrbrXkur-pgMpdokTswBhQ"/>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-lg">Dilshan Karunaratne</h3>
+<p class="text-on-surface-variant text-sm">Certified Nature &amp; Heritage Specialist</p>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">
+                                            Pending
+                                        </div>
+</div>
+<div class="mt-3 flex items-center gap-4 text-xs font-semibold text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="translate">translate</span>
+                                            English, Sinhala, German
+                                        </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="verified">verified</span>
+                                            SLTDA Licensed
+                                        </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Action Bar -->
+<div class="sticky bottom-8 bg-surface-container-lowest/80 backdrop-blur-xl p-6 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 border border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-tertiary/10 rounded-full text-tertiary">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div>
+<p class="text-sm font-bold">Plan looks perfect!</p>
+<p class="text-xs text-on-surface-variant">Includes 4 hotels, 2 guides, and all transport.</p>
+</div>
+</div>
+<div class="flex gap-4 w-full md:w-auto">
+<button class="flex-grow md:flex-none border-2 border-primary text-primary px-8 py-3 rounded-md font-bold hover:bg-primary/5 transition-all">
+                            Save as PDF
+                        </button>
+<button class="flex-grow md:flex-none bg-secondary text-on-secondary px-10 py-3 rounded-md font-bold shadow-lg shadow-secondary/20 hover:scale-[1.02] transition-all">
+                            Book Everything • $2,450
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Global Footer -->
+<footer class="w-full py-12 border-t-0 mt-20 bg-slate-50 dark:bg-slate-950 flex flex-col items-center gap-4 px-8">
+<div class="flex flex-wrap justify-center gap-8 mb-4">
+<a class="text-slate-400 hover:text-teal-500 font-['Inter'] text-xs uppercase tracking-widest underline-offset-4 hover:underline transition-opacity opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="text-slate-400 hover:text-teal-500 font-['Inter'] text-xs uppercase tracking-widest underline-offset-4 hover:underline transition-opacity opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="text-slate-400 hover:text-teal-500 font-['Inter'] text-xs uppercase tracking-widest underline-offset-4 hover:underline transition-opacity opacity-80 hover:opacity-100" href="#">Eco-Certifications</a>
+<a class="text-slate-400 hover:text-teal-500 font-['Inter'] text-xs uppercase tracking-widest underline-offset-4 hover:underline transition-opacity opacity-80 hover:opacity-100" href="#">Contact Us</a>
+</div>
+<p class="text-teal-800 dark:text-teal-300 font-['Inter'] text-xs uppercase tracking-widest">© 2024 The Curated Wanderer. Sri Lanka Tourism Excellence.</p>
+</footer>
+</body></html>

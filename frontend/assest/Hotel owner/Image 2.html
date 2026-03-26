@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Provider Central | Lanka Horizon</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#006948",
+              "surface-tint": "#006a61",
+              "surface-bright": "#f5faf8",
+              "outline-variant": "#bcc9c6",
+              "surface-container": "#eaefed",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#dee4e1",
+              "on-secondary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "outline": "#6d7a77",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed-variant": "#783200",
+              "primary-container": "#008378",
+              "tertiary-fixed": "#85f8c4",
+              "primary": "#00685f",
+              "on-tertiary-fixed": "#002114",
+              "surface-variant": "#dee4e1",
+              "inverse-primary": "#6bd8cb",
+              "on-primary-fixed": "#00201d",
+              "error-container": "#ffdad6",
+              "background": "#f5faf8",
+              "secondary": "#9d4300",
+              "primary-fixed-dim": "#6bd8cb",
+              "on-primary-fixed-variant": "#005049",
+              "primary-fixed": "#89f5e7",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#00855d",
+              "on-primary-container": "#f4fffc",
+              "secondary-fixed": "#ffdbca",
+              "secondary-container": "#fd761a",
+              "surface-dim": "#d6dbd9",
+              "on-surface": "#171d1c",
+              "surface": "#f5faf8",
+              "on-background": "#171d1c",
+              "tertiary-fixed-dim": "#68dba9",
+              "inverse-surface": "#2c3130",
+              "on-surface-variant": "#3d4947",
+              "surface-container-high": "#e4e9e7",
+              "on-secondary-container": "#5c2400",
+              "surface-container-low": "#f0f5f2",
+              "on-secondary-fixed": "#341100",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#ffb690",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#edf2f0",
+              "on-tertiary-fixed-variant": "#005137",
+              "on-tertiary-container": "#f5fff7"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f5faf8;
+      }
+      h1, h2, h3, h4, .font-headline {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-teal-900 dark:bg-slate-950 shadow-2xl shadow-teal-950/20 z-50 flex flex-col py-6 font-['Plus_Jakarta_Sans'] antialiased">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold text-white tracking-tight">Lanka Horizon</h1>
+<p class="text-xs text-teal-200/60 uppercase tracking-widest mt-1">Partner Portal</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-3 px-4 py-3 bg-teal-800 dark:bg-teal-900/40 text-white rounded-lg mx-2 duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-medium">Messages</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-teal-600 hover:bg-teal-500 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                Add New Service
+            </button>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-64 min-h-screen">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-40 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-teal-500/10 flex justify-between items-center h-16 px-8 font-['Plus_Jakarta_Sans'] font-medium">
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/50 px-4 py-1.5 rounded-full w-96">
+<span class="material-symbols-outlined text-slate-400" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full outline-none" placeholder="Search bookings, guests, or rooms..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="hover:bg-teal-50 dark:hover:bg-teal-900/30 rounded-full p-2 transition-all scale-95 active:scale-100">
+<span class="material-symbols-outlined text-slate-500" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:bg-teal-50 dark:hover:bg-teal-900/30 rounded-full p-2 transition-all scale-95 active:scale-100">
+<span class="material-symbols-outlined text-slate-500" data-icon="help_outline">help_outline</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+<div class="text-right">
+<p class="text-xs font-bold text-teal-900">Provider Central</p>
+<p class="text-[10px] text-slate-500">Estate Manager</p>
+</div>
+<img alt="User Profile Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="professional portrait of a middle-aged man with a warm smile in a corporate but relaxed setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkNE3mCzjNh-VIC4BbJkkHNZws4PMhI-IJqpIF7x_oPMmKlVjxjyL1eJ4IhAsvpyi8GMet2hFwrcpsJW1sQ773zKUBPt4AbuWh9_P2WInoI_EHyY_9RwwzpWcYEw-g8d4wY-9umznV56ka-AD0lialjfNp2yxrVzyj9TOadUPIGpqplBw8s4cGtF1ldNVQtCrO718_Mqhp8DkBWWZM3uaCyl8BaonF4uOv6ulUC4KQCbWVXMMdi8N19uRE_SiYHSBZmobMtpc3yiE"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-10 space-y-12 max-w-7xl mx-auto">
+<!-- Hero Header Section -->
+<section class="flex justify-between items-end">
+<div>
+<h2 class="text-4xl font-extrabold text-teal-900 tracking-tight mb-2">Morning, Nilaveli Estate</h2>
+<p class="text-on-surface-variant text-lg">Here's what's happening at your boutique property today.</p>
+</div>
+<div class="flex gap-4">
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-teal-600" data-icon="calendar_today">calendar_today</span>
+<span class="text-sm font-semibold">Oct 12, 2023</span>
+</div>
+</div>
+</section>
+<!-- Key Metrics Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Metric 1: Occupancy -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-teal-500/5 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-medium text-sm">Occupancy Rate</span>
+<span class="material-symbols-outlined text-teal-600" data-icon="bed">bed</span>
+</div>
+<div>
+<div class="text-3xl font-extrabold text-teal-900">85%</div>
+<div class="text-xs text-tertiary font-semibold flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+                            +12% from last week
+                        </div>
+</div>
+</div>
+<!-- Metric 2: Revenue -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-teal-500/5 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-medium text-sm">Daily Revenue</span>
+<span class="material-symbols-outlined text-secondary" data-icon="payments">payments</span>
+</div>
+<div>
+<div class="text-3xl font-extrabold text-teal-900">LKR 142.5k</div>
+<div class="text-xs text-secondary font-semibold flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-xs" data-icon="query_stats">query_stats</span>
+                            On track for monthly goal
+                        </div>
+</div>
+</div>
+<!-- Metric 3: New Bookings -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-teal-500/5 flex flex-col justify-between h-40 ring-2 ring-secondary/20">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-medium text-sm">New Bookings</span>
+<span class="material-symbols-outlined text-secondary" data-icon="notification_important">notification_important</span>
+</div>
+<div>
+<div class="text-3xl font-extrabold text-teal-900">2</div>
+<div class="text-xs text-secondary font-bold uppercase tracking-wider mt-1">Action Required</div>
+</div>
+</div>
+<!-- Metric 4: Reviews -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-teal-500/5 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-medium text-sm">Guest Rating</span>
+<span class="material-symbols-outlined text-amber-500" data-icon="grade" style="font-variation-settings: 'FILL' 1;">grade</span>
+</div>
+<div>
+<div class="text-3xl font-extrabold text-teal-900">4.9</div>
+<div class="text-xs text-on-surface-variant mt-1">From 128 reviews</div>
+</div>
+</div>
+</section>
+<!-- Main Dashboard Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+<!-- Center: Booking Requests -->
+<div class="lg:col-span-2 space-y-8">
+<div class="flex items-center justify-between">
+<h3 class="text-2xl font-bold text-teal-900">New Booking Requests</h3>
+<a class="text-teal-700 text-sm font-bold hover:underline" href="#">View All Requests</a>
+</div>
+<div class="space-y-4">
+<!-- Request Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm transition-transform hover:scale-[1.01] flex flex-col md:flex-row gap-6 items-center">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Sarah Jenkins" class="w-full h-full object-cover" data-alt="portrait of a young woman with a friendly expression in outdoor natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5dZTenyasL9PcWG848UDJCSag5hAzl-gdASnFUdjd7iLOvFk11IU1yrJR60mk-Hda91vtuuxmXrFvkpOdJLDUhPakzb94ovSVJEwyJzaRUJlxobf8qJFzj8RG6knanPvFqcLc4zMu2ekstcAeAWahezZg8EmhAJJYGqq_fvZ6_3k0lVmfUmDKPS_oTqmJKFJjazzNtpn7EeBQRzBHayqtSA3W9Y_pIsKZT-di3A_b9PsdvRze3MpL-bbF4TK9dhYiJkXJks2B9fk"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-1">
+<h4 class="text-xl font-bold text-teal-900">Sarah Jenkins</h4>
+<span class="bg-secondary-container/20 text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest">Pending</span>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="event">event</span>
+                                        Oct 12 - 15, 2023
+                                    </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="nights_stay">nights_stay</span>
+                                        3 Nights
+                                    </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                        2 Guests
+                                    </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="meeting_room">meeting_room</span>
+                                        Garden View Suite
+                                    </div>
+</div>
+</div>
+<div class="flex gap-2 flex-shrink-0">
+<button class="px-5 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant font-bold hover:bg-surface-container-high transition-colors">Decline</button>
+<button class="px-5 py-2.5 rounded-lg bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary-container transition-colors">Accept</button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm transition-transform hover:scale-[1.01] flex flex-col md:flex-row gap-6 items-center">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Michael Chen" class="w-full h-full object-cover" data-alt="portrait of a professional looking man in a light colored shirt in a bright setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp_RT6sPmio-FttcQRq2TYAWsl_QcyDAjjpviZ4MNZ4VW5nQd6Sk_YV6gjUFCAH541rcw9f3ezfjpIEaR3QhJ-jkKaCGP-VzDBOv5k6ISsa1DNi0dGsaB02Xvx5c-SQjZr3n4U_Q8vDFK2cJU2RNnak5ppwsEQ92QP_h_cj2vgPu3-Rfejd3Poc0UNZohxjhB3qzGEkPrcFypDIerkEpXR7Lezrun1O-Qs0m2Oss1IyNWB03xYkJjqpNK7y7UZjwasvOXXVLNylO4"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-1">
+<h4 class="text-xl font-bold text-teal-900">Michael Chen</h4>
+<span class="bg-secondary-container/20 text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest">Pending</span>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="event">event</span>
+                                        Oct 20 - 22, 2023
+                                    </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="nights_stay">nights_stay</span>
+                                        2 Nights
+                                    </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                        1 Guest
+                                    </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="meeting_room">meeting_room</span>
+                                        Standard Balcony
+                                    </div>
+</div>
+</div>
+<div class="flex gap-2 flex-shrink-0">
+<button class="px-5 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant font-bold hover:bg-surface-container-high transition-colors">Decline</button>
+<button class="px-5 py-2.5 rounded-lg bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary-container transition-colors">Accept</button>
+</div>
+</div>
+</div>
+<!-- Room Inventory Section -->
+<div class="space-y-6 pt-6">
+<div class="flex items-center justify-between">
+<h3 class="text-2xl font-bold text-teal-900">Room Inventory</h3>
+<button class="flex items-center gap-2 text-primary font-bold hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+                                Bulk Edit Availability
+                            </button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-outline-variant/10 text-on-surface-variant text-xs font-bold uppercase tracking-widest">
+<tr>
+<th class="px-6 py-4">Room Type</th>
+<th class="px-6 py-4">Available</th>
+<th class="px-6 py-4">Price (Night)</th>
+<th class="px-6 py-4 text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr>
+<td class="px-6 py-5 font-bold text-teal-900">Ocean Vista Villa</td>
+<td class="px-6 py-5 text-on-surface-variant">2 / 5</td>
+<td class="px-6 py-5 text-on-surface-variant">LKR 45,000</td>
+<td class="px-6 py-5 text-right">
+<span class="bg-tertiary-container/10 text-tertiary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Limited</span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-5 font-bold text-teal-900">Garden View Suite</td>
+<td class="px-6 py-5 text-on-surface-variant">1 / 8</td>
+<td class="px-6 py-5 text-on-surface-variant">LKR 32,500</td>
+<td class="px-6 py-5 text-right">
+<span class="bg-secondary-container/10 text-secondary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Almost Full</span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-5 font-bold text-teal-900">Standard Balcony</td>
+<td class="px-6 py-5 text-on-surface-variant">5 / 12</td>
+<td class="px-6 py-5 text-on-surface-variant">LKR 21,000</td>
+<td class="px-6 py-5 text-right">
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Available</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Calendar & Check-ins -->
+<div class="space-y-10">
+<!-- Calendar Widget -->
+<div class="bg-white p-6 rounded-2xl shadow-xl shadow-teal-950/5 border border-teal-500/5">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-teal-900">October 2023</h3>
+<div class="flex gap-2">
+<button class="p-1 hover:bg-slate-100 rounded-md"><span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span></button>
+<button class="p-1 hover:bg-slate-100 rounded-md"><span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span></button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+<span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<!-- Simple mock calendar grid -->
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">24</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">25</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">26</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">27</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">28</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">29</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">30</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">1</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">2</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">3</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium bg-teal-50 text-teal-600 rounded-full">4</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">5</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">6</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">7</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">8</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">9</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">10</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">11</div>
+<div class="aspect-square flex items-center justify-center text-xs font-bold bg-primary text-white rounded-full">12</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">13</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">14</div>
+<div class="aspect-square flex items-center justify-center text-xs font-medium">15</div>
+</div>
+</div>
+<!-- Upcoming Check-ins -->
+<div class="space-y-6">
+<h3 class="text-xl font-bold text-teal-900">Today's Arrivals</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-teal-600 font-bold">AJ</div>
+<div class="flex-1 border-b border-outline-variant/10 pb-4 group-hover:border-teal-500/30 transition-colors">
+<p class="font-bold text-on-surface">Alex Johnson</p>
+<div class="flex justify-between items-center mt-0.5">
+<p class="text-xs text-on-surface-variant">Ocean Vista Villa</p>
+<p class="text-xs font-bold text-tertiary">2:00 PM</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-teal-600 font-bold">RP</div>
+<div class="flex-1 border-b border-outline-variant/10 pb-4 group-hover:border-teal-500/30 transition-colors">
+<p class="font-bold text-on-surface">Rita Patel</p>
+<div class="flex justify-between items-center mt-0.5">
+<p class="text-xs text-on-surface-variant">Garden Suite</p>
+<p class="text-xs font-bold text-tertiary">4:30 PM</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-teal-600 font-bold">LW</div>
+<div class="flex-1 border-b border-outline-variant/10 pb-4 group-hover:border-teal-500/30 transition-colors">
+<p class="font-bold text-on-surface">Leo Wong</p>
+<div class="flex justify-between items-center mt-0.5">
+<p class="text-xs text-on-surface-variant">Standard Balcony</p>
+<p class="text-xs font-bold text-tertiary">6:00 PM</p>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 rounded-xl border border-teal-100 text-teal-700 font-bold text-sm hover:bg-teal-50 transition-colors">
+                            Download Daily Arrival List
+                        </button>
+</div>
+<!-- AI Concierge Insight (Floating feel) -->
+<div class="glass-card p-6 rounded-2xl border border-white/40 shadow-xl shadow-teal-950/5 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-3">
+<span class="material-symbols-outlined text-secondary opacity-30" data-icon="lightbulb" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<h4 class="font-bold text-teal-900 mb-2">Concierge Tip</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                            Booking demand for <span class="text-secondary font-bold">Deepavali Week</span> is up by 40%. Consider adjusting your Ocean Vista rates for the upcoming holidays.
+                        </p>
+<button class="mt-4 text-xs font-bold text-primary uppercase tracking-widest flex items-center gap-1">
+                            Review Smart Rates
+                            <span class="material-symbols-outlined text-[10px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button for AI Assistance (Contextual Suppression Logic Applied: Hidden on main dashboard usually but kept as 'The Concierge' brand element) -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="w-14 h-14 bg-secondary text-white rounded-full shadow-2xl shadow-secondary/40 flex items-center justify-center group transition-all hover:scale-110 active:scale-95">
+<span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<div class="absolute right-full mr-4 bg-teal-900 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all pointer-events-none">
+                Ask the AI Concierge
+            </div>
+</button>
+</div>
+</body></html>

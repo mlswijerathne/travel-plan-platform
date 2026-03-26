@@ -60,7 +60,7 @@ export function BookingItemCard({ item, bookingId, bookingStatus, existingReview
             {canReview && (
               <div>
                 {alreadyReviewed ? (
-                  <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                  <div className="flex items-center gap-1 text-xs text-tertiary font-medium">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     Reviewed
                   </div>

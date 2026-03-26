@@ -8,7 +8,7 @@ import { StarRating } from '@/components/shared/StarRating'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { MapPin, Clock, Star, ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
+import { MapPin, Clock, Star, ArrowLeft, CheckCircle, XCircle, Building2 } from 'lucide-react'
 import { formatRating, formatAmenity } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -61,18 +61,18 @@ export default function HotelDetailPage({ params }: { params: Promise<{ id: stri
       </Link>
 
       {/* Hero */}
-      <div className="rounded-xl border bg-card overflow-hidden">
-        <div className="h-56 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center overflow-hidden">
+      <div className="rounded-2xl border border-border/30 bg-card shadow-editorial overflow-hidden">
+        <div className="h-64 md:h-80 bg-gradient-to-br from-primary/10 to-tertiary/10 flex items-center justify-center overflow-hidden">
           {hotel.imageUrl ? (
             <img src={hotel.imageUrl} alt={hotel.name} className="w-full h-full object-cover" />
           ) : (
-            <span className="text-6xl">🏨</span>
+            <Building2 className="h-12 w-12 text-primary/30" />
           )}
         </div>
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold">{hotel.name}</h1>
+              <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">{hotel.name}</h1>
               <div className="flex items-center gap-3 mt-2">
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
@@ -84,8 +84,8 @@ export default function HotelDetailPage({ params }: { params: Promise<{ id: stri
               </div>
             </div>
             {hotel.reviewCount > 0 && (
-              <div className="flex items-center gap-2 bg-primary/5 rounded-lg px-3 py-2">
-                <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+              <div className="flex items-center gap-2 bg-surface-low rounded-lg px-3 py-2">
+                <Star className="h-5 w-5 fill-secondary text-secondary" />
                 <span className="text-lg font-bold">{formatRating(hotel.averageRating)}</span>
                 <span className="text-sm text-muted-foreground">({hotel.reviewCount} reviews)</span>
               </div>
@@ -118,8 +118,8 @@ export default function HotelDetailPage({ params }: { params: Promise<{ id: stri
       </div>
 
       {/* Availability Check */}
-      <div className="rounded-xl border bg-card p-6">
-        <h2 className="text-lg font-semibold mb-4">Check Availability</h2>
+      <div className="rounded-xl bg-card shadow-editorial border border-border/30 p-6">
+        <h2 className="font-display text-xl font-bold text-foreground mb-4">Check Availability</h2>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
             <label className="text-sm text-muted-foreground mb-1 block">Check-in</label>
@@ -135,13 +135,13 @@ export default function HotelDetailPage({ params }: { params: Promise<{ id: stri
           <div className="mt-3 flex items-center gap-2">
             {availability.available ? (
               <>
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <span className="text-sm text-green-700">{availability.message || `${availability.availableRooms} rooms available`}</span>
+                <CheckCircle className="h-5 w-5 text-tertiary" />
+                <span className="text-sm text-tertiary">{availability.message || `${availability.availableRooms} rooms available`}</span>
               </>
             ) : (
               <>
-                <XCircle className="h-5 w-5 text-red-500" />
-                <span className="text-sm text-red-600">{availability.message || 'No rooms available for these dates'}</span>
+                <XCircle className="h-5 w-5 text-destructive" />
+                <span className="text-sm text-destructive">{availability.message || 'No rooms available for these dates'}</span>
               </>
             )}
           </div>
@@ -151,7 +151,7 @@ export default function HotelDetailPage({ params }: { params: Promise<{ id: stri
       {/* Rooms */}
       {activeRooms.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-4">Rooms ({activeRooms.length})</h2>
+          <h2 className="font-display text-xl font-bold text-foreground mb-4">Rooms ({activeRooms.length})</h2>
           <div className="space-y-3">
             {activeRooms.map((room) => (
               <RoomCard key={room.id} room={room} />

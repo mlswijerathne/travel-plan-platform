@@ -70,10 +70,10 @@ import { createClient } from '@/lib/supabase/client'
 import { getItineraryPdfUrl } from '@/lib/api/itinerary'
 
 const STATUS_COLORS: Record<string, string> = {
-  PLANNING: 'bg-blue-50 text-blue-600 border-blue-200',
-  ACTIVE: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-  COMPLETED: 'bg-gray-50 text-gray-500 border-gray-200',
-  CANCELLED: 'bg-red-50 text-red-500 border-red-200',
+  PLANNING: 'bg-primary/10 text-primary border-primary/20',
+  ACTIVE: 'bg-tertiary/10 text-tertiary border-tertiary/30',
+  COMPLETED: 'bg-surface-low text-muted-foreground border-border/30',
+  CANCELLED: 'bg-destructive/10 text-destructive border-destructive/20',
 }
 
 const ACTIVITY_ICONS: Record<string, any> = {
@@ -290,12 +290,12 @@ export default function ItineraryDetailPage() {
       </Link>
 
       {/* Header */}
-      <Card className="bg-gradient-to-r from-primary/5 via-teal-50/50 to-emerald-50/30 border-0 shadow-sm">
+      <Card className="bg-gradient-to-br from-primary/10 via-surface-low to-tertiary/10 border-0 shadow-editorial">
         <CardContent className="py-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <h1 className="font-display text-2xl font-bold text-foreground">{itin.title}</h1>
+                <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">{itin.title}</h1>
                 <Badge variant="outline" className={`text-xs ${STATUS_COLORS[itin.status] ?? ''}`}>{itin.status}</Badge>
               </div>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -356,16 +356,16 @@ export default function ItineraryDetailPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="schedule">
-        <TabsList className="bg-white border shadow-sm">
-          <TabsTrigger value="schedule" className="gap-2">
+        <TabsList className="bg-surface-low rounded-xl p-1">
+          <TabsTrigger value="schedule" className="gap-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
             <CalendarDays className="h-4 w-4" />
             Schedule
           </TabsTrigger>
-          <TabsTrigger value="expenses" className="gap-2">
+          <TabsTrigger value="expenses" className="gap-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
             <DollarSign className="h-4 w-4" />
             Expenses
           </TabsTrigger>
-          <TabsTrigger value="summary" className="gap-2">
+          <TabsTrigger value="summary" className="gap-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
             <PieChart className="h-4 w-4" />
             Summary
           </TabsTrigger>
@@ -375,14 +375,15 @@ export default function ItineraryDetailPage() {
         <TabsContent value="schedule" className="mt-4">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold">
+              <h2 className="font-display font-extrabold tracking-tight">
                 Day-by-Day Schedule
                 {days && <span className="ml-2 text-sm font-normal text-muted-foreground">({days.length} days)</span>}
               </h2>
               {(!days || days.length === 0) && (
                 <Button
                   size="sm"
-                  className="gap-1.5"
+                  variant="ghost"
+                  className="gap-1.5 bg-primary/10 text-primary hover:bg-primary/20"
                   onClick={handleGenerateDays}
                   disabled={generateDaysMutation.isPending}
                 >
@@ -410,11 +411,11 @@ export default function ItineraryDetailPage() {
                 {(days as ItineraryDay[]).map((day) => {
                   const Icon = ACTIVITY_ICONS['CUSTOM']
                   return (
-                    <Card key={day.id} className="shadow-sm">
+                    <Card key={day.id} className="shadow-editorial border-l-4 border-primary">
                       <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-base flex items-center gap-2">
-                            <span className="h-7 w-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
+                          <CardTitle className="font-display text-base font-bold flex items-center gap-2">
+                            <span className="h-8 w-8 rounded-full bg-primary text-white text-xs font-display font-bold flex items-center justify-center shrink-0">
                               {day.dayNumber}
                             </span>
                             Day {day.dayNumber}
@@ -423,9 +424,9 @@ export default function ItineraryDetailPage() {
                             </span>
                           </CardTitle>
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
-                            className="gap-1 text-xs"
+                            className="gap-1 text-xs bg-primary/10 text-primary hover:bg-primary/20"
                             onClick={() => openAddActivity(day.id)}
                           >
                             <Plus className="h-3.5 w-3.5" />
@@ -444,7 +445,7 @@ export default function ItineraryDetailPage() {
                             {day.activities.map((act) => {
                               const ActIcon = ACTIVITY_ICONS[act.providerType ?? 'CUSTOM'] ?? MapPin
                               return (
-                                <div key={act.id} className="flex items-start gap-3 p-2.5 rounded-lg bg-muted/50 group">
+                                <div key={act.id} className="flex items-start gap-3 p-2.5 rounded-lg bg-surface-low group">
                                   <div className="h-8 w-8 rounded-lg bg-background flex items-center justify-center shrink-0 mt-0.5">
                                     <ActIcon className="h-4 w-4 text-primary" />
                                   </div>
@@ -500,7 +501,7 @@ export default function ItineraryDetailPage() {
         <TabsContent value="expenses" className="mt-4">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold">
+              <h2 className="font-display font-extrabold tracking-tight">
                 Expenses ({expenses.length})
                 {summary && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
@@ -508,7 +509,7 @@ export default function ItineraryDetailPage() {
                   </span>
                 )}
               </h2>
-              <Button size="sm" className="gap-1.5" onClick={() => setAddExpenseOpen(true)}>
+              <Button size="sm" className="gap-1.5 bg-primary/10 text-primary hover:bg-primary/20" variant="ghost" onClick={() => setAddExpenseOpen(true)}>
                 <Plus className="h-4 w-4" />
                 Add Expense
               </Button>
@@ -562,8 +563,8 @@ export default function ItineraryDetailPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              <Card className="shadow-sm">
-                <CardHeader className="pb-3"><CardTitle className="text-base">Total Spending</CardTitle></CardHeader>
+              <Card className="shadow-editorial">
+                <CardHeader className="pb-3"><CardTitle className="font-display font-bold text-base">Total Spending</CardTitle></CardHeader>
                 <CardContent>
                   <p className="text-3xl font-bold text-foreground">
                     Rs {((summary as any).totalAmount ?? (summary as any).totalSpent ?? 0).toLocaleString()}
@@ -579,7 +580,7 @@ export default function ItineraryDetailPage() {
                         <div
                           className={`h-full rounded-full ${
                             ((summary as any).totalAmount ?? (summary as any).totalSpent ?? 0) > itin.totalBudget
-                              ? 'bg-red-500'
+                              ? 'bg-destructive'
                               : 'bg-primary'
                           }`}
                           style={{
@@ -593,8 +594,8 @@ export default function ItineraryDetailPage() {
               </Card>
 
               {(summary as any).byCategory && Object.keys((summary as any).byCategory).length > 0 && (
-                <Card className="shadow-sm">
-                  <CardHeader className="pb-3"><CardTitle className="text-base">By Category</CardTitle></CardHeader>
+                <Card className="shadow-editorial">
+                  <CardHeader className="pb-3"><CardTitle className="font-display font-bold text-base">By Category</CardTitle></CardHeader>
                   <CardContent className="space-y-3">
                     {Object.entries((summary as any).byCategory as Record<string, number>)
                       .sort(([, a], [, b]) => b - a)
@@ -623,9 +624,9 @@ export default function ItineraryDetailPage() {
 
       {/* Add Expense Dialog */}
       <Dialog open={addExpenseOpen} onOpenChange={setAddExpenseOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Add Expense</DialogTitle>
+        <DialogContent className="sm:max-w-md p-6">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="font-display font-bold text-lg">Add Expense</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleAddExpense}>
             <div className="space-y-4 py-2">
@@ -671,9 +672,9 @@ export default function ItineraryDetailPage() {
 
       {/* Add Activity Dialog */}
       <Dialog open={addActivityOpen} onOpenChange={setAddActivityOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Add Activity</DialogTitle>
+        <DialogContent className="sm:max-w-md p-6">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="font-display font-bold text-lg">Add Activity</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleAddActivity}>
             <div className="space-y-4 py-2">

@@ -56,7 +56,7 @@ export function ProviderCard({ provider, onAddToBooking }: ProviderCardProps) {
           />
         </div>
       ) : (
-        <div className="h-24 bg-gradient-to-br from-primary/10 via-teal-50 to-emerald-50 flex items-center justify-center">
+        <div className="h-24 bg-gradient-to-br from-primary/10 via-primary/5 to-tertiary/10 flex items-center justify-center">
           <TypeIcon className="h-8 w-8 text-primary/40" />
         </div>
       )}
@@ -76,7 +76,7 @@ export function ProviderCard({ provider, onAddToBooking }: ProviderCardProps) {
         <Badge
             variant={isInternal ? 'default' : 'outline'}
             className={isInternal
-              ? 'text-[10px] shrink-0 gap-1 px-1.5 py-0.5 bg-emerald-600 hover:bg-emerald-700 border-emerald-600'
+              ? 'text-[10px] shrink-0 gap-1 px-1.5 py-0.5 bg-tertiary hover:bg-tertiary/90 border-tertiary'
               : 'text-[10px] shrink-0 gap-1 px-1.5 py-0.5 text-muted-foreground'}
           >
             {isInternal && <ShieldCheck className="h-3 w-3" />}

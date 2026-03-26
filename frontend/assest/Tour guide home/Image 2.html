@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#006948",
+              "surface-tint": "#006a61",
+              "surface-bright": "#f5faf8",
+              "outline-variant": "#bcc9c6",
+              "surface-container": "#eaefed",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#dee4e1",
+              "on-secondary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "outline": "#6d7a77",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed-variant": "#783200",
+              "primary-container": "#008378",
+              "tertiary-fixed": "#85f8c4",
+              "primary": "#00685f",
+              "on-tertiary-fixed": "#002114",
+              "surface-variant": "#dee4e1",
+              "inverse-primary": "#6bd8cb",
+              "on-primary-fixed": "#00201d",
+              "error-container": "#ffdad6",
+              "background": "#f5faf8",
+              "secondary": "#9d4300",
+              "primary-fixed-dim": "#6bd8cb",
+              "on-primary-fixed-variant": "#005049",
+              "primary-fixed": "#89f5e7",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#00855d",
+              "on-primary-container": "#f4fffc",
+              "secondary-fixed": "#ffdbca",
+              "secondary-container": "#fd761a",
+              "surface-dim": "#d6dbd9",
+              "on-surface": "#171d1c",
+              "surface": "#f5faf8",
+              "on-background": "#171d1c",
+              "tertiary-fixed-dim": "#68dba9",
+              "inverse-surface": "#2c3130",
+              "on-surface-variant": "#3d4947",
+              "surface-container-high": "#e4e9e7",
+              "on-secondary-container": "#5c2400",
+              "surface-container-low": "#f0f5f2",
+              "on-secondary-fixed": "#341100",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#ffb690",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#edf2f0",
+              "on-tertiary-fixed-variant": "#005137",
+              "on-tertiary-container": "#f5fff7"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-teal-900 dark:bg-slate-950 shadow-2xl shadow-teal-950/20 flex flex-col h-full py-6 font-['Plus_Jakarta_Sans'] antialiased z-50">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold text-white tracking-tight">Lanka Horizon</h1>
+<p class="text-teal-100/50 text-xs uppercase tracking-widest mt-1">Partner Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="flex items-center gap-3 px-4 py-3 bg-teal-800 dark:bg-teal-900/40 text-white rounded-lg mx-2 duration-200 ease-in-out hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined text-teal-400">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-medium">Bookings</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-medium">Inventory</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-medium">Analytics</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-medium">Messages</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-teal-100/70 hover:text-white transition-colors mx-2 duration-200 ease-in-out hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Settings</span>
+</div>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 bg-secondary text-white rounded-lg font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all shadow-lg shadow-secondary/20">
+<span class="material-symbols-outlined">add</span>
+                Add New Service
+            </button>
+</div>
+</aside>
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Component -->
+<header class="sticky top-0 z-40 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-teal-500/10 flex justify-between items-center h-16 px-8">
+<div class="flex items-center gap-6 flex-1">
+<span class="text-lg font-semibold text-teal-900 dark:text-teal-100 font-headline">Provider Central</span>
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search tours, guests, or payouts..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-teal-50 dark:hover:bg-teal-900/30 rounded-full p-2 transition-all scale-95 active:scale-100">
+<span class="material-symbols-outlined text-outline">notifications</span>
+</button>
+<button class="hover:bg-teal-50 dark:hover:bg-teal-900/30 rounded-full p-2 transition-all scale-95 active:scale-100">
+<span class="material-symbols-outlined text-outline">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="text-sm font-bold text-on-surface">Arjuna Perera</p>
+<p class="text-[10px] text-outline-variant uppercase tracking-tighter">Heritage Specialist</p>
+</div>
+<img class="h-10 w-10 rounded-full object-cover ring-2 ring-primary/20 group-hover:ring-primary transition-all" data-alt="portrait of a professional male tour guide with a friendly smile, outdoor lighting, natural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVzNkT9SgkaJsC7-DxazpEdszk1SQLMJkum1Tby6FC3IrESVIHDGLRGd4ukONUYXMAAg4b8jOIzx4nldCp4DDTT1epczT-pgKjy58jTXW2zinS6069LBfa4j5SrFzfbhIh8GI6OeJthP4zMd4Vnw63gwkMQcRkYC6cmtfbOD4DvCeUnHlaQ9DBZmLqxg5QX1AqSgV33XzUYU9_xnC6VzX3CnhSlx3cJxv0-c6h0vCXoOloHs1UQ98axECs1gYnIt9Sz2olGM2htbY"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 max-w-7xl mx-auto space-y-12">
+<!-- Quick Stats Section -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-sm font-medium">Upcoming Tours</p>
+<h3 class="text-3xl font-headline font-extrabold text-primary mt-1">4</h3>
+</div>
+<div class="bg-primary-container/10 p-4 rounded-lg">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">tour</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-sm font-medium">Total Views</p>
+<h3 class="text-3xl font-headline font-extrabold text-primary mt-1">128</h3>
+</div>
+<div class="bg-tertiary-container/10 p-4 rounded-lg">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">visibility</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-sm font-medium">Earnings</p>
+<h3 class="text-3xl font-headline font-extrabold text-secondary mt-1">LKR 42k</h3>
+</div>
+<div class="bg-secondary-container/10 p-4 rounded-lg">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+</div>
+</section>
+<!-- Main Bento Layout -->
+<div class="bento-grid">
+<!-- New Tour Requests -->
+<div class="col-span-8 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/5">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-2xl font-headline font-bold text-on-surface">New Tour Requests</h2>
+<p class="text-on-surface-variant text-sm mt-1">Manage your incoming inquiries and bookings</p>
+</div>
+<button class="text-primary font-bold text-sm hover:underline">View All Requests</button>
+</div>
+<div class="space-y-4">
+<div class="group bg-surface hover:bg-surface-container-low p-5 rounded-lg transition-all flex items-center gap-6">
+<div class="h-20 w-28 rounded-md overflow-hidden flex-shrink-0">
+<img class="h-full w-full object-cover" data-alt="scenic view of the historic Galle Fort lighthouse and ramparts at sunset in Sri Lanka" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB747TiivnZ2gWj_VwTB6ChL6355sd21HuLkmKoillCybdTnO2gEGjgOfZ3Tb0VcxC-a_ZqsmbSSoLw5TeCN5TE4iuPZ1TItvyyN232LtclEFQEbgaXwbVVAhtEVIAeNbrGsZ-5Z6teP7n3TV4R-PEpA0inxE9NZ9XXhDRLRhzrLS0eQIpo54Ief_Nb437BOkFc1SuilTBfDatGtUhF5BEyNzGm56ve35Nucna7xCTgUj0guScQST7xC0Lfl4pryYPo1zmTlTMFifU"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-headline font-bold text-lg text-on-surface">Galle Fort Heritage Walk</h4>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">Pending</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">Arriving Oct 12 • 4 Guests • Standard Package</p>
+<div class="flex items-center gap-4 mt-3">
+<button class="bg-primary text-white px-5 py-1.5 rounded-md text-sm font-semibold hover:brightness-110 transition-all">Accept</button>
+<button class="text-outline text-sm font-semibold hover:text-error transition-all">Decline</button>
+</div>
+</div>
+</div>
+<div class="group bg-surface hover:bg-surface-container-low p-5 rounded-lg transition-all flex items-center gap-6">
+<div class="h-20 w-28 rounded-md overflow-hidden flex-shrink-0">
+<img class="h-full w-full object-cover" data-alt="interior view of an ancient buddhist temple cave with intricate murals and statues in Sri Lanka" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmzK9v-nDlic8DjmW8Ac5ZI_vNf2IuAsYX-ITfikEn4hfo_47fy588Z8fivG2R6RHnSGav6KUgWsFFptIgpmiKfQMT4f2MF-9Qyprjs0J_X7PDuSm-geBD_5ZPwCjvaee3bkrXGHZNjMV3rTDb8AlcF7sFJ9Biit9_zQhUwQ-n4qKB0A214WLSOxce7EfIbMBmDYsIgVveNhh8I9IX1aDJepWDvEUfHSCRF4waxDeP7KtINEqwVJxkBcVf4wo18Si-ggcX5AjizrQ"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-headline font-bold text-lg text-on-surface">Dambulla Cave Exploration</h4>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">Pending</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">Arriving Oct 15 • 2 Guests • Full Day</p>
+<div class="flex items-center gap-4 mt-3">
+<button class="bg-primary text-white px-5 py-1.5 rounded-md text-sm font-semibold hover:brightness-110 transition-all">Accept</button>
+<button class="text-outline text-sm font-semibold hover:text-error transition-all">Decline</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Guide Profile Card -->
+<div class="col-span-4 bg-teal-900 text-white rounded-xl p-8 relative overflow-hidden flex flex-col justify-between">
+<div class="absolute top-0 right-0 w-32 h-32 bg-teal-800 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20"></div>
+<div>
+<div class="flex items-center justify-between mb-6">
+<div class="h-20 w-20 rounded-xl overflow-hidden ring-4 ring-teal-800 shadow-xl">
+<img class="h-full w-full object-cover" data-alt="close-up portrait of a professional male tour guide with a friendly smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFrb2PqTudphPIr4v3mqUy-S8o0i2ggBgZprVMJLikPvJ0wuCKg8MbQfl83NbHOvkzerXSAwwXpXwa0ICBzgh2Kob1Jp3PN9nOKI7E45FnHKbBEA4dO5oztY2ubCkl-y0OEdDaZNwwS-J5-dxbak0JZPkDdvNtab5k8VDxMQsjfbMQmX76zISa1Pre5Iqxjry4klXYmK27fNKRAv-ML-WLTwVlgii4Ba3NwDDWHLFU4cP6S7QgmZwXNoKpkikOQNZQTVpmbe8-lhs"/>
+</div>
+<div class="bg-tertiary px-3 py-1 rounded-full flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-[10px] font-bold tracking-widest uppercase">SLTDA Verified</span>
+</div>
+</div>
+<h3 class="text-2xl font-headline font-extrabold mb-1">Arjuna Perera</h3>
+<p class="text-teal-100/60 text-sm">Specialist in Colonial History &amp; Cultural Anthropology</p>
+</div>
+<div class="mt-8 space-y-4">
+<div class="flex items-center justify-between py-3 border-b border-teal-800">
+<span class="text-teal-100/40 text-xs font-bold uppercase tracking-widest">Experience</span>
+<span class="font-headline font-bold">12 Years</span>
+</div>
+<div class="flex items-center justify-between py-3 border-b border-teal-800">
+<span class="text-teal-100/40 text-xs font-bold uppercase tracking-widest">Languages</span>
+<span class="font-headline font-bold">EN, DE, SIN</span>
+</div>
+<div class="flex items-center justify-between py-3 border-b border-teal-800">
+<span class="text-teal-100/40 text-xs font-bold uppercase tracking-widest">Rating</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-headline font-bold">4.98</span>
+</div>
+</div>
+</div>
+<button class="mt-8 w-full bg-white/10 hover:bg-white/20 py-3 rounded-lg text-sm font-bold backdrop-blur-sm transition-all">Edit Public Profile</button>
+</div>
+<!-- Weekly Schedule -->
+<div class="col-span-12 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/5">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h2 class="text-2xl font-headline font-bold text-on-surface">Weekly Schedule</h2>
+<p class="text-on-surface-variant text-sm mt-1">October 9th - October 15th, 2023</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant/30 rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-outline">chevron_left</span>
+</button>
+<button class="p-2 border border-outline-variant/30 rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-4">
+<!-- Monday -->
+<div class="space-y-4">
+<p class="text-center text-[10px] font-bold text-outline uppercase tracking-tighter">Mon 09</p>
+<div class="h-32 rounded-lg bg-surface-container border-t-4 border-primary p-3 flex flex-col justify-between">
+<p class="text-[11px] font-bold text-primary">09:00 - 12:00</p>
+<p class="text-xs font-semibold leading-tight text-on-surface">National Museum Walk</p>
+<div class="w-full h-1 bg-primary/20 rounded-full"></div>
+</div>
+</div>
+<!-- Tuesday -->
+<div class="space-y-4">
+<p class="text-center text-[10px] font-bold text-outline uppercase tracking-tighter">Tue 10</p>
+<div class="h-32 rounded-lg bg-surface-container p-3 flex items-center justify-center border-dashed border-2 border-outline-variant/30">
+<p class="text-[10px] text-outline italic">No Bookings</p>
+</div>
+</div>
+<!-- Wednesday -->
+<div class="space-y-4">
+<p class="text-center text-[10px] font-bold text-outline uppercase tracking-tighter">Wed 11</p>
+<div class="h-32 rounded-lg bg-surface-container border-t-4 border-primary p-3 flex flex-col justify-between">
+<p class="text-[11px] font-bold text-primary">10:30 - 17:00</p>
+<p class="text-xs font-semibold leading-tight text-on-surface">City of Kings Tour</p>
+<div class="w-full h-1 bg-primary/20 rounded-full"></div>
+</div>
+</div>
+<!-- Thursday -->
+<div class="space-y-4">
+<p class="text-center text-[10px] font-bold text-outline uppercase tracking-tighter">Thu 12</p>
+<div class="h-32 rounded-lg bg-surface-container border-t-4 border-secondary p-3 flex flex-col justify-between shadow-lg shadow-secondary/10">
+<p class="text-[11px] font-bold text-secondary">08:00 - 11:00</p>
+<p class="text-xs font-bold leading-tight text-on-surface">Galle Fort (Pending)</p>
+<div class="w-full h-1 bg-secondary/20 rounded-full"></div>
+</div>
+</div>
+<!-- Friday -->
+<div class="space-y-4">
+<p class="text-center text-[10px] font-bold text-outline uppercase tracking-tighter">Fri 13</p>
+<div class="h-32 rounded-lg bg-surface-container border-t-4 border-primary p-3 flex flex-col justify-between">
+<p class="text-[11px] font-bold text-primary">09:00 - 12:00</p>
+<p class="text-xs font-semibold leading-tight text-on-surface">Port City Walk</p>
+<div class="w-full h-1 bg-primary/20 rounded-full"></div>
+</div>
+</div>
+<!-- Saturday -->
+<div class="space-y-4">
+<p class="text-center text-[10px] font-bold text-outline uppercase tracking-tighter">Sat 14</p>
+<div class="h-32 rounded-lg bg-surface-container border-t-4 border-primary p-3 flex flex-col justify-between">
+<p class="text-[11px] font-bold text-primary">Full Day</p>
+<p class="text-xs font-semibold leading-tight text-on-surface">Kandy Sacred Journey</p>
+<div class="w-full h-1 bg-primary/20 rounded-full"></div>
+</div>
+</div>
+<!-- Sunday -->
+<div class="space-y-4">
+<p class="text-center text-[10px] font-bold text-outline uppercase tracking-tighter">Sun 15</p>
+<div class="h-32 rounded-lg bg-surface-container p-3 flex items-center justify-center border-dashed border-2 border-outline-variant/30">
+<p class="text-[10px] text-outline italic">No Bookings</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Promotion Footer Area -->
+<section class="mt-12 p-8 rounded-2xl bg-gradient-to-r from-teal-50 to-white flex items-center gap-12 border border-teal-100">
+<div class="flex-1">
+<h2 class="text-2xl font-headline font-bold text-teal-900">Grow Your Audience</h2>
+<p class="text-on-surface-variant mt-2 max-w-md">Promote your 'Hidden Galle' tour to reach 3x more premium travelers this peak season. Get listed on the main explorer dashboard.</p>
+<button class="mt-6 bg-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-primary/20 hover:shadow-xl transition-all">Boost My Profile</button>
+</div>
+<div class="w-1/3 relative h-48 rounded-xl overflow-hidden shadow-2xl rotate-2">
+<img class="h-full w-full object-cover" data-alt="vibrant tropical beach in Sri Lanka with leaning palm trees and azure blue ocean water under a clear sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxYfM4scrkWiLrou70iMYpU95hscXRoNF0HGyu4iKfOPsYu_l65TSeCUU8DosHH-hXOP0Yq0OKZBBIA-8laE0I0bZq0tNxLPcYV83-MKCFSe5drmmJARAd9UZbJ7PP4qRjbeyGre2NXV4ItqCdYRUDtwKlhrjSUg_50gpTDYim9QpqsHyZZTupXFJRHEvUCOtUZI0NIRgoARFMWt4515CjqCAvf6BEE7SiZtvwikxdxalrddBWvT467m0ILIueAUQu1J74lWvKvDs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-teal-900/60 to-transparent flex items-end p-4">
+<p class="text-white text-xs font-bold uppercase tracking-widest">Peak Season: Oct-Mar</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

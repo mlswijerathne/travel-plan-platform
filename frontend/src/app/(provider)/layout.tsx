@@ -15,7 +15,7 @@ export default async function ProviderLayout({
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-background">
       <AuthNav userEmail={user.email ?? ''} />
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {children}

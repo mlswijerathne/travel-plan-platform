@@ -45,32 +45,32 @@ const ROLE_CARDS = [
     icon: Compass,
     title: 'Tourist',
     description: 'Plan and book your perfect Sri Lanka trip with AI assistance.',
-    color: 'border-teal-200 hover:border-teal-400 hover:bg-teal-50/50',
-    iconColor: 'bg-teal-50 text-teal-600',
+    color: 'border-border hover:border-primary/40 hover:bg-primary/5',
+    iconColor: 'bg-primary/10 text-primary',
   },
   {
     key: 'hotel_owner' as const,
     icon: Building2,
     title: 'Hotel Owner',
     description: 'List your property and manage bookings from travelers.',
-    color: 'border-blue-200 hover:border-blue-400 hover:bg-blue-50/50',
-    iconColor: 'bg-blue-50 text-blue-600',
+    color: 'border-border hover:border-primary/40 hover:bg-primary/5',
+    iconColor: 'bg-primary/10 text-primary',
   },
   {
     key: 'tour_guide' as const,
     icon: MapPin,
     title: 'Tour Guide',
     description: 'Offer your local expertise and connect with travelers.',
-    color: 'border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50/50',
-    iconColor: 'bg-emerald-50 text-emerald-600',
+    color: 'border-border hover:border-tertiary/40 hover:bg-tertiary/5',
+    iconColor: 'bg-tertiary/10 text-tertiary',
   },
   {
     key: 'vehicle_owner' as const,
     icon: Car,
     title: 'Vehicle Owner',
     description: 'Rent your vehicles to tourists visiting Sri Lanka.',
-    color: 'border-orange-200 hover:border-orange-400 hover:bg-orange-50/50',
-    iconColor: 'bg-orange-50 text-orange-500',
+    color: 'border-border hover:border-secondary/40 hover:bg-secondary/5',
+    iconColor: 'bg-secondary/10 text-secondary',
   },
 ]
 
@@ -323,16 +323,13 @@ function RegisterContent() {
   return (
     <main className="min-h-screen flex">
       {/* Brand Panel */}
-      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-gradient-to-br from-primary via-teal-600 to-emerald-600">
+      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-gradient-to-br from-primary via-primary to-tertiary">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
 
         <div className="relative flex flex-col justify-between p-12 w-full">
           <Link href="/" className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm">
-              <Compass className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-display text-xl font-bold text-white">TravelPlan</span>
+            <span className="font-display text-xl font-extrabold text-white tracking-tight">TravelPlan</span>
           </Link>
 
           <div className="space-y-8">
@@ -367,15 +364,12 @@ function RegisterContent() {
       </div>
 
       {/* Form Panel */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-8 bg-gradient-to-b from-teal-50/30 to-white lg:from-white lg:to-white overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-8 bg-background overflow-y-auto">
         <div className="w-full max-w-lg">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center justify-center gap-2 mb-6">
-            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
-              <Compass className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-display text-xl font-bold">
-              Travel<span className="text-primary">Plan</span>
+            <span className="font-display text-xl font-extrabold text-primary tracking-tight">
+              TravelPlan
             </span>
           </div>
 

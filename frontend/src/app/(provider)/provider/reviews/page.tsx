@@ -106,7 +106,7 @@ export default function ProviderReviewsPage() {
                         {getProviderTypeLabel(review.entityType)}
                       </Badge>
                       {review.isVerified && (
-                        <Badge className="bg-green-100 text-green-700 text-[10px]">Verified</Badge>
+                        <Badge className="bg-tertiary/10 text-tertiary text-[10px]">Verified</Badge>
                       )}
                     </div>
                     {review.title && <p className="font-medium text-sm">{review.title}</p>}

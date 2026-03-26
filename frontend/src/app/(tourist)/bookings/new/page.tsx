@@ -192,7 +192,7 @@ export default function NewBookingPage() {
     const avail = availabilityMap[availKey(type, id)]
     if (avail === undefined) return null
     return avail ? (
-      <Badge className="text-xs bg-green-100 text-green-700 border-green-300 hover:bg-green-100">Available</Badge>
+      <Badge className="text-xs bg-tertiary/10 text-tertiary border-tertiary/30 hover:bg-tertiary/15">Available</Badge>
     ) : (
       <Badge variant="destructive" className="text-xs">Unavailable</Badge>
     )

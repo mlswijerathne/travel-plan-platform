@@ -77,12 +77,12 @@ export default function AdminDashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Total Packages', value: stats?.totalPackages ?? 0, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50' },
-          { label: 'Featured Packages', value: stats?.featuredPackages ?? 0, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-          { label: 'Total Events', value: stats?.totalEvents ?? 0, icon: Ticket, color: 'text-violet-600', bg: 'bg-violet-50' },
-          { label: 'Published Events', value: stats?.publishedEvents ?? 0, icon: Users, color: 'text-amber-600', bg: 'bg-amber-50' },
+          { label: 'Total Packages', value: stats?.totalPackages ?? 0, icon: Package, color: 'text-primary', bg: 'bg-primary/10' },
+          { label: 'Featured Packages', value: stats?.featuredPackages ?? 0, icon: TrendingUp, color: 'text-tertiary', bg: 'bg-tertiary/10' },
+          { label: 'Total Events', value: stats?.totalEvents ?? 0, icon: Ticket, color: 'text-secondary', bg: 'bg-secondary/10' },
+          { label: 'Published Events', value: stats?.publishedEvents ?? 0, icon: Users, color: 'text-primary', bg: 'bg-primary/10' },
         ].map(({ label, value, icon: Icon, color, bg }) => (
-          <Card key={label} className="shadow-sm">
+          <Card key={label}>
             <CardContent className="flex items-center gap-4 py-5">
               <div className={`h-11 w-11 rounded-xl ${bg} flex items-center justify-center`}>
                 <Icon className={`h-5 w-5 ${color}`} />
@@ -173,7 +173,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <Badge
                     variant="outline"
-                    className={`text-xs shrink-0 ${evt.status === 'PUBLISHED' ? 'border-emerald-300 text-emerald-700 bg-emerald-50' : 'border-gray-200 text-gray-500'}`}
+                    className={`text-xs shrink-0 ${evt.status === 'PUBLISHED' ? 'border-tertiary/30 text-tertiary bg-tertiary/10' : 'border-border text-muted-foreground'}`}
                   >
                     {evt.status}
                   </Badge>

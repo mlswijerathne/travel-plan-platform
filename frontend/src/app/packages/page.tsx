@@ -70,11 +70,11 @@ export default function PackagesPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="min-h-screen bg-surface-low pb-20">
             {/* Header Section */}
-            <div className="bg-emerald-900 py-16 px-4 text-center">
+            <div className="bg-primary py-16 px-4 text-center">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">Explore Our Travel Packages</h1>
-                <p className="text-emerald-100 text-lg max-w-2xl mx-auto mb-8">
+                <p className="text-white/70 text-lg max-w-2xl mx-auto mb-8">
                     Discover hand-picked itineraries, from cultural triangles to southern beaches.
                 </p>
 
@@ -83,43 +83,43 @@ export default function PackagesPage() {
                     <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-3">
                         {/* Keyword Search */}
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                             <input
                                 type="text"
                                 placeholder="Search packages (e.g., Adventure, Heritage)"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-primary/50 outline-none"
                             />
                         </div>
 
                         {/* Destination Filter */}
                         <div className="flex-1 relative">
-                            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                             <input
                                 type="text"
                                 placeholder="Destination (e.g., Galle, Ella)"
                                 value={destination}
                                 onChange={(e) => setDestination(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-primary/50 outline-none"
                             />
                         </div>
 
                         {/* Max Price Filter */}
                         <div className="flex-1 relative">
-                            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                             <input
                                 type="number"
                                 placeholder="Max Price (Rs.)"
                                 value={maxPrice}
                                 onChange={(e) => setMaxPrice(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-primary/50 outline-none"
                             />
                         </div>
 
                         <button
                             type="submit"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-lg transition-colors flex items-center justify-center whitespace-nowrap"
+                            className="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-lg transition-colors flex items-center justify-center whitespace-nowrap"
                         >
                             Search
                         </button>
@@ -128,7 +128,7 @@ export default function PackagesPage() {
                     {/* Active Filters / Clear Button */}
                     {(searchTerm || destination || maxPrice) && (
                         <div className="mt-4 flex justify-end">
-                            <button onClick={handleClearFilters} className="text-sm text-gray-500 hover:text-red-500 transition-colors underline">
+                            <button onClick={handleClearFilters} className="text-sm text-muted-foreground hover:text-red-500 transition-colors underline">
                                 Clear all filters
                             </button>
                         </div>
@@ -140,7 +140,7 @@ export default function PackagesPage() {
             <div className="container mx-auto px-4 mt-12">
                 {loading ? (
                     <div className="flex justify-center items-center py-20">
-                        <Loader2 className="w-12 h-12 animate-spin text-emerald-600" />
+                        <Loader2 className="w-12 h-12 animate-spin text-primary" />
                     </div>
                 ) : error ? (
                     <div className="text-center py-20 text-red-600 font-medium">
@@ -148,11 +148,11 @@ export default function PackagesPage() {
                         {error}
                     </div>
                 ) : packages.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-xl border border-gray-200">
-                        <Search className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                        <h3 className="text-xl font-bold text-gray-800 mb-2">No packages found</h3>
-                        <p className="text-gray-500">Try adjusting your search criteria or clearing your filters.</p>
-                        <button onClick={handleClearFilters} className="mt-4 text-emerald-600 font-semibold hover:underline">
+                    <div className="text-center py-20 bg-white rounded-xl border border-border">
+                        <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
+                        <h3 className="text-xl font-bold text-foreground mb-2">No packages found</h3>
+                        <p className="text-muted-foreground">Try adjusting your search criteria or clearing your filters.</p>
+                        <button onClick={handleClearFilters} className="mt-4 text-primary font-semibold hover:underline">
                             View all packages
                         </button>
                     </div>
@@ -163,10 +163,10 @@ export default function PackagesPage() {
 
                             return (
                                 <Link href={`/packages/${pkg.id}`} key={pkg.id}>
-                                    <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden cursor-pointer h-full flex flex-col group">
+                                    <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-border overflow-hidden cursor-pointer h-full flex flex-col group">
 
                                         {/* Image Section */}
-                                        <div className="relative h-56 bg-gray-200 overflow-hidden">
+                                        <div className="relative h-56 bg-surface-high overflow-hidden">
                                             {pkg.images && pkg.images.length > 0 ? (
                                                 <img
                                                     src={pkg.images[0]}
@@ -174,7 +174,7 @@ export default function PackagesPage() {
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                 />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">No Image</div>
+                                                <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-surface-low">No Image</div>
                                             )}
 
                                             {/* Discount Badge */}
@@ -187,12 +187,12 @@ export default function PackagesPage() {
 
                                         {/* Content Section */}
                                         <div className="p-6 grow flex flex-col">
-                                            <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">{pkg.name}</h3>
+                                            <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-1">{pkg.name}</h3>
 
-                                            <div className="flex items-center text-sm text-gray-500 mb-4 space-x-4">
-                                                <span className="flex items-center"><Clock className="w-4 h-4 mr-1 text-emerald-600" /> {pkg.durationDays} Days</span>
+                                            <div className="flex items-center text-sm text-muted-foreground mb-4 space-x-4">
+                                                <span className="flex items-center"><Clock className="w-4 h-4 mr-1 text-primary" /> {pkg.durationDays} Days</span>
                                                 {pkg.destinations && pkg.destinations.length > 0 && (
-                                                    <span className="flex items-center"><MapPin className="w-4 h-4 mr-1 text-emerald-600" /> {pkg.destinations.length} Places</span>
+                                                    <span className="flex items-center"><MapPin className="w-4 h-4 mr-1 text-primary" /> {pkg.destinations.length} Places</span>
                                                 )}
                                             </div>
 
@@ -204,19 +204,19 @@ export default function PackagesPage() {
                                                     </span>
                                                 ))}
                                                 {pkg.destinations && pkg.destinations.length > 3 && (
-                                                    <span className="bg-gray-50 text-gray-500 border border-gray-200 text-xs px-2 py-1 rounded-full">
+                                                    <span className="bg-surface-low text-muted-foreground border border-border text-xs px-2 py-1 rounded-full">
                                                         +{pkg.destinations.length - 3}
                                                     </span>
                                                 )}
                                             </div>
 
-                                            <div className="mt-auto pt-4 border-t border-gray-100 flex items-end justify-between">
+                                            <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
                                                 <div>
-                                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Starting From</p>
+                                                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Starting From</p>
                                                     <div className="flex items-baseline space-x-2">
-                                                        <span className="text-2xl font-black text-gray-900">Rs {finalPrice.toFixed(2)}</span>
+                                                        <span className="text-2xl font-black text-foreground">Rs {finalPrice.toFixed(2)}</span>
                                                         {pkg.discountPercentage > 0 && (
-                                                            <span className="text-sm text-gray-400 line-through">Rs {pkg.basePrice.toFixed(2)}</span>
+                                                            <span className="text-sm text-muted-foreground line-through">Rs {pkg.basePrice.toFixed(2)}</span>
                                                         )}
                                                     </div>
                                                 </div>

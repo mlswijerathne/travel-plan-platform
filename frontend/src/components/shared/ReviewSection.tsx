@@ -25,7 +25,7 @@ function ReviewItem({ review }: { review: Review }) {
           <div className="flex items-center gap-2">
             <StarRating rating={review.rating} size="sm" />
             {review.isVerified && (
-              <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">
+              <span className="text-[10px] bg-tertiary/10 text-tertiary px-1.5 py-0.5 rounded-full font-medium">
                 Verified
               </span>
             )}

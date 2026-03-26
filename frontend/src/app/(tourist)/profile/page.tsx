@@ -33,12 +33,12 @@ const BUDGET_LEVELS = ['BUDGET', 'MODERATE', 'LUXURY']
 const TRAVEL_STYLES = ['Solo', 'Couple', 'Family', 'Group', 'Backpacker']
 
 const INTEREST_COLORS: Record<string, string> = {
-  Adventure: 'bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100',
-  Culture: 'bg-violet-50 text-violet-600 border-violet-200 hover:bg-violet-100',
-  Nature: 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100',
-  Food: 'bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100',
-  Relaxation: 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100',
-  Nightlife: 'bg-pink-50 text-pink-600 border-pink-200 hover:bg-pink-100',
+  Adventure: 'bg-secondary/10 text-secondary border-secondary/20 hover:bg-secondary/15',
+  Culture: 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/15',
+  Nature: 'bg-tertiary/10 text-tertiary border-tertiary/20 hover:bg-tertiary/20',
+  Food: 'bg-secondary/10 text-secondary border-secondary/20 hover:bg-secondary/15',
+  Relaxation: 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/15',
+  Nightlife: 'bg-secondary/10 text-secondary border-secondary/20 hover:bg-secondary/15',
 }
 
 export default function ProfilePage() {
@@ -164,12 +164,12 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
       {/* Profile Header */}
-      <Card className="border-0 bg-gradient-to-r from-primary/5 via-teal-50/50 to-emerald-50/30 shadow-sm">
+      <Card className="border-0 bg-gradient-to-r from-primary/10 via-surface-low to-tertiary/10 shadow-sm">
         <CardContent className="flex items-center gap-5 py-6">
           <div className="relative group">
             <Avatar className="h-16 w-16 ring-4 ring-white shadow-md">
               {tourist.profileImageUrl && <AvatarImage src={tourist.profileImageUrl} alt={tourist.firstName} />}
-              <AvatarFallback className="bg-gradient-to-br from-primary to-teal-500 text-white text-xl font-bold">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-tertiary text-white text-xl font-bold">
                 {initials}
               </AvatarFallback>
             </Avatar>
@@ -179,7 +179,7 @@ export default function ProfilePage() {
             </label>
           </div>
           <div>
-            <h1 className="font-display text-2xl font-bold text-foreground">
+            <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
               {tourist.firstName} {tourist.lastName}
             </h1>
             <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
@@ -200,7 +200,7 @@ export default function ProfilePage() {
 
       {/* Tabs */}
       <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="bg-white border shadow-sm">
+        <TabsList className="bg-surface-low rounded-xl p-1">
           <TabsTrigger value="profile" className="gap-2">
             <User className="h-4 w-4" />
             Profile

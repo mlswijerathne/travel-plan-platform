@@ -31,7 +31,7 @@ export function ChatMessage({ message, onQuickReply, onAddToBooking, isLast }: C
           'text-xs font-semibold',
           isUser
             ? 'bg-primary text-white'
-            : 'bg-gradient-to-br from-teal-50 to-teal-100 text-primary'
+            : 'bg-gradient-to-br from-primary/5 to-primary/10 text-primary'
         )}>
           {isUser ? 'You' : <Compass className="h-4 w-4" />}
         </AvatarFallback>

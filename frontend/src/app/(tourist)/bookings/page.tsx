@@ -24,11 +24,11 @@ export default function BookingsPage() {
   const pagination = data?.pagination
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My Bookings</h1>
-          <p className="text-muted-foreground">View and manage your travel bookings</p>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">My Bookings</h1>
+          <p className="text-muted-foreground mt-1">View and manage your travel bookings</p>
         </div>
         <Link href="/bookings/new">
           <Button>
@@ -37,16 +37,19 @@ export default function BookingsPage() {
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="bg-surface-low rounded-xl p-1 inline-flex flex-wrap gap-0.5">
         {BOOKING_STATUSES.map(({ value, label }) => (
-          <Button
+          <button
             key={value}
-            variant={statusFilter === value ? 'default' : 'outline'}
-            size="sm"
             onClick={() => { setStatusFilter(value); setPage(0) }}
+            className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+              statusFilter === value
+                ? 'bg-card shadow-sm text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
           >
             {label}
-          </Button>
+          </button>
         ))}
       </div>
 

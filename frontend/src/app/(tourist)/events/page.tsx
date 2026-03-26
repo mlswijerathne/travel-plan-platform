@@ -22,21 +22,21 @@ function EventCard({ event }: { event: EventSummary }) {
 
   return (
     <Link href={`/events/${event.id}`}>
-      <Card className="hover:shadow-lg transition-all duration-200 overflow-hidden h-full group">
-        <div className="relative h-44 bg-gradient-to-br from-violet-100 to-teal-100 overflow-hidden">
+      <Card className="hover:-translate-y-1 hover:shadow-editorial-lg transition-all duration-300 overflow-hidden h-full group bg-card rounded-xl shadow-editorial border border-border/30">
+        <div className="relative h-44 bg-gradient-to-br from-primary/10 to-tertiary/10 overflow-hidden">
           {event.coverImageUrl ? (
             <img src={event.coverImageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Ticket className="h-12 w-12 text-violet-300" />
+              <Ticket className="h-12 w-12 text-primary/30" />
             </div>
           )}
           <div className="absolute top-3 left-3 flex gap-1.5">
-            <Badge className="bg-white/90 text-foreground text-xs font-medium backdrop-blur-sm">
+            <Badge className="bg-white/90 text-foreground text-xs font-medium backdrop-blur-sm rounded-full">
               {event.category}
             </Badge>
             {event.authenticCultural && (
-              <Badge className="bg-amber-500/90 text-white text-xs backdrop-blur-sm">Cultural</Badge>
+              <Badge className="bg-secondary/90 text-white text-xs backdrop-blur-sm rounded-full">Cultural</Badge>
             )}
           </div>
           {!isAvailable && (
@@ -68,7 +68,7 @@ function EventCard({ event }: { event: EventSummary }) {
               {event.ticketPrice === 0 ? 'Free' : `Rs ${event.ticketPrice.toLocaleString()}`}
             </span>
             {event.vibe && (
-              <Badge variant="outline" className="text-xs">{event.vibe}</Badge>
+              <Badge variant="outline" className="text-xs rounded-full">{event.vibe}</Badge>
             )}
           </div>
         </CardContent>
@@ -111,45 +111,53 @@ export default function EventsPage() {
   const hasFilters = appliedFilters.location || appliedFilters.category
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold">Events</h1>
-        <p className="text-muted-foreground">Discover cultural events, festivals, and local experiences in Sri Lanka</p>
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex items-start gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+          <Ticket className="h-6 w-6 text-primary" />
+        </div>
+        <div>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">Events</h1>
+          <p className="mt-1 text-lg text-muted-foreground">Discover cultural events, festivals, and local experiences in Sri Lanka</p>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by city or location..."
-            value={location}
-            onChange={e => setLocation(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            className="pl-9 h-10"
-          />
-        </div>
-        <Select value={category || 'all'} onValueChange={val => setCategory(val === 'all' ? '' : val)}>
-          <SelectTrigger className="w-full sm:w-44 h-10">
-            <SelectValue placeholder="All categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All categories</SelectItem>
-            {EVENT_CATEGORIES.map(c => (
-              <SelectItem key={c} value={c}>{c.charAt(0) + c.slice(1).toLowerCase()}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Button onClick={handleSearch} className="h-10 gap-2 shrink-0">
-          <Search className="h-4 w-4" />
-          Search
-        </Button>
-        {hasFilters && (
-          <Button variant="ghost" onClick={handleClear} className="h-10 gap-1.5 shrink-0 text-muted-foreground">
-            <X className="h-4 w-4" />
-            Clear
+      {/* Filter Bar */}
+      <div className="bg-card rounded-xl shadow-editorial border border-border/30 p-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by city or location..."
+              value={location}
+              onChange={e => setLocation(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch()}
+              className="pl-9 h-10"
+            />
+          </div>
+          <Select value={category || 'all'} onValueChange={val => setCategory(val === 'all' ? '' : val)}>
+            <SelectTrigger className="w-full sm:w-44 h-10">
+              <SelectValue placeholder="All categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All categories</SelectItem>
+              {EVENT_CATEGORIES.map(c => (
+                <SelectItem key={c} value={c}>{c.charAt(0) + c.slice(1).toLowerCase()}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button onClick={handleSearch} className="h-10 gap-2 shrink-0 bg-primary hover:bg-primary/90">
+            <Search className="h-4 w-4" />
+            Search
           </Button>
-        )}
+          {hasFilters && (
+            <Button variant="ghost" onClick={handleClear} className="h-10 gap-1.5 shrink-0 text-muted-foreground hover:bg-accent">
+              <X className="h-4 w-4" />
+              Clear
+            </Button>
+          )}
+        </div>
       </div>
 
       {isLoading ? (
